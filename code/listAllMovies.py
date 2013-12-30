@@ -6,7 +6,7 @@ sys.path.append(WEBSITEDIR)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Web.settings")
 
 
-from main.models import Movie
+from base.models import Movie
 
 
 allMovies = sorted(Movie.objects.all(),

@@ -34,7 +34,7 @@ sys.path.append(WEBSITEDIR)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Web.settings")
 
 
-from main.models import Movie, VersusMatch
+from base.models import Movie, VersusMatch
 import trueskill as ts
 
 

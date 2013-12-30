@@ -4,7 +4,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "movieRatingsSite.settings")
 
 import HTMLParser
 
-from main.models import Movie
+from base.models import Movie
 
 
 DATAFILE = '../data/currentRatings.tsv'
