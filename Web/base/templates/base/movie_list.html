@@ -1,0 +1,122 @@
+{% load url from future %}
+
+<!DOCTYPE html>
+
+<!------------- CSS ------------->
+
+<style>
+
+text {
+  text-align: center;
+}
+
+body {
+    background: #FFFDF6;
+}
+
+a {
+   color: blue;
+   text-decoration: none;
+}
+
+a.banner_link {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+table {
+    width:800px;
+    border-collapse:collapse;
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+}
+
+td {
+    border: 1px solid peru;
+    padding: 2px;
+}
+
+.title {
+    text-align: left;
+}
+
+th.title {
+    color: olive;
+}
+
+th.rating {
+    color: olive;
+}
+
+td.stars {
+    color: #FF6600;
+}
+
+.error_message {
+    color: red;
+    font-size: 30px;
+}
+
+</style>
+
+
+
+
+<!------------- HTML ------------->
+
+{% if movie_list %}
+
+    <center>
+    <hr />
+      <a href="{% url 'main:bubble_chart' %}"
+	 class="banner_link">
+	 Bubble Chart of the Ratings
+      </a>
+    <hr />
+      <a href="{% url 'main:comparison' %}"
+	 class="banner_link">
+	 Compare Movies Head to Head
+      </a>
+    <hr />
+    <br />
+    </center>
+
+    <div id="movie_list"> 
+	<ul>
+	  <table>
+	    <th class="title">Title</th>
+	    <th class="rating">Rating</th>
+	    <th class="rating">Raw True Skill</th>
+	    <th class="rating">Seeded True Skill</th>
+	    {% for movie in movie_list %}
+	    <tr>
+	      <td class="title">
+		<a href="{% url 'main:movie_detail' movie.id  %}">{{ movie.name }}</a>
+	      </td>
+	      <td class="stars">
+		<b>{{ movie.unicode_star_rating }}</b>
+	      </td>
+	      <td>
+		<b>{{ movie.raw_true_skill }}</b>
+	      </td>
+	      <td>
+		<b>{{ movie.seeded_true_skill }}</b>
+	      </td>
+	    </tr>
+	    {% endfor %}
+	  </table>
+	</ul>
+    </div>
+
+{% else %}
+    
+    <center>
+      <br /><br /><br /><br /><br />
+      <p class="error_message">
+	No movies in the database
+      </p>
+    </center>
+
+{% endif %}

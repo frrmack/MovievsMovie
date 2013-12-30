@@ -1,0 +1,297 @@
+{% load url from future %}
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!------------- CSS ------------->
+
+<style>
+
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
+  text {
+    font: 10px sans-serif;
+  }
+
+  #title_banner {
+    position: absolute;
+    top: 0;
+    display: table;
+    width: 100%;
+    height: 50px;
+    font: 25px sans-serif;
+    text-align: center;
+    color: pink;
+    background: #333;
+  }
+
+  div.center {
+  display: table-cell;
+  vertical-align: middle;
+  }
+
+  #chart_area {
+    margin-top: 50px;
+    background: #FED;
+    overflow: auto;
+  }
+
+  .bubble_chart {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  #chart_area_padding {
+    float: right;
+    width: 200px; height: 100%; 
+    background: gray;
+  }
+
+  #control_panel {
+    position: fixed;
+    left: 100%;
+    margin-left: -200px;
+    width: 200px; height: 100%; 
+    background:gray; 
+    color:white;
+    overflow: auto;
+    text-align:center; 
+  }
+
+  .panel-sub-area {
+    margin-top: 1cm;
+    margin-bottom: 2cm;
+  }
+
+  h1 {
+    font-family: "Avant Garde", Garamond, Palatino, serif;
+    font-weight:normal;
+    font-size:20px;
+  }
+
+  button {
+    width: 130px;
+  }
+
+
+</style>
+
+<!------------- HTML ------------->
+
+<title>Bubble Chart of Movie Ratings</title>
+
+<body>
+
+  <!-- Spanning title div -->
+  <div id="title_banner">
+    <div class="center">Bubble Chart of Movie Ratings</div>
+  </div>
+
+
+  <!-- Side frame with the control panel -->
+  <div id="control_panel">
+
+    <p><h1>Control Panel</h1></p>
+    
+    <div class='panel-sub-area'>
+      <p><button id="change_colorscheme">Change Colors</button></p>
+    </div>
+    <div class='panel-sub-area'>
+      <p><button onclick="window.location.href='{% url 'main:bubble_chart' 'random' num_nodes %}'">
+	  Randomize
+      </button></p>
+
+      <p><button onclick="window.location.href='{% url 'main:bubble_chart' 'ordered_by_name' num_nodes %}' ">
+	  Order By Name
+      </button></p>
+
+      <p><button onclick="window.location.href='{% url 'main:bubble_chart' 'ordered_by_rating' num_nodes %}'">
+	  Order By Rating
+      </button></p>
+    </div>
+    <div class='panel-sub-area'>
+      <p><button onclick="window.location.href='{% url 'main:bubble_chart' order_rule 25 %}'">
+	  Show &nbsp;25
+      </button></p>
+
+      <p><button onclick="window.location.href='{% url 'main:bubble_chart' order_rule 100 %}'">
+	  Show 100
+      </button></p>
+
+      <p><button onclick="window.location.href='{% url 'main:bubble_chart' order_rule 200 %}'">
+	  Show 200
+      </button></p>
+
+      <p><button onclick="window.location.href='{% url 'main:bubble_chart' order_rule 500 %}'">
+	  Show 500
+      </button></p>
+
+      <p><button onclick="window.location.href='{% url 'main:bubble_chart' order_rule max_num_nodes %}'">
+	  Show All
+      </button></p>
+    </div>
+    <div class='panel-sub-area'>
+      <p><button onclick="window.location.href='{% url 'main:movie_list' %}'">
+	  List All Movies
+      </button></p>
+      <p><button onclick="window.location.href='{% url 'main:comparison' %}'">
+	  Compare Movies
+      </button></p>
+    </div>
+
+  </div>
+
+
+  <!-- Floating div holding space for the control panel-->
+  <div id="chart_area_padding"></div>
+  <!-- The background of the chart -->
+  <div id="chart_area">
+    <!-- Chart (to be filled by the d3 script) -->
+    <div id="chart"></div>
+  </div>
+
+
+
+
+
+</body>
+
+
+<!------------ SCRIPTS -------------->
+
+<!-- Control Panel Button: Change Color -->
+<script>
+document.getElementById("change_colorscheme").onclick = function() {
+    var panel = document.getElementById("control_panel");
+    var chart_div = document.getElementById("chart");
+    if (panel.style.getPropertyValue("color") == "black") {
+      panel.style.setProperty("color", "white");
+      panel.style.setProperty("background", "grey");
+      chart_div.style.setProperty("background", "#FED");
+    }
+    else {
+      panel.style.setProperty("color", "black");
+      panel.style.setProperty("background", "LightPink");
+      chart_div.style.setProperty("background", "grey");
+    }
+};
+</script>
+
+<!-- String Method to Unescape Html Entities -->
+<script>
+String.prototype.unescapeHtml = function () {
+    var temp = document.createElement("div");
+    temp.innerHTML = this;
+    return temp.childNodes[0].nodeValue;
+}
+</script>
+
+<!-- Bubble Chart using d3 -->
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script>
+
+///////////////-- DATA --///////////////
+var movieList = [
+        {% for movie in movie_list %}
+            {"name":  "{{ movie.name }}",
+             "value": {{ movie.starRating }},
+             "url":   "{% url 'main:movie_detail' movie.id %}",
+             "unicode_stars": "{{ movie.unicode_star_rating }}"
+             },
+        {% endfor %}
+];
+
+var movieData = {"children": movieList};
+////////////////////////////////////////
+
+
+
+///////////-- Chart Setup --////////////
+
+//-- Initialize geometry, format and colors
+var diameter = 635,           // 856 | 960 ?
+    format = d3.format(",d"),
+//  color = d3.scale.category20c();
+    color = d3.scale.linear()
+      .domain([0.2,1.2,2.3,3.5,4.4,5.26])
+      .range(["pink", "red", "orange", "yellow", "green", "#E898FF"]);
+
+//-- The pack layout of d3 for packing hierarchies of
+//-- circular nodes. [It will be used with flat data
+//-- (depth of only one level) to make a bubble chart]
+var bubble = d3.layout.pack()
+    .sort(null)
+    .size([diameter, diameter])
+    .padding(1.5);
+
+//-- Set up the svg for the chart
+var svg = d3.select("#chart").append("svg")
+    .attr("width", diameter)
+    .attr("height", diameter)
+    .attr("class", "bubble_chart");
+
+
+
+/////////-- Draw Each Node --//////////
+
+//-- The following bubble.nodes() is where the layout magic happens.
+//-- The passed data (movieData) needs special structure. For
+//-- example, it has to have the {"children": array_of_objects}
+//-- structure. Also, the objects in that array need to have
+//-- a "value" attribute. Other attributes like x, y, r are
+//-- calculated from this "value". The .filter following .data
+//-- is also necessary, it won't work without it.
+
+//-- Calculate the layout: determine the coordinates and 
+//-- radii of every node and start entering elements.
+var node = svg.selectAll(".node")
+    .data(bubble.nodes(movieData)         
+    .filter(function(d) { return !d.children; }))
+  .enter()
+
+    //-- Link to detail view on click ("a" must come before
+    //-- the elements to be drawn, like "g")
+    .append("a")
+    .attr("xlink:href", function(d) { return d.url; })
+
+    //-- Enter the entire group of nodes and move each
+    //-- node to thecalculated coordinates
+    .append("g")
+    .attr("class", "node")
+    .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+//-- Text that the browser shows when mouse hovers over a node
+node.append("title")
+    .text(function(d) { return d.name.unescapeHtml() +" ("+ d.unicode_stars +")"; });
+
+//-- Draw the circles for all nodes with the already calculated radii
+//-- (Add a small random element to the integer value for color purposes,
+//-- this way there will be discretely different colors but with some
+//-- fluctuation in shades of each discerete color)
+node.append("circle")
+    .attr("r", function(d) { return d.r; })
+    .style("fill", function(d) { return color(d.value+Math.random()/4); });
+
+//-- The text that permaently appears on the circle. Cut to fit.
+node.append("text")
+    .attr("dy", ".3em")
+    .style("text-anchor", "middle")
+    .text(function(d) { return d.name.unescapeHtml().substring(0, d.r / 3); });
+
+
+
+///////-- Final Frame Geometry --///////
+
+//-- Set the heights of the divs to the diameter value
+//-- of the chart (initialized at the beginning)
+d3.select("#chart").style("height", diameter + "px");
+d3.select("#chart_area").style("height", diameter + "px");
+d3.select("#chart_area_padding").style("height", diameter + "px");
+d3.select("#control_panel").style("height", diameter + "px");
+
+</script>
+

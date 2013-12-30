@@ -15,9 +15,9 @@ def now():
     return datetime.utcnow().replace(tzinfo=utc)
 
 
-# def home(request):
-#     """ Default view for the root """
-#     return render(request, 'base/home.html')
+def home(request):
+    """ Default view for the root """
+    return render(request, 'base/home.html')
 
 
 

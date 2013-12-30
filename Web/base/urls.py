@@ -11,7 +11,7 @@ from random import shuffle
 
 
 urlpatterns = patterns('base.views',
-                       #url(r'^$', 'home', name='home'),
+                       url(r'^$', 'home', name='home'),
                        # /main/list                                                                                                                                                  
                        url(r'^list$',
                            ListView.as_view ( queryset = Movie.objects.order_by('-starSeededTrueSkillMu') ),
@@ -44,9 +44,9 @@ urlpatterns = patterns('base.views',
                        # /main/                                                                                                                                                      
                        # set home page to be the default bubble                                                                                                                      
                        # chart: random order, showing all movies                                                                                                                     
-                       url(r'^$',
-                           views.bubbleChart,
-                           name = 'bubble_chart')
+                       # url(r'^$',
+                       #     views.bubbleChart,
+                       #     name = 'bubble_chart')
 
 
 
