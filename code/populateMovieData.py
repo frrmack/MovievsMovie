@@ -1,5 +1,5 @@
 import sys, os
-sys.path.append('../Website/')
+sys.path.append('../Web/')
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "movieRatingsSite.settings")
 
 import HTMLParser
@@ -7,8 +7,7 @@ import HTMLParser
 from main.models import Movie
 
 
-
-DATAFILE = '../Data/currentRatings.tsv'
+DATAFILE = '../data/currentRatings.tsv'
 
 with open(DATAFILE, 'r') as datafile:
     count = 0

@@ -4,6 +4,10 @@ bcrypt
 MySQL-python
 #nltk
 
+# webdriver
+selenium
+pyvirtualdisplay
+
 #image processing
 #pillow 
  
@@ -38,3 +42,6 @@ django-waffle
 
 # beautiful soup to sanitize the HTML from IssueLab database
 beautifulsoup4
+
+# trueskill
+http://github.com/sublee/trueskill/zipball/master#egg=trueskill-dev

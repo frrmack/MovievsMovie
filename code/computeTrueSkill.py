@@ -29,9 +29,9 @@
 import sys, os
 
 SCRIPTPOS = os.path.abspath(__file__).rsplit('/',1)[0] + '/'
-WEBSITEDIR = SCRIPTPOS + '../Website/'
+WEBSITEDIR = SCRIPTPOS + '../Web/'
 sys.path.append(WEBSITEDIR)
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "movieRatingsSite.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Web.settings")
 
 
 from main.models import Movie, VersusMatch
