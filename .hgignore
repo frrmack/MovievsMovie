@@ -61,10 +61,6 @@ server_config.ini
 // *.sqlite3
 *.db
 
-# ignore issuelab data. this is important to make sure this directory
-# is a symlink on issuelab and a directory on virtualbox
-data/
-
 # ignore files generated during analysis run
 make.out
 email.out
@@ -74,12 +70,8 @@ email.out
 issuelab.org/
 issue_lab_sql_stuff/
 
-# ignore this big file
-keywords/saved_wiki_counts.pck
 
 # ignore all this garbage
-*.csv
-*.pdf
 *.xlsx
 *.log
 *.tar
