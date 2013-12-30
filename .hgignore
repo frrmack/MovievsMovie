@@ -1,0 +1,89 @@
+syntax: glob
+
+\#*
+
+# annoying files
+*~
+*.pyc
+*.swp
+*.orig
+*.o
+.DS_Store
+
+# dummy files
+aa
+bb
+cc
+dd
+ee
+ff
+gg
+hh
+ii
+jj
+kk
+ll
+mm
+nn
+oo
+pp
+qq
+rr
+ss
+tt
+uu
+vv
+ww
+xx
+yy
+zz
+.tmp/
+
+# ignore sass cache files
+*.sass-cache
+*CACHE*
+
+# ignore things that are created by vagrant, puppet, and fabric
+.vagrant/
+puppet/.librarian
+puppet/Puppetfile.lock
+puppet/modules/moneyball/templates/*.json
+puppet/manifests/build
+
+# rendered templates
+Web/Web/settings/local.py
+server_config.ini
+
+# ssh config stuff
+.ssh/*config
+
+# ignore dbs
+// *.sqlite3
+*.db
+
+# ignore issuelab data. this is important to make sure this directory
+# is a symlink on issuelab and a directory on virtualbox
+data/
+
+# ignore files generated during analysis run
+make.out
+email.out
+*.mysql_load
+
+# old issuelab ignore data
+issuelab.org/
+issue_lab_sql_stuff/
+
+# ignore this big file
+keywords/saved_wiki_counts.pck
+
+# ignore all this garbage
+*.csv
+*.pdf
+*.xlsx
+*.log
+*.tar
+*.tgz
+
+# lrs
+sandbox/

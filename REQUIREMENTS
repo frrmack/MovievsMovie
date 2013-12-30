@@ -1,0 +1,40 @@
+invoke
+Django==1.6 
+bcrypt
+MySQL-python
+#nltk
+
+#image processing
+#pillow 
+ 
+# Templates
+django_compressor 
+
+# Security 
+bleach 
+#cef 
+
+# Logging
+#raven
+
+# Celery: Message queue
+celery
+django-celery
+
+# Caching
+python-memcached
+
+# Admin 
+#django-debug-toolbar 
+
+# Migrations 
+South 
+
+# Feature testing
+django-waffle
+
+# TextBlob for text manipulation
+#textblob
+
+# beautiful soup to sanitize the HTML from IssueLab database
+beautifulsoup4

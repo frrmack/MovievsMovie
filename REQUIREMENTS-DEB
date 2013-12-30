@@ -1,0 +1,13 @@
+apache2
+python-dev
+libffi-dev
+libmysqlclient-dev
+libapache2-mod-wsgi
+poppler-utils
+imagemagick
+make
+ruby-sass
+libjpeg-dev
+libfreetype6-dev
+zlib1g-dev
+libpng12-dev
