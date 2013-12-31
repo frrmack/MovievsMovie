@@ -1,6 +1,6 @@
 import sys, os
 sys.path.append('../Web/')
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "movieRatingsSite.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Web.settings")
 
 import HTMLParser
 

@@ -42,11 +42,11 @@ urlpatterns = patterns('base.views',
                            name = 'versus_result'),
                        # /                                                                                                                                                           
                        # /main/                                                                                                                                                      
-                       # set home page to be the default bubble                                                                                                                      
-                       # chart: random order, showing all movies                                                                                                                     
-                       # url(r'^$',
-                       #     views.bubbleChart,
-                       #     name = 'bubble_chart')
+                       #set /chart to be the default bubble                                                                                                                      
+                       #chart: random order, showing all movies                                                                                                                     
+                       url(r'^chart/$',
+                           views.bubbleChart,
+                           name = 'bubble_chart')
 
 
 
