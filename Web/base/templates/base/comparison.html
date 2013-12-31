@@ -162,18 +162,18 @@
       <p><button id="change_colorscheme">Change Colors</button></p>
     </div>
     <div class='panel-sub-area'>
-      <p><button onclick="window.location.href='{% url 'main:bubble_chart' 'random' 0 %}'">
+      <p><button onclick="window.location.href='{% url 'bubble_chart' 'random' 0 %}'">
 	  The Bubble Chart
       </button></p>
-      <p><button onclick="window.location.href='{% url 'main:movie_list' %}'">
+      <p><button onclick="window.location.href='{% url 'movie_list' %}'">
 	  List All Movies
       </button></p>
-      <p><button onclick="window.location.href='{% url 'main:comparison' %}'">
+      <p><button onclick="window.location.href='{% url 'comparison' %}'">
 	  Compare Movies
       </button></p>
     </div>
     <div class='panel-sub-area'>
-      <p><button id="skip_button" onclick="window.location.href='{% url 'main:comparison' %}'">
+      <p><button id="skip_button" onclick="window.location.href='{% url 'comparison' %}'">
 	  Skip This One
       </button></p>
     </div>
@@ -199,11 +199,11 @@
     <div id="main_content">
 
 
-      <form action="{% url 'main:versus_result' movie1.id movie2.id %}"
+      <form action="{% url 'versus_result' movie1.id movie2.id %}"
 	    method="post">
 	{% csrf_token %}
 	<div id="left_movie" class="movie_window">
-	  <a href="{% url 'main:movie_detail' movie1.id %}">
+	  <a href="{% url 'movie_detail' movie1.id %}">
 	    <img id="poster_1" src="{{ STATIC_URL }}posters/_poster_template.jpg" />
 	  </a>
 	  <button id="left_wins_button"
@@ -215,7 +215,7 @@
 	</div>
 
 	<div id="right_movie" class="movie_window">
-	  <a href="{% url 'main:movie_detail' movie2.id %}">
+	  <a href="{% url 'movie_detail' movie2.id %}">
 	    <img id="poster_2" src="{{ STATIC_URL }}posters/_poster_template.jpg" />
 	  </a>
 	  <button id="right_wins_button"

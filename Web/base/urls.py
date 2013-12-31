@@ -12,42 +12,40 @@ from random import shuffle
 
 urlpatterns = patterns('base.views',
                        url(r'^$', 'home', name='home'),
-                       # /main/list                                                                                                                                                  
+                       # /base/list                                                                                                                                                  
                        url(r'^list$',
                            ListView.as_view ( queryset = Movie.objects.order_by('-starSeededTrueSkillMu') ),
                            name = 'movie_list'),
-                       # main/5                                                                                                                                                      
+                       # base/5                                                                                                                                                      
                        url(r'^(?P<pk>\d+)$',
                            DetailView.as_view( model = Movie ),
                            name = 'movie_detail'),
-                       # /main/chart/random/200                                                                                                                                      
-                       # /main/chart/ordered_by_name/                                                                                                                                
-                       # /main/chart/ordered_by_rating/1400                                                                                                                          
+                       # /base/chart/random/200                                                                                                                                      
+                       # /base/chart/ordered_by_name/                                                                                                                                
+                       # /base/chart/ordered_by_rating/1400                                                                                                                          
                        url(r'^chart/(?P<order_rule>\w+)/(?P<num_nodes>\d+)?$',
-                           views.bubbleChart,
+                           'bubbleChart',
                            name = 'bubble_chart'),
-                       # main/comparison/a=23&b=18                                                                                                                                   
+                       # base/comparison/a=23&b=18                                                                                                                                   
                        url(r'^comparison/a=(?P<movie_1_id>\d+)\&b=(?P<movie_2_id>\d+)$',
-                           views.comparison,
+                           'comparison',
                            name = 'comparison'),
-                       # main/comparison/a=23                                                                                                                                        
-                       url(r'^comparison/a=(?P<movie_1_id>\d+)$', views.comparison, name = 'comparison'),
-                       # main/comparison/b=18                                                                                                                                        
-                       url(r'^comparison/b=(?P<movie_2_id>\d+)$', views.comparison, name = 'comparison'),
-                       # main/comparison/                                                                                                                                            
-                       url(r'^comparison/$', views.comparison, name = 'comparison'),
-                       # main/comparison/a=23&b=18/result                                                                                                                            
+                       # base/comparison/a=23                                                                                                                                        
+                       url(r'^comparison/a=(?P<movie_1_id>\d+)$', 'comparison', name = 'comparison'),
+                       # base/comparison/b=18                                                                                                                                        
+                       url(r'^comparison/b=(?P<movie_2_id>\d+)$', 'comparison', name = 'comparison'),
+                       # base/comparison/                                                                                                                                            
+                       url(r'^comparison/$', 'comparison', name = 'comparison'),
+                       # base/comparison/a=23&b=18/result                                                                                                                            
                        url(r'^comparison/a=(?P<movie_1_id>\d+)\&b=(?P<movie_2_id>\d+)/result$',
-                           views.versusResult,
+                           'versusResult',
                            name = 'versus_result'),
                        # /                                                                                                                                                           
-                       # /main/                                                                                                                                                      
+                       # /base/                                                                                                                                                      
                        #set /chart to be the default bubble                                                                                                                      
                        #chart: random order, showing all movies                                                                                                                     
                        url(r'^chart/$',
-                           views.bubbleChart,
+                           'bubbleChart',
                            name = 'bubble_chart')
-
-
 
 )

@@ -101,44 +101,44 @@
       <p><button id="change_colorscheme">Change Colors</button></p>
     </div>
     <div class='panel-sub-area'>
-      <p><button onclick="window.location.href='{% url 'main:bubble_chart' 'random' num_nodes %}'">
+      <p><button onclick="window.location.href='{% url 'bubble_chart' 'random' num_nodes %}'">
 	  Randomize
       </button></p>
 
-      <p><button onclick="window.location.href='{% url 'main:bubble_chart' 'ordered_by_name' num_nodes %}' ">
+      <p><button onclick="window.location.href='{% url 'bubble_chart' 'ordered_by_name' num_nodes %}' ">
 	  Order By Name
       </button></p>
 
-      <p><button onclick="window.location.href='{% url 'main:bubble_chart' 'ordered_by_rating' num_nodes %}'">
+      <p><button onclick="window.location.href='{% url 'bubble_chart' 'ordered_by_rating' num_nodes %}'">
 	  Order By Rating
       </button></p>
     </div>
     <div class='panel-sub-area'>
-      <p><button onclick="window.location.href='{% url 'main:bubble_chart' order_rule 25 %}'">
+      <p><button onclick="window.location.href='{% url 'bubble_chart' order_rule 25 %}'">
 	  Show &nbsp;25
       </button></p>
 
-      <p><button onclick="window.location.href='{% url 'main:bubble_chart' order_rule 100 %}'">
+      <p><button onclick="window.location.href='{% url 'bubble_chart' order_rule 100 %}'">
 	  Show 100
       </button></p>
 
-      <p><button onclick="window.location.href='{% url 'main:bubble_chart' order_rule 200 %}'">
+      <p><button onclick="window.location.href='{% url 'bubble_chart' order_rule 200 %}'">
 	  Show 200
       </button></p>
 
-      <p><button onclick="window.location.href='{% url 'main:bubble_chart' order_rule 500 %}'">
+      <p><button onclick="window.location.href='{% url 'bubble_chart' order_rule 500 %}'">
 	  Show 500
       </button></p>
 
-      <p><button onclick="window.location.href='{% url 'main:bubble_chart' order_rule max_num_nodes %}'">
+      <p><button onclick="window.location.href='{% url 'bubble_chart' order_rule max_num_nodes %}'">
 	  Show All
       </button></p>
     </div>
     <div class='panel-sub-area'>
-      <p><button onclick="window.location.href='{% url 'main:movie_list' %}'">
+      <p><button onclick="window.location.href='{% url 'movie_list' %}'">
 	  List All Movies
       </button></p>
-      <p><button onclick="window.location.href='{% url 'main:comparison' %}'">
+      <p><button onclick="window.location.href='{% url 'comparison' %}'">
 	  Compare Movies
       </button></p>
     </div>
@@ -199,7 +199,7 @@ var movieList = [
         {% for movie in movie_list %}
             {"name":  "{{ movie.name }}",
              "value": {{ movie.starRating }},
-             "url":   "{% url 'main:movie_detail' movie.id %}",
+             "url":   "{% url 'movie_detail' movie.id %}",
              "unicode_stars": "{{ movie.unicode_star_rating }}"
              },
         {% endfor %}

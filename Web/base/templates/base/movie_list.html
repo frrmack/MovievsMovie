@@ -70,12 +70,12 @@ td.stars {
 
     <center>
     <hr />
-      <a href="{% url 'main:bubble_chart' %}"
+      <a href="{% url 'bubble_chart' %}"
 	 class="banner_link">
 	 Bubble Chart of the Ratings
       </a>
     <hr />
-      <a href="{% url 'main:comparison' %}"
+      <a href="{% url 'comparison' %}"
 	 class="banner_link">
 	 Compare Movies Head to Head
       </a>
@@ -93,7 +93,7 @@ td.stars {
 	    {% for movie in movie_list %}
 	    <tr>
 	      <td class="title">
-		<a href="{% url 'main:movie_detail' movie.id  %}">{{ movie.name }}</a>
+		<a href="{% url 'movie_detail' movie.id  %}">{{ movie.name }}</a>
 	      </td>
 	      <td class="stars">
 		<b>{{ movie.unicode_star_rating }}</b>

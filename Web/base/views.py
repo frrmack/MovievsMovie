@@ -49,7 +49,7 @@ def bubbleChart(request, order_rule='random', num_nodes=None):
                'num_nodes': num_nodes,
                'max_num_nodes': max_num_nodes
                }
-    return render(request, 'main/rating_bubble_chart.html', context)
+    return render(request, 'base/rating_bubble_chart.html', context)
 
 
 
@@ -71,12 +71,12 @@ def comparison(request, movie_1_id=None, movie_2_id=None):
         # No movies at all in the database                                                                                                                                           
         # ---Temporarily using an empty movie_list view as---                                                                                                                        
         # ---placeholder for a specific page informing this---                                                                                                                       
-        return HttpResponseRedirect(reverse('main:movie_list'))
+        return HttpResponseRedirect(reverse('movie_list'))
     # render                                                                                                                                                                         
     context = {'movie1' : movie1,
                'movie2' : movie2
               }
-    return render(request, 'main/comparison.html', context)
+    return render(request, 'base/comparison.html', context)
 
 
 def versusResult(request, movie_1_id, movie_2_id):
@@ -127,7 +127,7 @@ def versusResult(request, movie_1_id, movie_2_id):
     randID1 = Movie.randoms.random().id
     randID2 = Movie.randoms.random().id
     # give a new comparison view with random movies                                                                                                                                  
-    return HttpResponseRedirect(reverse('main:comparison',
+    return HttpResponseRedirect(reverse('comparison',
                                         args=(randID1, randID2)))
 
 
