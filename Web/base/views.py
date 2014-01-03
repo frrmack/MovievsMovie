@@ -21,6 +21,10 @@ def home(request):
 
 
 
+def bootstrap_test(request):
+    """ For testing if bootstrap works """
+    return render(request, 'base/base_bootstrap.html')
+
 def bubbleChart(request, order_rule='random', num_nodes=None):
     # translate order_rule into django model api                                                                                                                                     
     order_query = {'random': '?',

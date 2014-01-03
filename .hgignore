@@ -79,3 +79,6 @@ issue_lab_sql_stuff/
 
 # lrs
 sandbox/
+
+# The dir that is filled by collectstatic
+static/

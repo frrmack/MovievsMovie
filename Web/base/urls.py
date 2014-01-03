@@ -12,6 +12,7 @@ from random import shuffle
 
 urlpatterns = patterns('base.views',
                        url(r'^$', 'home', name='home'),
+                       url(r'^test$', 'bootstrap_test', name='bootstrap'),
                        # /base/list                                                                                                                                                  
                        url(r'^list$',
                            ListView.as_view ( queryset = Movie.objects.order_by('-starSeededTrueSkillMu') ),
