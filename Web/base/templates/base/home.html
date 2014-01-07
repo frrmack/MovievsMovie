@@ -1,5 +1,10 @@
 {% extends "base/base.html" %}
 
+    <!-- title -->
+    {% block title %}
+    Home
+    {% endblock %}
+    <!-- end of title -->
 
     <!-- extrahead -->
     <!-- end of extrahead -->
@@ -7,7 +12,7 @@
     <!-- jquery -->
     {% block jquery %}
     <!-- set the active nav button here -->
-    document.getElementById("nav-home").className = "active";
+    $('#nav-home').addClass('active');
     {% endblock %}
     <!-- end of jquery -->
 
