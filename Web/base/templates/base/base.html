@@ -26,7 +26,13 @@
         padding-bottom: 40px;
       }
       footer {
-        margin-top: 40px;
+        margin-top: 60px;
+      }
+      .stars {
+        color: #FFAA00;
+      }
+      .copyright {
+        margin-top: 10px;
       }
       {% block css %}{% endblock %}
     </style>
@@ -129,24 +135,28 @@
       <!-- FOOTER -->
       <footer>
 	<div class="footer">
-        <div class="container">
-	  {% block footer %}
-          <div class="row">
-            <div class="col-md-4"></div>
-            <div class="col-md-4">
-              <ul class="nav nav-pills">
-		<li><a href="{% url 'home' %}">About Us</a></li>
-		<li><a href="http://www.imdb.com">Imdb</a></li>
-		<li><a href="#">Terms of Use</a></li>
-              </ul>
-            </div>
-	    <div class="col-md-3"></div>
-            <div class="col-md-1">
-	      <div class="well well-sm text-right"> 
-		&copy; 2014
+	  <hr>
+          <div class="container">
+	    {% block footer %}
+            <div class="row">
+              <div class="col-md-4">
+		<div class="copyright"> 
+		  &copy; 2014
+		</div>
+	    </div>
+              <div class="col-md-4">
+		<ul class="nav nav-pills">
+		  <li><a href="{% url 'home' %}">About Us</a></li>
+		  <li><a href="http://www.imdb.com">Imdb</a></li>
+		  <li><a href="#">Terms of Use</a></li>
+		</ul>
+              </div>
+              <div class="col-md-4">
+		<div class="copyright text-right"> 
+		  Movie vs Movie
+		</div>
 	      </div>
 	    </div>
-	  </div>
           </div>
 	  {% endblock %}
         </div>
