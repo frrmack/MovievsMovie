@@ -1,14 +1,65 @@
-{% load url from future %}
-<h1>{{ movie.name }}</h1>
+{% extends "base/base.html" %}
 
-<p>
-    <b>Title:</b> {{ movie.name}}
-</p>
+    <!-- title -->
+    {% block title %}
+    {{ movie.name }}
+    {% endblock %}
+    <!-- end of title -->
 
-<p>
-    <b>Rating:</b> 
-    <span style="color:#FF5500"> 
-        {{ movie.unicode_star_rating}} 
-    </span>
-</p>
+    <!-- css -->
+    {% block css %}
+    .dl-horizontal dt {
+       width: 75px;
+       white-space: normal;
+    } 
+    .dl-horizontal dd {
+       margin-left: 110px;
+    }
+    {% endblock %}
+    <!-- end of css -->
+
+    <!-- extrahead -->
+    <!-- end of extrahead -->
+
+    <!-- jquery -->
+    <!-- end of jquery -->
+
+    <!-- pageheader -->
+    {% block pageheader %}
+    <div class="container">
+      <div class="page-header">
+	<h1>{{ movie.name }}</h1>
+	<a class="btn btn-primary btn-lg" href="#">Details on imdb</a>
+      </div>
+    </div>
+    {% endblock %}
+    <!-- end of pageheader -->
+
+
+    <!-- content -->
+    {% block content %}
+    <div class="col-md-6 text-left">
+      <dl class="dl-horizontal">
+
+	<dt>Title</dt>
+	<dd>{{ movie.name }}</dd>
+	
+	<dt>Star Rating</dt>
+	<dd> 
+	  <span style="color:#FF5500">
+	    {{ movie.unicode_star_rating}} 
+	  </span>
+	</dd>
+	
+	<dt>TrueSkill</dt>
+	<dd>{{ movie.seeded_true_skill}}</dd>
+
+      </dl>
+    </div>
+    {% endblock %}
+    <!-- end of content -->
+
+    <!-- footer -->
+    <!-- end of footer -->
+
 
