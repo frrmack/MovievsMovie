@@ -19,8 +19,20 @@
     <!-- Bootstrap CSS -->
     <link href="{{STATIC_URL}}css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- Custom sidebar CSS -->
+    <link href="{{STATIC_URL}}css/simple-sidebar.css" rel="stylesheet">
+
+    <!-- AwesomeFonts CSS -->
+    <!-- <link href="{{STATIC_URL}}css/font-awesome.min.css" rel="stylesheet"> -->
+
     <!-- CSS customization -->
     <style type="text/css">
+      .top-indent {
+        margin-top: 10px;
+      }
+      .main-bar-container {
+        width: 100%;
+      }
       body {
         padding-top: 50px;
         padding-bottom: 40px;
@@ -117,47 +129,69 @@
       {% endblock %}
       <!-- END OF NAVBAR -->
 
-      <!-- PAGE HEADER -->
-      {% block pageheader %}
-      {% endblock %}
-      <!-- END OF PAGE HEADER -->
+      <!-- PAGE WRAPPER -->
+      <div id="wrapper">
 
-      <!-- CONTENT -->
-      {% block content %}
-      {% endblock %}
-      <!-- END OF CONTENT -->
-
-      <!-- FOOTER -->
-      <footer>
-	<div class="footer">
-          <div class="container">
-	    <hr>
-	    {% block footer %}
-            <div class="row">
-              <div class="col-md-4">
-		<div class="copyright"> 
-		  &copy; 2014
-		</div>
-	      </div>
-              <div class="col-md-4">
-		<ul class="nav nav-pills">
-		  <li><a href="{% url 'home' %}">About Us</a></li>
-		  <li><a href="http://www.imdb.com">Imdb</a></li>
-		  <li><a href="#">Terms of Use</a></li>
-		</ul>
-              </div>
-              <div class="col-md-4">
-		<div class="copyright text-right"> 
-		  Movie vs Movie
-		</div>
-	      </div>
-	    </div>
+	<!-- SIDEBAR -->
+	<div id="sidebar-wrapper">
+	  <ul class="sidebar-nav">
+            <li class="sidebar-brand"><a href="#">Filter Movies</a></li>
+            <li><a href="#">5-star</a></li>
+            <li><a href="#">4-star</a></li>
+            <li><a href="#">3-star</a></li>
+            <li><a href="#">2-star</a></li>
+            <li><a href="#">1-star</a></li>
+	  </ul>
+	  <div class="sidebar-extra">
+	    {% block extrasidebar %}
 	    {% endblock %}
-          </div>
-        </div>
-      </footer>
-      <!-- END OF FOOTER -->
+	  </div>
+	</div>
+	<!-- END OF SIDEBAR -->
 
+	<!-- PAGE HEADER -->
+	{% block pageheader %}
+	{% endblock %}
+	<!-- END OF PAGE HEADER -->
+
+	<!-- CONTENT -->
+	{% block content %}
+	{% endblock %}
+	<!-- END OF CONTENT -->
+
+	<!-- FOOTER -->
+	<footer>
+	  <div class="footer">
+            <div class="container main-bar-container">
+	      <hr>
+	      {% block footer %}
+              <div class="row">
+		<div class="col-md-4">
+		  <div class="copyright"> 
+		    &copy; 2014
+		  </div>
+		</div>
+		<div class="col-md-4">
+		  <ul class="nav nav-pills">
+		    <li><a href="{% url 'home' %}">About Us</a></li>
+		    <li><a href="http://www.imdb.com">Imdb</a></li>
+		    <li><a href="#">Terms of Use</a></li>
+		  </ul>
+		</div>
+		<div class="col-md-4">
+		  <div class="copyright text-right"> 
+		    Movie vs Movie
+		  </div>
+		</div>
+	      </div>
+	      {% endblock %}
+            </div>
+          </div>
+	</footer>
+	<!-- END OF FOOTER -->
+
+      </div>
+      <!-- END OF PAGE WRAPPER -->
   </body>
   <!-- END OF PAGE -->
 </html>

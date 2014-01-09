@@ -1,4 +1,4 @@
-{% extends "base/base.html" %}
+{% extends "base/base_with_sidebar.html" %}
 
     <!-- title -->
     {% block title %}
@@ -21,13 +21,23 @@
     <!-- end of extrahead -->
 
     <!-- jquery -->
+    {% block jquery %}
+    <!-- set the active nav button here -->
+    $('#nav-list').addClass('active');
+    {% endblock %}
     <!-- end of jquery -->
 
     <!-- pageheader -->
+    <!-- use div class="content-header"-->
     <!-- end of pageheader -->
 
     <!-- content -->
+    <!-- use class="page-content inset"
+	 if you have a header -->
+    <!-- use class="main-bar-container"
+	 for your containers -->
     {% block content %}
+    <div class="container main-bar-container">
 
       {% if movie_list %}
 
@@ -35,8 +45,7 @@
 	<table class="table table-striped">
 	  <th class="title">Title</th>
 	  <th class="rating">Rating</th>
-	  <th class="rating">Raw True Skill</th>
-	  <th class="rating">Seeded True Skill</th>
+	  <th class="rating">TrueSkill</th>
 	  {% for movie in movie_list %}
 	  <tr>
 	    <td>
@@ -46,10 +55,7 @@
 		<b>{{ movie.unicode_star_rating }}</b>
 	    </td>
 	    <td>
-	      <b>{{ movie.raw_true_skill }}</b>
-	    </td>
-	    <td>
-	      <b>{{ movie.seeded_true_skill }}</b>
+	      {{ movie.seeded_true_skill }}
 	    </td>
 	  </tr>
 	  {% endfor %}
@@ -66,11 +72,9 @@
 	  No movies in the database
 	</div>
       </div>      
-
       {% endif %}
 
+    </div>
     {% endblock %}
     <!-- end of content -->
 
-    <!-- footer -->
-    <!-- end of footer -->

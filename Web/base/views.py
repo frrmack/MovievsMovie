@@ -89,44 +89,49 @@ def versusResult(request, movie_1_id, movie_2_id):
     movie2 = get_object_or_404(Movie, pk=movie_2_id)
     # get the posted result                                                                                                                                                          
     result = request.POST['result']
-    #                                                                                                                                                                                
-    # ~~~~Design choice~~~~~~~~~~~~~                                                                                                                                                 
-    # When two movies that were previously compared are compared again,                                                                                                              
-    # we will not treat is as another match. Instead of multiple matches,                                                                                                            
-    # we will have a single result for any given pair. This is to allow                                                                                                              
-    # changes in opinion to have a more immediate effect, to remove                                                                                                                  
-    # any confusion as to preferences between any two movies, and to keep                                                                                                            
-    # the database compact, simple and straightforward.                                                                                                                              
-    #                                                                                                                                                                                
-    # Temporarily, TrueSkill will be changed by a single update (as if                                                                                                               
-    # there have been multiple matches), but this will be corrected when                                                                                                             
-    # The main way of calculating TrueSkill is going over the entire chain                                                                                                           
-    # of VersusMatches from scratch.                                                                                                                                                 
-    # ~~~~~~~~~~~~~~~~                                                                                                                                                               
-    #                                                                                                                                                                                
-    # find the match if these two movies were compared before                                                                                                                        
-    # or create a new match                                                                                                                                                          
-    try:
-        match = VersusMatch.objects.filter(
-                                   contestants=movie1
-                                   ).filter(
-                                   contestants=movie2
-                                   )[0]
-        # make sure the movies are in the right order                                                                                                                                
-        # so that the result integer is accurate                                                                                                                                     
-        match.movie1, match.movie2 = movie1, movie2
-    except IndexError:
-        # match not in database, create a new match                                                                                                                                  
-        match = VersusMatch(movie1=movie1,
-                            movie2=movie2)
-    # record the result                                                                                                                                                              
-    match.result = result
-    # record the date and time (this is not necessary if a new match                                                                                                                 
-    # is created, since this is done by default, but it is necessary                                                                                                                 
-    # if an old match is retrieved.                                                                                                                                                  
-    match.timestamp = now()
-    # put the match in the database                                                                                                                                                  
-    match.save()
+    # a result of -1 means "skip", no recording
+    # in that case. Only record a valid result
+    if int(result) in (0,1,2):
+        #                                                                                                                                                                                
+        # ~~~~Design choice~~~~~~~~~~~~~                                                                                                                                                 
+        # When two movies that were previously compared are compared again,                                                                                                              
+        # we will not treat is as another match. Instead of multiple matches,                                                                                                            
+        # we will have a single result for any given pair. This is to allow                                                                                                              
+        # changes in opinion to have a more immediate effect, to remove                                                                                                                  
+        # any confusion as to preferences between any two movies, and to keep                                                                                                            
+        # the database compact, simple and straightforward.                                                                                                                              
+        #                                                                                                                                                                                
+        # Temporarily, TrueSkill will be changed by a single update (as if                                                                                                               
+        # there have been multiple matches), but this will be corrected when                                                                                                             
+        # The main way of calculating TrueSkill is going over the entire chain                                                                                                           
+        # of VersusMatches from scratch.                                                                                                                                                 
+        # ~~~~~~~~~~~~~~~~                                                                                                                                                               
+        #                                                                                                                                                                                
+        # find the match if these two movies were compared before                                                                                                                        
+        # or create a new match                                                                                                                                                          
+        try:
+            match = VersusMatch.objects.filter(
+                                       contestants=movie1
+                                       ).filter(
+                                       contestants=movie2
+                                       )[0]
+            # make sure the movies are in the right order                                                                                                                                
+            # so that the result integer is accurate                                                                                                                                     
+            match.movie1, match.movie2 = movie1, movie2
+        except IndexError:
+            # match not in database, create a new match                                                                                                                                  
+            match = VersusMatch(movie1=movie1,
+                                movie2=movie2)
+        # record the result                                                                                                                                                              
+        match.result = result
+        # record the date and time (this is not necessary if a new match                                                                                                                 
+        # is created, since this is done by default, but it is necessary                                                                                                                 
+        # if an old match is retrieved.                                                                                                                                                  
+        match.timestamp = now()
+        # put the match in the database                                                                                                                                                  
+        match.save()
+        # --end of recording (end of if)
+
     # pick new random movies                                                                                                                                                         
     randID1 = Movie.randoms.random().id
     randID2 = Movie.randoms.random().id

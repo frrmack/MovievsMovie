@@ -1,0 +1,292 @@
+{% load url from future %}
+
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!------------- CSS ------------->
+
+<style type="text/css">
+
+  html, body {
+    margin: 0;
+    padding: 0;
+  }
+
+  #title_banner {
+    position: absolute;
+    top: 0;
+    display: table;
+    width: 100%;
+    height: 50px;
+    font: 25px sans-serif;
+    text-align: center;
+    color: orange;
+    background: #333;
+  }
+
+  div.center {
+  display: table-cell;
+  vertical-align: middle;
+  }
+
+  #main_area {
+    margin-top: 50px;
+    background: #FDF7E3;
+    height: 856px;
+  }
+
+  #main_content {
+    position: relative;
+    overflow: auto;
+    height: 856px;
+    text-align:center; 
+  }
+
+  #main_area_padding {
+    float: right;
+    width: 200px; height: 856px; 
+    background: gray;
+  }
+
+  #control_panel {
+    position: fixed;
+    left: 100%;
+    margin-left: -200px;
+    width: 200px; height: 856px; 
+    background:gray; 
+    color:white;
+    overflow: auto;
+    text-align:center; 
+  }
+
+  .panel-sub-area {
+    margin-top: 1cm;
+    margin-bottom: 2cm;
+  }
+
+  h1 {
+    font-family: "Avant Garde", Garamond, Palatino, serif;
+    font-weight:normal;
+    font-size:20px;
+  }
+
+  button {
+    width: 130px;
+  }
+
+</style>
+
+
+
+<style type="text/css">
+
+  #versus {
+    position: absolute;
+    top: 40%;
+    margin-top: -150px;
+    left: 50%;
+    margin-left: -150px;
+    width: 300px;
+    height: 300px;
+    color: red;
+    font-size: 50px;
+    display:table;
+  }
+  
+  .movie_window {
+    position: absolute;
+    top: 40%;
+    margin-top: -175px;
+    width: 240px;
+    height: 350px;
+    font-size: 26px;
+  }
+
+  .movie_button {
+     width: 220px;
+     height: 60px;
+     font-size: 22px;
+     color: #630;
+     overflow:hidden;
+  }
+
+  #draw_button {
+     padding: 1px;
+     width: 110px;
+     height: 52px;
+     font-size: 20px;
+     color: #630;
+  }
+
+
+  #left_movie {
+    left: 25%;
+    margin-left: -120px;
+  }
+
+  #right_movie {
+    right: 25%;
+    margin-right: -120px;
+  }
+
+  #key_legend {
+    margin-left: 8px;
+  }
+
+  .key {
+    color: #FB9;
+  }
+  
+
+
+</style>
+
+<!------------- HTML ------------->
+
+<title>Movie Comparison</title>
+
+<body>
+
+  <!-- Spanning title div -->
+  <div id="title_banner">
+    <div class="center">Thunderdome: One Movie Left Standing</div>
+  </div>
+
+
+  <!-- Side frame with the control panel -->
+  <div id="control_panel">
+
+    <p><h1>Control Panel</h1></p>
+    
+    <div class='panel-sub-area'>
+      <p><button id="change_colorscheme">Change Colors</button></p>
+    </div>
+    <div class='panel-sub-area'>
+      <p><button onclick="window.location.href='{% url 'bubble_chart' 'random' 0 %}'">
+	  The Bubble Chart
+      </button></p>
+      <p><button onclick="window.location.href='{% url 'movie_list' %}'">
+	  List All Movies
+      </button></p>
+      <p><button onclick="window.location.href='{% url 'comparison' %}'">
+	  Compare Movies
+      </button></p>
+    </div>
+    <div class='panel-sub-area'>
+      <p><button id="skip_button" onclick="window.location.href='{% url 'comparison' %}'">
+	  Skip This One
+      </button></p>
+    </div>
+    <div id="key_legend" class='panel-sub-area'>
+      <p>
+	  Hint: Use key shortcuts
+      </p>
+      <p><span class="key">[1]</span>: Left movie wins </p>
+      <p><span class="key">[2]</span>: Right movie wins </p>
+      <p><span class="key">[0]</span>: Drawn game (tie) </p>
+      <p><span class="key">[Space]</span>: Skip this one </p>
+      <p><span class="key">[Backspace]</span>: Undo & revote </p>
+    </div>
+
+  </div>
+
+
+
+  <!-- Floating div holding space for the control panel-->
+  <div id="main_area_padding"></div>
+  <!-- The main "frame" -->
+  <div id="main_area">
+    <div id="main_content">
+
+
+      <form action="{% url 'versus_result' movie1.id movie2.id %}"
+	    method="post">
+	{% csrf_token %}
+	<div id="left_movie" class="movie_window">
+	  <a href="{% url 'movie_detail' movie1.id %}">
+	    <img id="poster_1" src="{{ STATIC_URL }}posters/_poster_template.jpg" />
+	  </a>
+	  <button id="left_wins_button"
+	          name="result"
+		  value="1"
+		  class="movie_button">
+	      {{ movie1.readable_name }}
+	  </button>
+	</div>
+
+	<div id="right_movie" class="movie_window">
+	  <a href="{% url 'movie_detail' movie2.id %}">
+	    <img id="poster_2" src="{{ STATIC_URL }}posters/_poster_template.jpg" />
+	  </a>
+	  <button id="right_wins_button"
+	          name="result"
+		  value="2"
+		  class="movie_button">
+	      {{ movie2.readable_name }}
+	  </button>
+	</div>
+
+	<div id="versus">
+	  <div class="center">
+	    <img src="{{ STATIC_URL }}images/versus.png" />
+	    <p>
+	      <button id="draw_button"
+		      name="result"
+		      value="0">
+		  <img src="{{ STATIC_URL }}images/draw_logo.png" />
+	      </button>
+	    </p>
+	  </div>
+	</div>
+      </form>
+      
+    </div>
+  </div>
+
+</body>
+
+
+<!------------ SCRIPTS -------------->
+
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+
+<!-- Key Presses for Choosing Match Outcome -->
+<!-- 1: Left wins  2: Right wins  0: Draw  -->
+<!-- Space: Skip   Backspace: Revote the last one-->
+<script>
+$(document).keydown(function(event) {
+    if ( event.which == 49 ) {            //1
+        $("#left_wins_button").click();
+    } else if ( event.which == 50) {      //2
+        $("#right_wins_button").click();
+    } else if ( event.which == 48) {      //0
+        $("#draw_button").click();
+    } else if ( event.which == 32) {      //space
+        $("#skip_button").click();      
+    } else if ( event.which == 8) {       //backspace
+        history.go(-1);
+    }
+});
+</script>
+
+
+<!-- Control Panel Button: Change Color -->
+<script>
+document.getElementById("change_colorscheme").onclick = function() {
+    var panel = document.getElementById("control_panel");
+    var main_div = document.getElementById("main_area");
+    if (panel.style.getPropertyValue("color") == "black") {
+      panel.style.setProperty("color", "white");
+      panel.style.setProperty("background", "grey");
+      main_div.style.setProperty("background", "#FDF7E3");
+    }
+    else {
+      panel.style.setProperty("color", "black");
+      panel.style.setProperty("background", "LightPink");
+      main_div.style.setProperty("background", "grey");
+    }
+};
+</script>
+
+
+

@@ -22,6 +22,7 @@
     <!-- end of extrahead -->
 
     <!-- jquery -->
+    <!-- set the active nav button here -->
     <!-- end of jquery -->
 
     <!-- pageheader -->
@@ -38,23 +39,25 @@
 
     <!-- content -->
     {% block content %}
-    <div class="col-md-6 text-left">
-      <dl class="dl-horizontal">
+    <div class="container">
+      <div class="col-md-6 text-left">
+	<dl class="dl-horizontal">
 
-	<dt>Title</dt>
-	<dd>{{ movie.name }}</dd>
+	  <dt>Title</dt>
+	  <dd>{{ movie.name }}</dd>
 	
-	<dt>Star Rating</dt>
-	<dd> 
-	  <span class="stars">
-	    {{ movie.unicode_star_rating}} 
-	  </span>
-	</dd>
+	  <dt>Star Rating</dt>
+	  <dd> 
+	    <span class="stars">
+	      {{ movie.unicode_star_rating}} 
+	    </span>
+	  </dd>
 	
-	<dt>TrueSkill</dt>
-	<dd>{{ movie.seeded_true_skill}}</dd>
-
-      </dl>
+	  <dt>TrueSkill</dt>
+	  <dd>{{ movie.seeded_true_skill}}</dd>
+	  
+	</dl>
+      </div>
     </div>
     {% endblock %}
     <!-- end of content -->
