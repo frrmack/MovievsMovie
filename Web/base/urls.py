@@ -1,28 +1,21 @@
 """urlconf for the base application"""
 
 from django.conf.urls import url, patterns
-
-from django.views.generic import DetailView, ListView
-
-from base import views
-from base.models import Movie
-
-from random import shuffle
+from base.views import MovieListView, MovieDetailView
 
 
 urlpatterns = patterns('base.views',
                        url(r'^$', 'home', name='home'),
-                       url(r'^test$', 'bootstrap_test', name='bootstrap'),
                        # /base/list                                                                                                                                                  
                        url(r'^list$',
-                           ListView.as_view ( queryset = Movie.objects.order_by('-starSeededTrueSkillMu') ),
+                           MovieListView.as_view(),
                            name = 'movie_list'),
                        # base/5                                                                                                                                                      
                        url(r'^(?P<pk>\d+)$',
-                           DetailView.as_view( model = Movie ),
+                           MovieDetailView.as_view(),
                            name = 'movie_detail'),
                        # base/5/saved                                                                                                                                            
-                       url(r'^(?P<pk>\d+)/saved$', 'save_movie_rating', name = 'save_rating'),
+                       url(r'^(?P<pk>\d+)/save_rating$', 'save_movie_rating', name = 'save_rating'),
                        # /base/chart/random/200                                                                                                                                      
                        # /base/chart/ordered_by_name/                                                                                                                                
                        # /base/chart/ordered_by_rating/1400                                                                                                                          

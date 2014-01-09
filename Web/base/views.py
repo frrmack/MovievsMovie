@@ -6,6 +6,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 
+from django.views.generic import ListView, DetailView
+
 from base.models import Movie, VersusMatch
 
 from datetime import datetime
@@ -21,9 +23,26 @@ def home(request):
     """ Default view for the root """
     return render(request, 'base/home.html')
 
-def bootstrap_test(request):
-    """ For testing if bootstrap works """
-    return render(request, 'base/base_bootstrap.html')
+
+class MovieListView(ListView):
+
+    context_object_name = "movie_list"
+    queryset = Movie.objects.order_by('-starSeededTrueSkillMu')
+    template_name = "base/movie_list.html"
+
+
+class MovieDetailView(DetailView):
+
+    model = Movie
+    template_name = "base/movie_detail.html"
+
+    def get_context_data(self, **kwargs):
+        # Call the base implementation first to get a context
+        context = super(MovieDetailView, self).get_context_data(**kwargs)
+        # Add in a QuerySet of all the books
+        context['something_else'] = 'something'
+        return context
+
 
 def bubbleChart(request, order_rule='random', num_nodes=None):
     # translate order_rule into django model api                                                                                                                                     
