@@ -1,5 +1,9 @@
 {% extends "base/base.html" %}
 
+    <!-- turn off sidebar -->
+    {% block sidebar %}
+    {% endblock %}
+
     <!-- title -->
     {% block title %}
     {{ movie.name }}
@@ -22,43 +26,8 @@
     <!-- end of extrahead -->
 
     <!-- jquery -->
-    {% csrf_token %}
     {% block jquery %}
-
-
-    function getCookie(name) {
-      var cookieValue = null;
-      if (document.cookie && document.cookie != '') {
-          var cookies = document.cookie.split(';');
-          for (var i = 0; i < cookies.length; i++) {
-              var cookie = jQuery.trim(cookies[i]);
-              // Does this cookie string begin with the name we want?
-              if (cookie.substring(0, name.length + 1) == (name + '=')) {
-	          cookieValue =  decodeURIComponent(cookie.substring(name.length + 1));
-                  break;
-              }
-          }
-      }
-      return cookieValue;
-    }
-
-    var csrftoken = getCookie('csrftoken');
-
-    function csrfSafeMethod(method) {
-    // these HTTP methods do not require CSRF protection
-      return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-    }
-
-    $.ajaxSetup({
-      crossDomain: false, // obviates need for sameOrigin test
-      beforeSend: function(xhr, settings) {
-        if (!csrfSafeMethod(settings.type)) {
-          xhr.setRequestHeader("X-CSRFToken", csrftoken);
-        }
-      }
-    });
-
-
+ 
       <!-- at first show the stars in the db -->
       <!-- save the new rating if user changes it -->
       $('#star').raty({
@@ -70,10 +39,10 @@
             data: {"rating": score},
             dataType: "json",
             success: function(data){
-              console.log( "succesfully saved with rating " + data.rating );
+              console.log( "Succesfully saved with rating " + data.rating );
             },
             error: function(msg){
-              console.log( "There's an error with the server" );
+              console.log( "Error from server during AJAX POST." );
               console.log( msg.responseText );
             }              
           });
@@ -107,11 +76,6 @@
 	  <dt>Star Rating</dt>
 	  <dd> 
 	    <div id="star"></div>
-	    <!--
-	    <span class="stars">
-	      {{ movie.unicode_star_rating}}
-	    </span>
-	    -->
 	  </dd>
 	
 	  <dt>TrueSkill</dt>

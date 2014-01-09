@@ -22,7 +22,7 @@
 
     <!-- Jquery -->
     <script src="{{STATIC_URL}}js/jquery-1.10.2.min.js" type="text/javascript"></script>
-    <!-- (online:) <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> -->
+    <!-- (online:) <script src="http://code.jquery.com/jquery-1.10.2.min.js"></script> -->
 
     <!-- bootstrap JS -->
     <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
@@ -66,49 +66,21 @@
       {% endblock %}
       <!-- END OF NAVBAR -->
 
-      <!-- SIDEBAR TEMPLATE: -->
-      <!-- to have a sidebar, 
-	   do nothing -->
-      <!-- to turn off sidebar, 
-	   kill the sidebar block by
-	   overwriting with emptiness -->
+      <!-- PAGE HEADER -->
+      {% block pageheader %}
+      {% endblock %}
+      <!-- END OF PAGE HEADER -->
 
-      {% block sidebar %}
-      <!-- PAGE WRAPPER -->
-      <div id="wrapper">
+      <!-- CONTENT -->
+      {% block content %}
+      {% endblock %}
+      <!-- END OF CONTENT -->
 
-	<!-- SIDEBAR -->
-	<div id="sidebar-wrapper">
-	  {% include "base/sidebar.html" %}
-	  <div class="sidebar-extra">
-	    {% block extrasidebar %}
-	    {% endblock extrasidebar %}
-	  </div>
-	</div>
-	<!-- END OF SIDEBAR -->
-      {% endblock sidebar %}
-
-
-        <!-- PAGE HEADER -->
-	{% block pageheader %}
-	{% endblock %}
-	<!-- END OF PAGE HEADER -->
-	
-	<!-- CONTENT -->
-	{% block content %}
-	{% endblock %}
-	<!-- END OF CONTENT -->
-
-	<!-- FOOTER -->
-	{% block footer %}
-	{% include "base/footer.html" %}
-	{% endblock %}
-	<!-- END OF FOOTER -->
-
-      </div>
-      <!-- END OF PAGE WRAPPER -->
-      <!-- superfluous if sidebar block is killed -->
-      <!-- but that's ok :) -->
+      <!-- FOOTER -->
+      {% block footer %}
+      {% include "base/footer.html" %}
+      {% endblock %}
+      <!-- END OF FOOTER -->
 
   </body>
   <!-- END OF PAGE -->

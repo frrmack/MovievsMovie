@@ -27,15 +27,11 @@
     <!-- bootstrap JS -->
     <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
 
+    <!-- Custom sidebar JS -->
+    <script src="{{STATIC_URL}}js/simple-sidebar.js"></script>
+
     <!-- Custom base JS -->
     <script src="{{STATIC_URL}}js/base.js"></script>
-
-    <!-- Raty (star ratings) -->
-    <script src="{{ STATIC_URL }}js/jquery.raty.min.js"></script>
-    <script src="{{ STATIC_URL }}js/raty-settings.js"></script>
-    <script type="text/javascript">
-      $.fn.raty.defaults.path = '{{ STATIC_URL }}img';
-    </script>
 
     <!-- extra head block -->
     {% block extrahead %}
@@ -47,12 +43,10 @@
       {% endblock %}
     </style>
 
-    <!-- extra javascript (jquery) -->
+    <!-- extra javascript -->
     <script type="text/javascript">
-    $(function(){
-      {% block jquery %}
-      {% endblock %}
-    });
+    {% block jquery %}
+    {% endblock %}
     </script>
 
   </head>
@@ -66,14 +60,6 @@
       {% endblock %}
       <!-- END OF NAVBAR -->
 
-      <!-- SIDEBAR TEMPLATE: -->
-      <!-- to have a sidebar, 
-	   do nothing -->
-      <!-- to turn off sidebar, 
-	   kill the sidebar block by
-	   overwriting with emptiness -->
-
-      {% block sidebar %}
       <!-- PAGE WRAPPER -->
       <div id="wrapper">
 
@@ -82,18 +68,16 @@
 	  {% include "base/sidebar.html" %}
 	  <div class="sidebar-extra">
 	    {% block extrasidebar %}
-	    {% endblock extrasidebar %}
+	    {% endblock %}
 	  </div>
 	</div>
 	<!-- END OF SIDEBAR -->
-      {% endblock sidebar %}
 
-
-        <!-- PAGE HEADER -->
+	<!-- PAGE HEADER -->
 	{% block pageheader %}
 	{% endblock %}
 	<!-- END OF PAGE HEADER -->
-	
+
 	<!-- CONTENT -->
 	{% block content %}
 	{% endblock %}
@@ -107,9 +91,6 @@
 
       </div>
       <!-- END OF PAGE WRAPPER -->
-      <!-- superfluous if sidebar block is killed -->
-      <!-- but that's ok :) -->
-
   </body>
   <!-- END OF PAGE -->
 </html>
