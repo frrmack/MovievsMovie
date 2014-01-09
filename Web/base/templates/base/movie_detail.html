@@ -22,7 +22,18 @@
     <!-- end of extrahead -->
 
     <!-- jquery -->
-    <!-- set the active nav button here -->
+    {% block jquery %}
+
+      <!-- at first show the stars in the db -->
+      <!-- save the new rating if user changes it -->
+      $('#star').raty({
+        score: {{ movie.starRating }},
+        click: function(score, evt) {
+          alert("score: " + score);
+        }
+      });
+
+    {% endblock %}
     <!-- end of jquery -->
 
     <!-- pageheader -->
@@ -48,9 +59,12 @@
 	
 	  <dt>Star Rating</dt>
 	  <dd> 
+	    <div id="star"></div>
+	    <!--
 	    <span class="stars">
-	      {{ movie.unicode_star_rating}} 
+	      {{ movie.unicode_star_rating}}
 	    </span>
+	    -->
 	  </dd>
 	
 	  <dt>TrueSkill</dt>
@@ -61,8 +75,5 @@
     </div>
     {% endblock %}
     <!-- end of content -->
-
-    <!-- footer -->
-    <!-- end of footer -->
 
 

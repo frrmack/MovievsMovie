@@ -54,7 +54,20 @@
     <!-- (online:) <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script> -->
 
     <!-- bootstrap JS -->
-     <script src=”js/bootstrap.min.js”></script>
+    <script src="{{STATIC_URL}}js/bootstrap.min.js"></script>
+
+    <!-- Raty (star ratings) -->
+    <script src="{{ STATIC_URL }}js/jquery.raty.min.js"></script>
+
+    <!-- Raty settings -->
+    <script type="text/javascript">
+      $('#star').raty({
+      size      : 24,
+      starOff   : 'star-off.png',
+      starOn    : 'star-on.png',
+      });
+      $.fn.raty.defaults.path = '{{ STATIC_URL }}img';
+    </script>
 
     <!-- extra head block -->
     {% block extrahead %}

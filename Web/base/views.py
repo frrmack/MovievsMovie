@@ -19,8 +19,6 @@ def home(request):
     """ Default view for the root """
     return render(request, 'base/home.html')
 
-
-
 def bootstrap_test(request):
     """ For testing if bootstrap works """
     return render(request, 'base/base_bootstrap.html')
@@ -54,6 +52,9 @@ def bubbleChart(request, order_rule='random', num_nodes=None):
                'max_num_nodes': max_num_nodes
                }
     return render(request, 'base/rating_bubble_chart.html', context)
+
+
+
 
 
 
