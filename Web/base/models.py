@@ -48,12 +48,12 @@ class Movie(models.Model):
 
 
     def raw_true_skill(self):
-        return u'%.2f  \u00B1%.1f' % (self.rawTrueSkillMu, 1*self.rawTrueSkillSigma)
+        return u'%.2f  \u00B1 %.1f' % (self.rawTrueSkillMu, 2*self.rawTrueSkillSigma)
 
     raw_true_skill.admin_order_field = 'rawTrueSkillMu'
     
     def seeded_true_skill(self):
-        return u'%.2f  \u00B1%.1f' % (self.starSeededTrueSkillMu, 1*self.starSeededTrueSkillSigma)
+        return u'%.2f  \u00B1 %.1f' % (self.starSeededTrueSkillMu, 2*self.starSeededTrueSkillSigma)
 
     seeded_true_skill.admin_order_field = 'starSeededTrueSkillMu'
 
