@@ -21,6 +21,8 @@ urlpatterns = patterns('base.views',
                        url(r'^(?P<pk>\d+)$',
                            DetailView.as_view( model = Movie ),
                            name = 'movie_detail'),
+                       # base/5/saved                                                                                                                                            
+                       url(r'^(?P<pk>\d+)/saved$', 'save_movie_rating', name = 'save_rating'),
                        # /base/chart/random/200                                                                                                                                      
                        # /base/chart/ordered_by_name/                                                                                                                                
                        # /base/chart/ordered_by_rating/1400                                                                                                                          

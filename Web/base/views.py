@@ -2,7 +2,7 @@
 
 from django.shortcuts import render
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 
@@ -10,6 +10,8 @@ from base.models import Movie, VersusMatch
 
 from datetime import datetime
 from django.utils.timezone import utc
+
+import json
 
 def now():
     return datetime.utcnow().replace(tzinfo=utc)
@@ -55,9 +57,6 @@ def bubbleChart(request, order_rule='random', num_nodes=None):
 
 
 
-
-
-
 def comparison(request, movie_1_id=None, movie_2_id=None):
     try:
         # get the first movie                                                                                                                                                        
@@ -82,6 +81,20 @@ def comparison(request, movie_1_id=None, movie_2_id=None):
                'movie2' : movie2
               }
     return render(request, 'base/comparison.html', context)
+
+
+def save_movie_rating(request, pk=None):
+
+    print 'HEY'
+    print pk
+    print request.POST['rating']
+    movie = get_object_or_404(Movie, pk=pk)
+    rating = request.POST['rating']
+    movie.starRating = int(rating)
+    movie.save()
+    return HttpResponse(json.dumps({'rating': rating}),
+                        content_type="application/json")
+
 
 
 def versusResult(request, movie_1_id, movie_2_id):
