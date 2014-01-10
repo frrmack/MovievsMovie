@@ -27,12 +27,17 @@ class Movie(models.Model):
     imdb_id = models.CharField(max_length=255)
 
     name = models.CharField(max_length=500)
+    year = models.IntegerField(default=0)
+    description = models.CharField(max_length=1000)
+
     starRating = models.IntegerField(default=0)
 
     rawTrueSkillMu = models.FloatField(default=3.0)
     rawTrueSkillSigma = models.FloatField(default=1.0)
     starSeededTrueSkillMu = models.FloatField(default=3.0)
     starSeededTrueSkillSigma = models.FloatField(default=1.0)
+
+    poster_name = models.CharField(max_length=255)
 
     objects = models.Manager()
     randoms = RandomManager()
