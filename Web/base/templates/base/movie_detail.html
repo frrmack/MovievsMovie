@@ -54,12 +54,12 @@
 
     <!-- pageheader -->
     {% block pageheader %}
-    <div class="container">
-      <div class="page-header">
-	<h1>{{ movie.name }}</h1>
-	<a class="btn btn-primary btn-lg" href="#">Details on imdb</a>
-      </div>
-    </div>
+    <!-- <div class="container"> -->
+    <!--   <div class="page-header"> -->
+    <!-- 	<h1>{{ movie.name }}</h1> -->
+    <!-- 	<a class="btn btn-primary btn-lg" href="#">Details on imdb</a> -->
+    <!--   </div> -->
+    <!-- </div> -->
     {% endblock %}
     <!-- end of pageheader -->
 
@@ -68,10 +68,25 @@
     {% block content %}
     <div class="container">
       <div class="col-md-6 text-left">
+
+
+	<div class="container">
+	  <div class="page-header">
+	    <h1>{{ movie.name }}</h1>
+	    <a class="btn btn-primary btn-lg" href="#">Details on imdb</a>
+	  </div>
+	</div>
+
 	<dl class="dl-horizontal">
 
 	  <dt>Title</dt>
 	  <dd>{{ movie.name }}</dd>
+
+	  <dt>Summary</dt>
+	  <dd>{{ movie.description }}</dd>
+
+	  <dt>Year</dt>
+	  <dd>{{ movie.year }}</dd>
 	
 	  <dt>Star Rating</dt>
 	  <dd> 
@@ -82,6 +97,10 @@
 	  <dd>{{ movie.seeded_true_skill}}</dd>
 	  
 	</dl>
+      </div>
+      <div class="col-md-6 inset">
+	<img id="poster_1" src="{{ STATIC_URL }}posters/{{movie.poster_name}}"
+	     class="center-block img-rounded">
       </div>
     </div>
     {% endblock %}

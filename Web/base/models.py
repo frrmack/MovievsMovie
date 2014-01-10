@@ -28,7 +28,7 @@ class Movie(models.Model):
 
     name = models.CharField(max_length=500)
     year = models.IntegerField(default=0)
-    description = models.CharField(max_length=1000)
+    description = models.CharField(max_length=1000, default="")
 
     starRating = models.IntegerField(default=0)
 
@@ -37,7 +37,7 @@ class Movie(models.Model):
     starSeededTrueSkillMu = models.FloatField(default=3.0)
     starSeededTrueSkillSigma = models.FloatField(default=1.0)
 
-    poster_name = models.CharField(max_length=255)
+    poster_name = models.CharField(max_length=255, default="_empty_poster.jpg")
 
     objects = models.Manager()
     randoms = RandomManager()
