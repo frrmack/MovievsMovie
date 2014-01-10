@@ -89,19 +89,20 @@ def bubbleChart(request, order_rule='random', num_nodes=None):
 def search(request):
 
     query = request.GET['query']
+
     try:
         title, content, url = movie_search.find(query)
         content = content[:-11] + '...'
         if movie_search.get_imdb_type(url) != "title":
             raise movie_search.NotFoundError
+
     except movie_search.NotFoundError:
-        print 'No movie found with name %s.' % query
+
         context = {'error_title': 'No title found',
                    'error_message': 'No title matching the query "%s" was found.' % query}
         return render(request, 'base/error_message.html', context)
+
     else:
-        print title
-        print url
         # search & parse
         soup = movie_search.connect(url)
         name, year, director = movie_search.parse_name_year_director(soup)
@@ -119,9 +120,12 @@ def search(request):
                       name=name,
                       year=year,
                       director=director,
-                      description=content)
+                      description=content,
+                      poster_name = '%s.jpg'%imdb_id)
+
         context = {'movie' : movie,
                    'poster_url': tmp_poster_url}
+
         return render(request, 'base/movie_detail.html', context)
 
 

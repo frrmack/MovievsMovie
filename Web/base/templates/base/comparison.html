@@ -94,6 +94,7 @@
 	    <div class="row top-indent">
 	      <a href="{% url 'movie_detail' movie1.id %}">
 		<img id="poster_1" src="{{STATIC_URL}}posters/{{movie1.poster_name}}"
+		     height="317" width="214"
 		     class="center-block img-rounded">
 	      </a>
 	    </div>
@@ -139,8 +140,9 @@
 	    <!-- image row -->
 	    <div class="row top-indent">
 	      <a href="{% url 'movie_detail' movie2.id %}">
-		<img id="poster_1" src="{{ STATIC_URL}}posters/{{movie1.poster_name}}"
-			class="center-block img-rounded">
+		<img id="poster_2" src="{{ STATIC_URL}}posters/{{movie2.poster_name}}"
+		     height="317" width="214"
+		     class="center-block img-rounded">
 	      </a>
 	    </div>
 	    <!-- button row -->
