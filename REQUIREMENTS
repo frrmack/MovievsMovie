@@ -45,3 +45,6 @@ beautifulsoup4
 
 # trueskill
 http://github.com/sublee/trueskill/zipball/master#egg=trueskill-dev
+
+# django filtering
+django-generic-filters
