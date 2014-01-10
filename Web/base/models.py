@@ -28,7 +28,8 @@ class Movie(models.Model):
 
     name = models.CharField(max_length=500)
     year = models.IntegerField(default=0)
-    description = models.CharField(max_length=1000, default="")
+    director = models.CharField(max_length=500, default="N/A")
+    description = models.CharField(max_length=1000, default="N/A")
 
     starRating = models.IntegerField(default=0)
 
