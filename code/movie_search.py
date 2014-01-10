@@ -71,13 +71,14 @@ def parse_poster_url(imdb_soup):
     return imdb_soup.find('td', {'id':'img_primary'}).img.attrs['src']
 
 
-def get_poster(movie_url):
+def get_poster(movie_url, target_filename=None):
     movie_id = urlparse.urlsplit(movie_url).path.strip('/').split('/')[-1]
     soup = connect(movie_url)
     poster_url = parse_poster_url(soup)
-    filename =  movie_id + '.jpg'
+    if target_filename is None:
+        target_filename =  movie_id + '.jpg'
     
-    download(url, filename)
+    download(url, target_filename)
 
 
         
