@@ -63,13 +63,12 @@ def download(url, target_file_name=None):
 def parse_poster_url(imdb_soup):
     """ go parse the page and get the url
         for the poster
-
-        can i show this image without downloading
-        it ? (by linking to source on the page)
     """
     #~~ The 'td' tag with id "img_primary" --> the "src" of the 'img' tag within it                                                                                                  
-    return imdb_soup.find('td', {'id':'img_primary'}).img.attrs['src']
-
+    try:
+        return imdb_soup.find('td', {'id':'img_primary'}).img.attrs['src']
+    except AttributeError:
+        raise NotFoundError('No poster for this title')
 
 def get_poster(movie_url, target_filename=None):
     movie_id = urlparse.urlsplit(movie_url).path.strip('/').split('/')[-1]
@@ -97,7 +96,7 @@ def parse_name_year_director(imdb_soup):
     name_header = soup.findAll('h1', {'class':'header'})[0]
 
     name = name_header.span.string
-    year = int(name_header.a.string)
+    year = int(name_header.find('span', {'class':'nobr'}).get_text().strip('()'))
 
     #~~ first 'div' tag with the class 'txt-block'--> first 'a' tag within it                                                                                                        
     director = soup.findAll('div', {'class': "txt-block"})[0].a.string

@@ -92,9 +92,9 @@ def search(request):
 
     try:
         title, content, url = movie_search.find(query)
-        content = content[:-11] + '...'
         if movie_search.get_imdb_type(url) != "title":
             raise movie_search.NotFoundError
+        imdb_id = movie_search.get_imdb_id(url)
 
     except movie_search.NotFoundError:
 
@@ -106,13 +106,19 @@ def search(request):
         # search & parse
         soup = movie_search.connect(url)
         name, year, director = movie_search.parse_name_year_director(soup)
-        imdb_id = movie_search.get_imdb_id(url)
+        content = content[:-11] + '...'
 
         # download the poster temporarily
-        poster_url = movie_search.parse_poster_url(soup)
-        tmp_poster_file = os.path.join(settings.PROJECT_ROOT, 'base/static/posters/tmp.jpg')
-        tmp_poster_url = '%sposters/tmp.jpg' % settings.STATIC_URL
-        movie_search.download(poster_url, tmp_poster_file)
+        try:
+            poster_url = movie_search.parse_poster_url(soup)
+        except movie_search.NotFoundError:
+            tmp_poster_url = '%sposters/_empty_poster.jpg' % settings.STATIC_URL
+            poster_name = '_empty_poster.jpg'
+        else:
+            tmp_poster_file = os.path.join(settings.PROJECT_ROOT, 'base/static/posters/tmp.jpg')
+            tmp_poster_url = '%sposters/tmp.jpg' % settings.STATIC_URL
+            poster_name = '%s.jpg' % imdb_id
+            movie_search.download(poster_url, tmp_poster_file)
 
         # create model instance
         movie = Movie(id=imdb_id,
@@ -121,7 +127,7 @@ def search(request):
                       year=year,
                       director=director,
                       description=content,
-                      poster_name = '%s.jpg'%imdb_id)
+                      poster_name = poster_name)
 
         context = {'movie' : movie,
                    'poster_url': tmp_poster_url}

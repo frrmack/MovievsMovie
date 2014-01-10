@@ -14,25 +14,22 @@
 		<li id="nav-fight"><a href="{% url 'comparison' %}"><span class="glyphicon
 										 glyphicon-fire"></span>
 		    Fight!</a></li>
-		<li id="nav-add"><a href="#"><span class="glyphicon
-							  glyphicon-plus-sign"></span>
-		    Add Movie</a></li>
 		<li id="nav-list"><a href="{% url 'movie_list' %}"><span class="glyphicon
 										glyphicon-th-list"></span>
 		    List Movies</a></li>
 		<li id="nav-bubble"><a href="{% url 'bubble_chart' %}"><span class="glyphicon
 										    glyphicon-certificate"></span>
 		    Bubble Chart</a></li>
-		<li class="dropdown">
-		  <a class="dropdown-toggle"
-		     data-toggle="dropdown" href="#"><span class="glyphicon
-								  glyphicon-question-sign"></span>
-		    What's Going On?<b class="caret"></b></a>
-		  <ul class="dropdown-menu">
-		    <li><a href="#">Dropdown Test 1</a></li>
-		    <li><a href="#">Dropdown Test 2</a></li>
-		  </ul>
-		</li><!-- li class "dropdown" -->
+		<!-- <li class="dropdown"> -->
+		<!--   <a class="dropdown-toggle" -->
+		<!--      data-toggle="dropdown" href="#"><span class="glyphicon -->
+		<!-- 						  glyphicon-question-sign"></span> -->
+		<!--     What's Going On?<b class="caret"></b></a> -->
+		<!--   <ul class="dropdown-menu"> -->
+		<!--     <li><a href="#">Dropdown Test 1</a></li> -->
+		<!--     <li><a href="#">Dropdown Test 2</a></li> -->
+		<!--   </ul> -->
+		<!-- </li><\!-- li class "dropdown" -\-> -->
 	      </ul>
 	      <form name="searchbar" class="navbar-form navbar-right" role="search"
 		    action="{% url 'search' %}" method="get">

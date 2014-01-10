@@ -66,10 +66,6 @@
     <!-- pageheader -->
     <!-- use div class="content-header"-->
     {% block pageheader %}
-    <div class="container main-bar-container">
-      <div class="content-header">
-      </div>
-    </div>
     {% endblock %}
     <!-- end of pageheader -->
 
@@ -79,19 +75,19 @@
     <!-- use class="main-bar-container"
 	 for your containers -->
     {% block content %}
-    <div class="container main-bar-container inset">
+    <div class="container main-bar-container inset-lg">
 
       <form action="{% url 'versus_result' movie1.id movie2.id %}"
 	    method="post">
 	{% csrf_token %}
 
-	<div class="row">
+	<div class="row top-indent-lg">
 
 	  <div id="left-empty" class="col-md-1"></div>
 
 	  <div id="left-movie" class="col-md-3">
 	    <!-- image row -->
-	    <div class="row top-indent">
+	    <div class="row top-indent-md">
 	      <a href="{% url 'movie_detail' movie1.id %}">
 		<img id="poster_1" src="{{STATIC_URL}}posters/{{movie1.poster_name}}"
 		     height="317" width="214"
@@ -111,13 +107,13 @@
 
 	  <div id="vs" class="col-md-4">
 	    <!-- image row -->
-	    <div class="row top-indent">
+	    <div class="row top-indent-md">
 	      <img src="{{ STATIC_URL }}img/vs_alpha_lg.png"
 		   height="300" width="300"
 		   class="img-circle center-block">
 	    </div>
 	    <!-- draw button row -->
-	    <div class="row inset">
+	    <div class="row inset top-indent">
 	      <button id="draw_button" 
 		      name="result" 
 		      value="0" 
@@ -138,7 +134,7 @@
 
 	  <div id="right-movie" class="col-md-3">
 	    <!-- image row -->
-	    <div class="row top-indent">
+	    <div class="row top-indent-md">
 	      <a href="{% url 'movie_detail' movie2.id %}">
 		<img id="poster_2" src="{{ STATIC_URL}}posters/{{movie2.poster_name}}"
 		     height="317" width="214"
