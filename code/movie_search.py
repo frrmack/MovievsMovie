@@ -81,6 +81,12 @@ def get_poster(movie_url, target_filename=None):
     download(url, target_filename)
 
 
+def get_imdb_id(url):
+    return urlparse.urlparse(url).path.strip('/').split('/',2)[1]
+
+def get_imdb_type(url):
+    return urlparse.urlparse(url).path.strip('/').split('/',1)[0]
+
         
 def parse_name_year_director(imdb_soup):
     
@@ -88,10 +94,10 @@ def parse_name_year_director(imdb_soup):
     soup = imdb_soup
 
     #~~ the h1 tag with class "header" and itemprop "name"                                                                                                                           
-    name_header = soup.findAll('h1', {'class':'header',
-                                      'itemprop':'name'})[0]
-    name = name_header.contents[0].strip()
-    year = name_header.span.a.string
+    name_header = soup.findAll('h1', {'class':'header'})[0]
+
+    name = name_header.span.string
+    year = int(name_header.a.string)
 
     #~~ first 'div' tag with the class 'txt-block'--> first 'a' tag within it                                                                                                        
     director = soup.findAll('div', {'class': "txt-block"})[0].a.string
@@ -103,6 +109,7 @@ def parse_name_year_director(imdb_soup):
 
 if __name__ == "__main__":
     
+
     # manual
     usage = "Usage: python movie_search.py The Unbearable Lightness of Being"
 

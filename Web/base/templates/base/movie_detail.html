@@ -35,7 +35,7 @@
         click: function(score, evt) {
           $.ajax({
             type: "POST",
-            url: "{% url 'save_rating' movie.id %}",
+            url: "{% url 'save_rating' movie.year %}",
             data: {"rating": score},
             dataType: "json",
             success: function(data){
@@ -54,12 +54,6 @@
 
     <!-- pageheader -->
     {% block pageheader %}
-    <!-- <div class="container"> -->
-    <!--   <div class="page-header"> -->
-    <!-- 	<h1>{{ movie.name }}</h1> -->
-    <!-- 	<a class="btn btn-primary btn-lg" href="#">Details on imdb</a> -->
-    <!--   </div> -->
-    <!-- </div> -->
     {% endblock %}
     <!-- end of pageheader -->
 
@@ -67,7 +61,7 @@
     <!-- content -->
     {% block content %}
     <div class="container">
-      <div class="col-md-6 text-left">
+      <div class="col-md-7 text-left">
 
 
 	<div class="container">
@@ -83,7 +77,7 @@
 	  <dd>{{ movie.name }}</dd>
 
 	  <dt>Summary</dt>
-	  <dd>{{ movie.description }}</dd>
+	  <dd>{{ movie.description | safe }}</dd>
 
 	  <dt>Year</dt>
 	  <dd>{{ movie.year }}</dd>
@@ -103,8 +97,8 @@
 	  
 	</dl>
       </div>
-      <div class="col-md-6 inset">
-	<img id="poster_1" src="{{ STATIC_URL }}posters/{{movie.poster_name}}"
+      <div class="col-md-5 inset-md">
+	<img id="poster" src="{{ poster_url }}"
 	     class="center-block img-rounded">
       </div>
     </div>

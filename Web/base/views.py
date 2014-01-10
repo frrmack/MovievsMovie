@@ -6,6 +6,8 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.core.urlresolvers import reverse
 
+from django.conf import settings
+
 from django.views.generic import ListView, DetailView
 
 from base.models import Movie, VersusMatch
@@ -14,6 +16,12 @@ from datetime import datetime
 from django.utils.timezone import utc
 
 import json
+
+import os, sys
+# absolute path to this script
+SCRIPTPOS = os.path.abspath(__file__).rsplit('/',1)[0] + '/'
+sys.path.append(SCRIPTPOS+"../../code/")
+import movie_search
 
 def now():
     return datetime.utcnow().replace(tzinfo=utc)
@@ -37,10 +45,12 @@ class MovieDetailView(DetailView):
     template_name = "base/movie_detail.html"
 
     def get_context_data(self, **kwargs):
+        movie = kwargs['object']
         # Call the base implementation first to get a context
         context = super(MovieDetailView, self).get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
-        context['something_else'] = 'something'
+        # Add in a poster url
+        context['poster_url'] = "%sposters/%s" % (settings.STATIC_URL,
+                                                  movie.poster_name) 
         return context
 
 
@@ -74,6 +84,45 @@ def bubbleChart(request, order_rule='random', num_nodes=None):
                }
     return render(request, 'base/rating_bubble_chart.html', context)
 
+
+
+def search(request):
+
+    query = request.GET['query']
+    try:
+        title, content, url = movie_search.find(query)
+        content = content[:-11] + '...'
+        if movie_search.get_imdb_type(url) != "title":
+            raise movie_search.NotFoundError
+    except movie_search.NotFoundError:
+        print 'No movie found with name %s.' % query
+        context = {'error_title': 'No title found',
+                   'error_message': 'No title matching the query "%s" was found.' % query}
+        return render(request, 'base/error_message.html', context)
+    else:
+        print title
+        print url
+        # search & parse
+        soup = movie_search.connect(url)
+        name, year, director = movie_search.parse_name_year_director(soup)
+        imdb_id = movie_search.get_imdb_id(url)
+
+        # download the poster temporarily
+        poster_url = movie_search.parse_poster_url(soup)
+        tmp_poster_file = os.path.join(settings.PROJECT_ROOT, 'base/static/posters/tmp.jpg')
+        tmp_poster_url = '%sposters/tmp.jpg' % settings.STATIC_URL
+        movie_search.download(poster_url, tmp_poster_file)
+
+        # create model instance
+        movie = Movie(id=imdb_id,
+                      imdb_id = imdb_id,
+                      name=name,
+                      year=year,
+                      director=director,
+                      description=content)
+        context = {'movie' : movie,
+                   'poster_url': tmp_poster_url}
+        return render(request, 'base/movie_detail.html', context)
 
 
 def comparison(request, movie_1_id=None, movie_2_id=None):

@@ -1,0 +1,55 @@
+{% extends "base/base.html" %}
+
+    <!-- turn off sidebar -->
+    {% block sidebar %}
+    {% endblock %}
+
+    <!-- title -->
+    {% block title %}
+    {{ error_title }}
+    {% endblock %}
+    <!-- end of title -->
+
+    <!-- css -->
+    {% block css %}
+    {% endblock %}
+    <!-- end of css -->
+
+    <!-- extrahead -->
+    <!-- end of extrahead -->
+
+    <!-- jquery -->
+    {% block jquery %}
+    {% endblock %}
+    <!-- end of jquery -->
+
+    <!-- pageheader -->
+    {% block pageheader %}
+    {% endblock %}
+    <!-- end of pageheader -->
+
+
+    <!-- content -->
+    {% block content %}
+    <div class="container inset-lg">
+
+      <div class="row">
+
+	<div class="col-md-3"></div>
+	<div class="col-md-6">
+	  <div class="panel panel-danger">
+	    <div class="panel-heading">
+	      <h3 class="panel-title">{{ error_title }}</h3>
+	    </div>
+	    <div class="panel-body">
+	      {{ error_message }}
+	    </div>
+	  </div>
+	</div>      
+	<div class="col-md-3"></div>
+
+      </div>
+    {% endblock %}
+    <!-- end of content -->
+
+

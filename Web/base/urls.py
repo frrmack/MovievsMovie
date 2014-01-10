@@ -14,8 +14,10 @@ urlpatterns = patterns('base.views',
                        url(r'^(?P<pk>\d+)$',
                            MovieDetailView.as_view(),
                            name = 'movie_detail'),
-                       # base/5/saved                                                                                                                                            
+                       # base/5/saverating                                                                                                                                            
                        url(r'^(?P<pk>\d+)/save_rating$', 'save_movie_rating', name = 'save_rating'),
+                       # base/search                                                                                                                                                      
+                       url(r'^search$', 'search', name='search'),
                        # /base/chart/random/200                                                                                                                                      
                        # /base/chart/ordered_by_name/                                                                                                                                
                        # /base/chart/ordered_by_rating/1400                                                                                                                          
