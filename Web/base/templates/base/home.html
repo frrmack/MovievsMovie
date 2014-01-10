@@ -11,6 +11,14 @@
     <!-- end of title -->
 
     <!-- css -->
+    {% block css %}
+      .jumbotron {
+        background-image: url({{ STATIC_URL }}img/green_bg.jpg);
+      }
+      .white {
+        color: #fff;
+      }
+    {% endblock %}
     <!-- end of css -->
 
     <!-- extrahead -->
@@ -28,7 +36,7 @@
     <div class="container-fluid">
       <div class="jumbotron">
 	<h1>Movie vs Movie</h1>
-	<p>This is a website for comparing movies against each
+	<p class="white">This is a website for comparing movies against each
 	  other. Choose which movie you like better, one pair at a time,
 	  to find out your own taste profile: A complete and continuous
 	  ranking of all movies you've seen.</p>
@@ -126,6 +134,14 @@
           <a href="#" class="btn btn-info">Let the Movies Free</a>
 	</div>
       </div>
+
+      <div class="row inset">
+	<div class="col-md-12 inset">
+	  <img src="{{ STATIC_URL }}img/movievsmovielogo_alpha_lg.png"
+	       class="img-rounded center-block">
+	</div>
+      </div>
+
     </div>
     {% endblock %}
     <!-- end of content -->
