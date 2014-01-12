@@ -13,13 +13,19 @@ import HTMLParser
 
 
 class RandomManager(models.Manager):
-    def random(self):
+    def random(self, exclude=None):
+        # exclude: You can give a model instance, and random
+        # will return a random one, anything BUT this guy
+        # (useful when you need a random guy outside myself, etc.)
         count = self.aggregate(count=models.Count('imdb_id'))['count']
-        if count == 0:
+        if count == 0 or (count == 1 and exclude is not None):
             raise self.model.DoesNotExist("There is not a single %s to pick randomly." % self.model.__name__)
         random_index = randint(0, count-1)
-        return self.all()[random_index]
-
+        lucky_guy = self.all()[random_index]
+        while lucky_guy == exclude:
+            random_index = randint(0, count-1)
+            lucky_guy = self.all()[random_index]
+        return lucky_guy
 
 
 class Movie(models.Model):
@@ -75,6 +81,17 @@ class Movie(models.Model):
     readable_name.admin_order_field = 'name'
     readable_name.short_description = 'Title'
     
+    def did_already_fight(self, opponent):
+        """
+        Returns true if this movie had a previous
+        fight with this opponent
+        """
+        matches = self.fight_set.all()
+        for match in matches:
+            if opponent in (match.movie1, match.movie2):
+                return True
+        return False
+        
 
     def won_against(self):
         """
