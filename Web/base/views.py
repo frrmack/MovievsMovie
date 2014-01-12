@@ -2,7 +2,7 @@
 
 from django.shortcuts import render
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse
 
@@ -73,7 +73,7 @@ class MovieDetailView(DetailView):
 
 def error_page(request, title, message):
 
-    message = message.replace('\n',' ')
+    message = message.replace('\n','<br>')
     context = {'error_title': title,
                'error_message': message}
     return render(request, 'base/error_message.html', context)
@@ -229,6 +229,12 @@ def save_movie_rating(request, movie_id):
 
 
 def fight(request, movie_1_id=None, movie_2_id=None):
+
+    # Choose movie 2 randomly if both movies for the
+    # fight have the same actual id. Can't fight yourself!
+    if movie_1_id == movie_2_id != None:
+        movie_2_id = None
+
     try:
         # get the first movie                                                                                                                                                        
         if movie_1_id is not None:
@@ -242,8 +248,29 @@ def fight(request, movie_1_id=None, movie_2_id=None):
         else:
             # if no id given, pick a random one                                                                                                                                      
             movie2 = Movie.randoms.random()
+            # make sure you don't get movie1 though:
+            while movie2 == movie1:
+                movie2 = Movie.randoms.random()
+            
+    except Http404:
+
+        # could not find a movie with the given id value
+        err_title = 'No movie with this id'
+        err_msg = 'You wanted a movie to fight, but this movie ' +\
+                  'is not among the movies you rated here.\n\n' +\
+                  'Unless there is something wrong, you should only ' +\
+                  'see this if you typed in a specific id in the ' +\
+                  'fight url that doesn\'t correspond to any rated ' +\
+                  'movie in the database.\n\n' +\
+                  'Either there is a typo in the id, or you need to ' +\
+                  'rate it first. In the latter case, you can put the ' +\
+                  'id in the search bar to see the details of the movie ' +\
+                  'and rate it.'
+        return error_page(request, err_title, err_msg)
+
     except Movie.DoesNotExist:
 
+        # could not find any movie (Movie.randoms.random() failed)
         err_title = 'No movies to fight'
         err_msg = 'You did not rate any movies, so there are ' + \
                   'no movies to fight against each other.\n\n' + \
