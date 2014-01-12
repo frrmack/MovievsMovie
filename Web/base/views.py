@@ -40,8 +40,7 @@ class MovieListView(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         # check if there is some video onsite
-        print self.queryset
-        if not self.queryset:
+        if not self.get_queryset():
             
             err_title = 'No movies rated'
             err_msg = 'You did not rate any movies, so there are ' + \
