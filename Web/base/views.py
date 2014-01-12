@@ -17,7 +17,7 @@ from django.utils.timezone import utc
 
 import json
 
-import os, sys
+import os, sys, shutil
 # absolute path to this script
 SCRIPTPOS = os.path.abspath(__file__).rsplit('/',1)[0] + '/'
 sys.path.append(SCRIPTPOS+"../../code/")
@@ -40,6 +40,7 @@ class MovieListView(ListView):
 
     def dispatch(self, request, *args, **kwargs):
         # check if there is some video onsite
+        print self.queryset
         if not self.queryset:
             
             err_title = 'No movies rated'
@@ -72,7 +73,7 @@ class MovieDetailView(DetailView):
 
 def error_page(request, title, message):
 
-    message = message.replace('\n','<br>')
+    message = message.replace('\n',' ')
     context = {'error_title': title,
                'error_message': message}
     return render(request, 'base/error_message.html', context)
@@ -117,7 +118,6 @@ def search(request):
 
     try:
         title, content, url = movie_search.find(query)
-        print 'DOOO'
         if movie_search.get_imdb_type(url) != "title":
             raise movie_search.NotFoundError
         imdb_id = movie_search.get_imdb_id(url)
@@ -133,7 +133,7 @@ def search(request):
         soup = movie_search.connect(url)
         name, year, director = movie_search.parse_name_year_director(soup)
         content = content[:-11] + '...'
-        content = content.replace('\n', '<br>')
+        content = content.replace('\n', ' ')
 
         # download the poster temporarily
         try:
@@ -175,14 +175,18 @@ def save_movie_rating(request, movie_id):
 
     except Movie.DoesNotExist:
         # B) Not in the db, saving it for the first time
-        corrected_description = \
-                    request.POST['description'].replace('<br>', '\n')
         movie = Movie(imdb_id = request.POST['imdb_id'],
                       name= request.POST['name'],
                       year= request.POST['year'],
                       director= request.POST['director'],
-                      description= corrected_description,
+                      description= request.POST['description'],
                       poster_name = request.POST['poster_name'])
+        tmp_poster = os.path.join(settings.PROJECT_ROOT,
+                                  'base/static/posters/tmp.jpg')
+        permanent_poster = os.path.join(settings.PROJECT_ROOT,
+                                        'base/static/posters/%s' \
+                                        % request.POST['poster_name'])
+        shutil.copy(tmp_poster, permanent_poster)
         print 'initialized new model for %s' % name
 
 
@@ -229,16 +233,12 @@ def fight(request, movie_1_id=None, movie_2_id=None):
                   'of stars in the rating field.'
         return error_page(request, err_title, err_msg)
 
-
-        # No movies at all in the database                                                                                                                                           
-        # ---Temporarily using an empty movie_list view as---                                                                                                                        
-        # ---placeholder for a specific page informing this---                                                                                                                       
-        return HttpResponseRedirect(reverse('movie_list'))
-    # render                                                                                                                                                                         
-    context = {'movie1' : movie1,
-               'movie2' : movie2
-              }
-    return render(request, 'base/fight.html', context)
+    else:
+        # render                                                                                                                                                                         
+        context = {'movie1' : movie1,
+                   'movie2' : movie2
+               }
+        return render(request, 'base/fight.html', context)
 
 
 

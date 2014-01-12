@@ -66,10 +66,6 @@ make.out
 email.out
 *.mysql_load
 
-# old issuelab ignore data
-issuelab.org/
-issue_lab_sql_stuff/
-
 
 # ignore all this garbage
 *.xlsx
