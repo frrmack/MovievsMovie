@@ -16,23 +16,23 @@ urlpatterns = patterns('base.views',
                            MovieDetailView.as_view(),
                            name = 'movie_detail'),
                        # /tt51/saverating                                                                                                                                            
-                       url(r'^(?P<movie_id>tt\d+)/save_rating$', 'save_movie_rating', name = 'save_rating'),
+                       url(r'^(?P<movie_id>tt\d+)/save_rating$', 'save_movie_rating', name='save_rating'),
                        # /search                                                                                                                                                      
                        url(r'^search$', 'search', name='search'),
-                       # /comparison/a=tt23&b=tt18                                                                                                                                   
-                       url(r'^comparison/a=(?P<movie_1_id>tt\d+)\&b=(?P<movie_2_id>tt\d+)$',
-                           'comparison',
-                           name = 'comparison'),
-                       # /comparison/a=tt23                                                                                                                                        
-                       url(r'^comparison/a=(?P<movie_1_id>tt\d+)$', 'comparison', name = 'comparison'),
-                       # /comparison/b=tt18                                                                                                                                        
-                       url(r'^comparison/b=(?P<movie_2_id>tt\d+)$', 'comparison', name = 'comparison'),
-                       # /comparison/                                                                                                                                            
-                       url(r'^comparison/$', 'comparison', name = 'comparison'),
-                       # /comparison/a=tt23&b=tt18/result                                                                                                                            
-                       url(r'^comparison/a=(?P<movie_1_id>tt\d+)\&b=(?P<movie_2_id>tt\d+)/result$',
-                           'versusResult',
-                           name = 'versus_result'),
+                       # /fight/a=tt23&b=tt18                                                                                                                                   
+                       url(r'^fight/a=(?P<movie_1_id>tt\d+)\&b=(?P<movie_2_id>tt\d+)$',
+                           'fight',
+                           name = 'fight'),
+                       # /fight/a=tt23                                                                                                                                        
+                       url(r'^fight/a=(?P<movie_1_id>tt\d+)$', 'fight', name='fight'),
+                       # /fight/b=tt18                                                                                                                                        
+                       url(r'^fight/b=(?P<movie_2_id>tt\d+)$', 'fight', name='fight'),
+                       # /fight/                                                                                                                                            
+                       url(r'^fight/$', 'fight', name='fight'),
+                       # /fight/a=tt23&b=tt18/result                                                                                                                            
+                       url(r'^fight/a=(?P<movie_1_id>tt\d+)\&b=(?P<movie_2_id>tt\d+)/result$',
+                           'fight_result',
+                           name='fight_result'),
                        # /chart/random/200                                                                                                                                      
                        # /chart/ordered_by_name/                                                                                                                                
                        # /chart/ordered_by_rating/1400                                                                                                                          

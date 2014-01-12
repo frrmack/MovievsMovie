@@ -198,7 +198,7 @@ def save_movie_rating(request, movie_id):
 
 
 
-def comparison(request, movie_1_id=None, movie_2_id=None):
+def fight(request, movie_1_id=None, movie_2_id=None):
     try:
         # get the first movie                                                                                                                                                        
         if movie_1_id is not None:
@@ -238,12 +238,12 @@ def comparison(request, movie_1_id=None, movie_2_id=None):
     context = {'movie1' : movie1,
                'movie2' : movie2
               }
-    return render(request, 'base/comparison.html', context)
+    return render(request, 'base/fight.html', context)
 
 
 
 
-def versusResult(request, movie_1_id, movie_2_id):
+def fight_result(request, movie_1_id, movie_2_id):
     # get the movies                                                                                                                                                                 
     movie1 = get_object_or_404(Movie, pk=movie_1_id)
     movie2 = get_object_or_404(Movie, pk=movie_2_id)
@@ -295,8 +295,8 @@ def versusResult(request, movie_1_id, movie_2_id):
     # pick new random movies                                                                                                                                                         
     randID1 = Movie.randoms.random().imdb_id
     randID2 = Movie.randoms.random().imdb_id
-    # give a new comparison view with random movies                                                                                                                                  
-    return HttpResponseRedirect(reverse('comparison',
+    # give a new fight view with random movies                                                                                                                                  
+    return HttpResponseRedirect(reverse('fight',
                                         args=(randID1, randID2)))
 
 
