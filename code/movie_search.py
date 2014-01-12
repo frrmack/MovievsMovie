@@ -96,7 +96,7 @@ def parse_name_year_director(imdb_soup):
     name_header = soup.findAll('h1', {'class':'header'})[0]
 
     name = name_header.span.string
-    year = int(name_header.find('span', {'class':'nobr'}).get_text().strip('()'))
+    year = name_header.find('span', {'class':'nobr'}).get_text().strip('()')
 
     #~~ first 'div' tag with the class 'txt-block'--> first 'a' tag within it                                                                                                        
     director = soup.findAll('div', {'class': "txt-block"})[0].a.string
