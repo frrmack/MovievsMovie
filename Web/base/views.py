@@ -117,6 +117,7 @@ def search(request):
     query = request.GET['query']
 
     try:
+        # google search within the imdb.com domain
         title, content, url = movie_search.find(query)
         if movie_search.get_imdb_type(url) != "title":
             raise movie_search.NotFoundError
@@ -124,39 +125,60 @@ def search(request):
 
     except movie_search.NotFoundError:
 
+        # either no search result returned, or the returned
+        # result is not a title (but an actor, character, etc.)
         err_title = 'Not found'
         err_msg = 'No movie matching the query "%s" was found.' % query
         return error_page(request, err_title, err_msg)
 
     else:
-        # search & parse
-        soup = movie_search.connect(url)
-        name, year, director = movie_search.parse_name_year_director(soup)
-        content = content[:-11] + '...'
-        content = content.replace('\n', ' ')
 
-        # download the poster temporarily
+        # check if the found movie is already in the db
         try:
-            poster_url = movie_search.parse_poster_url(soup)
-        except movie_search.NotFoundError:
-            tmp_poster_url = '%sposters/_empty_poster.jpg' % settings.STATIC_URL
-            poster_name = '_empty_poster.jpg'
-        else:
-            tmp_poster_file = os.path.join(settings.PROJECT_ROOT, 'base/static/posters/tmp.jpg')
-            tmp_poster_url = '%sposters/tmp.jpg' % settings.STATIC_URL
-            poster_name = '%s.jpg' % imdb_id
-            movie_search.download(poster_url, tmp_poster_file)
+            # A) already in the db, show it
+            movie = Movie.objects.get(pk=imdb_id)
+            poster_url = '%sposters/%s' % (settings.STATIC_URL,
+                                           movie.poster_name)
 
-        # create model instance
-        movie = Movie(imdb_id = imdb_id,
-                      name=name,
-                      year=year,
-                      director=director,
-                      description=content,
-                      poster_name = poster_name)
+        except Movie.DoesNotExist:
 
+            # B) not in the db, parse the imdb page
+            soup = movie_search.connect(url)
+            name, year, director = movie_search.parse_name_year_director(soup)
+            content = content[:-11] + '...'
+            content = content.replace('\n', ' ')
+
+            # download the poster temporarily
+            try:
+                imdb_poster_url = movie_search.parse_poster_url(soup)
+            except movie_search.NotFoundError:
+                tmp_poster_url = '%sposters/_empty_poster.jpg' % settings.STATIC_URL
+                poster_name = '_empty_poster.jpg'
+            else:
+                tmp_poster_file = os.path.join(settings.PROJECT_ROOT, 'base/static/posters/tmp.jpg')
+                poster_name = '%s.jpg' % imdb_id
+                movie_search.download(imdb_poster_url, tmp_poster_file)
+
+            # create model instance
+            movie = Movie(imdb_id = imdb_id,
+                          name=name,
+                          year=year,
+                          director=director,
+                          description=content,
+                          poster_name = poster_name)
+            poster_url = '%sposters/tmp.jpg' % settings.STATIC_URL
+
+
+        # now we have a movie (and a poster), either retrieved from our db
+        # or parsed from imdb. Show its details.
+        #
+        # [If the rating is changed in this view, the movie will be saved.
+        #  If it was already in our db, only the rating will change. If it
+        #  wasn't in there, it will get in at this point. This is handled by
+        #  the save_movie_rating view.]
+            
         context = {'movie' : movie,
-                   'poster_url': tmp_poster_url}
+                   'poster_url': poster_url}
 
         return render(request, 'base/movie_detail.html', context)
 
