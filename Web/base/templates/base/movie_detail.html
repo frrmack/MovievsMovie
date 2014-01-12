@@ -39,10 +39,10 @@
             data: {"rating": score,
                    "imdb_id": "{{movie.imdb_id}}",
                    "name": "{{movie.name | safe }}",
-                   "year": "{{movie.year}}",
-                   "director":"{{movie.director}}",
-                   "description":"{{movie.description}}",
-                   "poster_name" : "{{movie.poster_name}}"
+                   "year": "{{movie.year | safe}}",
+                   "director":"{{movie.director | safe}}",
+                   "description":"{{movie.description | safe}}",
+                   "poster_name" : "{{movie.poster_name | safe}}"
                   },
             dataType: "json",
             success: function(data){

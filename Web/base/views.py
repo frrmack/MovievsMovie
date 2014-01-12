@@ -165,23 +165,31 @@ def search(request):
 def save_movie_rating(request, movie_id):
 
     rating = request.POST['rating']
+    name = request.POST['name']
 
     # Check if the movie is already in the db
     try:
         # A) Already in the db, just change the rating
         movie = Movie.objects.get(pk=movie_id)
+        print 'retrieved %s from database' % name
+
     except Movie.DoesNotExist:
         # B) Not in the db, saving it for the first time
+        corrected_description = \
+                    request.POST['description'].replace('<br>', '\n')
         movie = Movie(imdb_id = request.POST['imdb_id'],
                       name= request.POST['name'],
                       year= request.POST['year'],
                       director= request.POST['director'],
-                      description= request.POST['description'],
+                      description= corrected_description,
                       poster_name = request.POST['poster_name'])
+        print 'initialized new model for %s' % name
+
 
     # set the rating and save
     movie.starRating = int(rating)
     movie.save()
+    print 'saved %s in the db with the new rating %s' % (name, rating)
 
     # done
     return HttpResponse(json.dumps({'rating': rating}),
