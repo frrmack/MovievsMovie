@@ -3,7 +3,7 @@
 from django.shortcuts import render
 
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.core.urlresolvers import reverse
 
 from django.conf import settings
@@ -37,6 +37,22 @@ class MovieListView(ListView):
     context_object_name = "movie_list"
     queryset = Movie.objects.order_by('-starSeededTrueSkillMu')
     template_name = "base/movie_list.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        # check if there is some video onsite
+        if not self.queryset:
+            
+            err_title = 'No movies rated'
+            err_msg = 'You did not rate any movies, so there are ' + \
+                      'no movies to list. You can rate a movie by ' + \
+                      'using the search bar to find it\'s detal page ' + \
+                      ' and clicking on the relevant amount ' +\
+                      ' of stars in the rating field.'
+            return error_page(request, err_title, err_msg)
+
+        else:
+            return super(MovieListView, self).dispatch(request, *args, **kwargs)
+
 
 
 class MovieDetailView(DetailView):
@@ -85,6 +101,12 @@ def bubbleChart(request, order_rule='random', num_nodes=None):
     return render(request, 'base/rating_bubble_chart.html', context)
 
 
+def error_page(request, title, message):
+
+        context = {'error_title': title,
+                   'error_message': message}
+        return render(request, 'base/error_message.html', context)
+
 
 def search(request):
 
@@ -98,9 +120,9 @@ def search(request):
 
     except movie_search.NotFoundError:
 
-        context = {'error_title': 'No title found',
-                   'error_message': 'No title matching the query "%s" was found.' % query}
-        return render(request, 'base/error_message.html', context)
+        err_title = 'No title found'
+        err_msg = 'No title matching the query "%s" was found.' % query
+        return error_page(request, err_title, err_msg)
 
     else:
         # search & parse

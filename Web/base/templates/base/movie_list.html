@@ -39,8 +39,6 @@
     {% block content %}
     <div class="container main-bar-container">
 
-      {% if movie_list %}
-
       <div id="movie_list"> 
 	<table class="table table-striped">
 	  <th class="title">Title</th>
@@ -61,18 +59,6 @@
 	  {% endfor %}
 	</table>
       </div>
-
-      {% else %}
-
-      <div class="panel panel-danger">
-	<div class="panel-heading">
-	  <h3 class="panel-title">Error</h3>
-	</div>
-	<div class="panel-body">
-	  No movies in the database
-	</div>
-      </div>      
-      {% endif %}
 
     </div>
     {% endblock %}
