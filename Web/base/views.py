@@ -246,10 +246,20 @@ def fight(request, movie_1_id=None, movie_2_id=None):
             movie2 = get_object_or_404(Movie, pk=movie_2_id)
         else:
             # if no id given, pick a random one                                                                                                                                      
-            movie2 = Movie.randoms.random()
-            # make sure you don't get movie1 though:
-            while movie2 == movie1:
-                movie2 = Movie.randoms.random()
+            # that movie1 did not fight before
+            # also make sure you don't get movie1
+            movie2 = Movie.randoms.random(exclude=movie1)
+            max_tries = Movie.objects.count()
+            counter = 0
+            while movie1.did_already_fight(movie2):
+                movie2 = Movie.randoms.random(exclude=movie1)
+                # don't search for too long
+                counter += 1
+                if counter == max_tries:
+                    print 'GAVE UP'
+                    break
+            print 'After %i tries: %s VS %s' % (counter, movie1.name, movie2.name)
+
             
     except Http404:
 
@@ -344,11 +354,13 @@ def fight_result(request, movie_1_id, movie_2_id):
         match.save()
         # --end of recording (end of if)
 
-    # pick new random movies                                                                                                                                                         
-    randID1 = Movie.randoms.random().imdb_id
-    randID2 = Movie.randoms.random().imdb_id
-    # give a new fight view with random movies                                                                                                                                  
-    return HttpResponseRedirect(reverse('fight',
-                                        args=(randID1, randID2)))
+    # # pick new random movies                                                                                                                                                         
+    # randID1 = Movie.randoms.random().imdb_id
+    # randID2 = Movie.randoms.random().imdb_id
+    # # give a new fight view with random movies                                                                                                                                  
+    # return HttpResponseRedirect(reverse('fight',
+    #                                     args=(randID1, randID2)))
+    # THIS ABOVE HELPS US SHOW THE IDS IN THE URL
+    return HttpResponseRedirect(reverse('fight'))
 
 
