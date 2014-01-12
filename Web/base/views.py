@@ -133,6 +133,7 @@ def search(request):
         soup = movie_search.connect(url)
         name, year, director = movie_search.parse_name_year_director(soup)
         content = content[:-11] + '...'
+        content = content.replace('\n', '<br>')
 
         # download the poster temporarily
         try:
@@ -158,6 +159,35 @@ def search(request):
                    'poster_url': tmp_poster_url}
 
         return render(request, 'base/movie_detail.html', context)
+
+
+
+def save_movie_rating(request, movie_id):
+
+    rating = request.POST['rating']
+
+    # Check if the movie is already in the db
+    try:
+        # A) Already in the db, just change the rating
+        movie = Movie.objects.get(pk=movie_id)
+    except Movie.DoesNotExist:
+        # B) Not in the db, saving it for the first time
+        movie = Movie(imdb_id = request.POST['imdb_id'],
+                      name= request.POST['name'],
+                      year= request.POST['year'],
+                      director= request.POST['director'],
+                      description= request.POST['description'],
+                      poster_name = request.POST['poster_name'])
+
+    # set the rating and save
+    movie.starRating = int(rating)
+    movie.save()
+
+    # done
+    return HttpResponse(json.dumps({'rating': rating}),
+                        content_type="application/json")
+
+
 
 
 def comparison(request, movie_1_id=None, movie_2_id=None):
@@ -202,15 +232,6 @@ def comparison(request, movie_1_id=None, movie_2_id=None):
               }
     return render(request, 'base/comparison.html', context)
 
-
-def save_movie_rating(request, movie_id):
-
-    movie = get_object_or_404(Movie, pk=movie_id)
-    rating = request.POST['rating']
-    movie.starRating = int(rating)
-    movie.save()
-    return HttpResponse(json.dumps({'rating': rating}),
-                        content_type="application/json")
 
 
 

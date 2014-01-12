@@ -36,10 +36,17 @@
           $.ajax({
             type: "POST",
             url: "{% url 'save_rating' movie.imdb_id %}",
-            data: {"rating": score},
+            data: {"rating": score,
+                   "imdb_id": "{{movie.imdb_id}}",
+                   "name": "{{movie.name | safe }}",
+                   "year": "{{movie.year}}",
+                   "director":"{{movie.director}}",
+                   "description":"{{movie.description}}",
+                   "poster_name" : "{{movie.poster_name}}"
+                  },
             dataType: "json",
             success: function(data){
-              console.log( "Succesfully saved with rating " + data.rating );
+              console.log( "Succesfully saved rating as " + data.rating );
             },
             error: function(msg){
               console.log( "Error from server during AJAX POST." );
