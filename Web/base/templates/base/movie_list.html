@@ -47,7 +47,7 @@
 	  {% for movie in movie_list %}
 	  <tr>
 	    <td>
-	      <a href="{% url 'movie_detail' movie.id  %}">{{ movie.name }}</a>
+	      <a href="{% url 'movie_detail' movie.imdb_id  %}">{{ movie.name }}</a>
 	    </td>
 	    <td class="stars">
 		<b>{{ movie.unicode_star_rating }}</b>

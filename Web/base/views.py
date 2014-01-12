@@ -117,6 +117,7 @@ def search(request):
 
     try:
         title, content, url = movie_search.find(query)
+        print 'DOOO'
         if movie_search.get_imdb_type(url) != "title":
             raise movie_search.NotFoundError
         imdb_id = movie_search.get_imdb_id(url)
@@ -146,8 +147,7 @@ def search(request):
             movie_search.download(poster_url, tmp_poster_file)
 
         # create model instance
-        movie = Movie(id=imdb_id,
-                      imdb_id = imdb_id,
+        movie = Movie(imdb_id = imdb_id,
                       name=name,
                       year=year,
                       director=director,
@@ -203,12 +203,9 @@ def comparison(request, movie_1_id=None, movie_2_id=None):
     return render(request, 'base/comparison.html', context)
 
 
-def save_movie_rating(request, pk=None):
+def save_movie_rating(request, movie_id):
 
-    print 'HEY'
-    print pk
-    print request.POST['rating']
-    movie = get_object_or_404(Movie, pk=pk)
+    movie = get_object_or_404(Movie, pk=movie_id)
     rating = request.POST['rating']
     movie.starRating = int(rating)
     movie.save()
@@ -267,8 +264,8 @@ def versusResult(request, movie_1_id, movie_2_id):
         # --end of recording (end of if)
 
     # pick new random movies                                                                                                                                                         
-    randID1 = Movie.randoms.random().id
-    randID2 = Movie.randoms.random().id
+    randID1 = Movie.randoms.random().imdb_id
+    randID2 = Movie.randoms.random().imdb_id
     # give a new comparison view with random movies                                                                                                                                  
     return HttpResponseRedirect(reverse('comparison',
                                         args=(randID1, randID2)))

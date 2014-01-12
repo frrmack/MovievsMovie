@@ -35,7 +35,7 @@
         click: function(score, evt) {
           $.ajax({
             type: "POST",
-            url: "{% url 'save_rating' movie.year %}",
+            url: "{% url 'save_rating' movie.imdb_id %}",
             data: {"rating": score},
             dataType: "json",
             success: function(data){

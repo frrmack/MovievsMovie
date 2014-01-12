@@ -14,7 +14,7 @@ import HTMLParser
 
 class RandomManager(models.Manager):
     def random(self):
-        count = self.aggregate(count=models.Count('id'))['count']
+        count = self.aggregate(count=models.Count('imdb_id'))['count']
         if count == 0:
             raise self.model.DoesNotExist("There is not a single %s to pick randomly." % self.model.__name__)
         random_index = randint(0, count-1)
@@ -24,7 +24,7 @@ class RandomManager(models.Manager):
 
 class Movie(models.Model):
 
-    imdb_id = models.CharField(max_length=255)
+    imdb_id = models.CharField(max_length=255, primary_key=True)
 
     name = models.CharField(max_length=500)
     year = models.IntegerField(default=0)
