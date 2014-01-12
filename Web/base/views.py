@@ -137,8 +137,7 @@ def search(request):
         try:
             # A) already in the db, show it
             movie = Movie.objects.get(pk=imdb_id)
-            poster_url = '%sposters/%s' % (settings.STATIC_URL,
-                                           movie.poster_name)
+            poster_to_show = movie.poster_name
 
         except Movie.DoesNotExist:
 
@@ -146,31 +145,36 @@ def search(request):
             soup = movie_search.connect(url)
             name, year, director = movie_search.parse_name_year_director(soup)
             content = content[:-11] + '...'
-            content = content.replace('\n', ' ')
+            description = content.replace('\n', ' ')
 
-            # download the poster temporarily
+            #    download the poster temporarily (if there is a poster)
             try:
                 imdb_poster_url = movie_search.parse_poster_url(soup)
             except movie_search.NotFoundError:
-                tmp_poster_url = '%sposters/_empty_poster.jpg' % settings.STATIC_URL
-                poster_name = '_empty_poster.jpg'
+                poster_name_in_db = '_empty_poster.jpg'
+                poster_to_show = '_empty_poster.jpg'
             else:
                 tmp_poster_file = os.path.join(settings.PROJECT_ROOT, 'base/static/posters/tmp.jpg')
-                poster_name = '%s.jpg' % imdb_id
+                poster_name_in_db = '%s.jpg' % imdb_id
                 movie_search.download(imdb_poster_url, tmp_poster_file)
+                poster_to_show = "tmp.jpg"
 
-            # create model instance
+            #    create model instance
             movie = Movie(imdb_id = imdb_id,
                           name=name,
                           year=year,
                           director=director,
-                          description=content,
-                          poster_name = poster_name)
-            poster_url = '%sposters/tmp.jpg' % settings.STATIC_URL
+                          description=description,
+                          poster_name=poster_name_in_db)
+
+        finally:
+            # put together the url for the poster
+            poster_url = '%sposters/%s' % (settings.STATIC_URL,
+                                           poster_to_show)
 
 
         # now we have a movie (and a poster), either retrieved from our db
-        # or parsed from imdb. Show its details.
+        # or parsed from imdb. Show its details. Render, baby, render.
         #
         # [If the rating is changed in this view, the movie will be saved.
         #  If it was already in our db, only the rating will change. If it
