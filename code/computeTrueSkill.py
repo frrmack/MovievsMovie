@@ -34,7 +34,7 @@ sys.path.append(WEBSITEDIR)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Web.settings")
 
 
-from base.models import Movie, VersusMatch
+from base.models import Movie, Fight
 import trueskill as ts
 
 
@@ -44,9 +44,9 @@ def update_true_skill(match, true_skill_dict):
     """
     TrueSkill = true_skill_dict
     if match.isDraw():
-        id1, id2 = match.movie1.id, match.movie2.id
+        id1, id2 = match.movie1.imdb_id, match.movie2.imdb_id
     else:
-        id1, id2 = match.winner().id, match.loser().id
+        id1, id2 = match.winner().imdb_id, match.loser().imdb_id
     new_ratings = ts.rate_1vs1(TrueSkill[id1], TrueSkill[id2], drawn=match.isDraw())
     TrueSkill[id1], TrueSkill[id2] = new_ratings
 
@@ -65,13 +65,13 @@ def compute_true_skills():
 
     # initialize TrueSkill for each movie
     for movie in Movie.objects.all():
-        rawTS[movie.id] = ts.Rating(mu=3.0, sigma=1.0)
-        seededTS[movie.id] = ts.Rating(mu=1.*movie.starRating, sigma=0.5)
+        rawTS[movie.imdb_id] = ts.Rating(mu=3.0, sigma=1.0)
+        seededTS[movie.imdb_id] = ts.Rating(mu=1.*movie.starRating, sigma=0.5)
 
     # iterate over matches (over time) and incrementally update
     # TrueSkill dictionaries    
     count = 0
-    for match in sorted(VersusMatch.objects.all(),
+    for match in sorted(Fight.objects.all(),
                        key = lambda m: m.timestamp):
         count += 1
         update_true_skill(match, rawTS)
@@ -82,8 +82,8 @@ def compute_true_skills():
     count = 0
     for movie in Movie.objects.all():
         count += 1
-        rawRating = rawTS[movie.id]
-        seededRating = seededTS[movie.id]
+        rawRating = rawTS[movie.imdb_id]
+        seededRating = seededTS[movie.imdb_id]
         movie.rawTrueSkillMu = rawRating.mu
         movie.rawTrueSkillSigma = rawRating.sigma
         movie.starSeededTrueSkillMu = seededRating.mu
