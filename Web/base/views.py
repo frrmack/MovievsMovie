@@ -44,10 +44,10 @@ class MovieListView(ListView):
             
             err_title = 'No movies rated'
             err_msg = 'You did not rate any movies, so there are ' + \
-                      'no movies to list. You can rate a movie by ' + \
-                      'using the search bar to find it\'s detal page ' + \
-                      ' and clicking on the relevant amount ' +\
-                      ' of stars in the rating field.'
+                      'no movies to list.\n\n You can rate a movie by ' + \
+                      'using the search bar to find it\'s detail page ' + \
+                      'and clicking on the relevant amount ' +\
+                      'of stars in the rating field.'
             return error_page(request, err_title, err_msg)
 
         else:
@@ -68,6 +68,14 @@ class MovieDetailView(DetailView):
         context['poster_url'] = "%sposters/%s" % (settings.STATIC_URL,
                                                   movie.poster_name) 
         return context
+
+
+def error_page(request, title, message):
+
+    message = message.replace('\n','<br>')
+    context = {'error_title': title,
+               'error_message': message}
+    return render(request, 'base/error_message.html', context)
 
 
 def bubbleChart(request, order_rule='random', num_nodes=None):
@@ -101,11 +109,6 @@ def bubbleChart(request, order_rule='random', num_nodes=None):
     return render(request, 'base/rating_bubble_chart.html', context)
 
 
-def error_page(request, title, message):
-
-        context = {'error_title': title,
-                   'error_message': message}
-        return render(request, 'base/error_message.html', context)
 
 
 def search(request):
@@ -120,8 +123,8 @@ def search(request):
 
     except movie_search.NotFoundError:
 
-        err_title = 'No title found'
-        err_msg = 'No title matching the query "%s" was found.' % query
+        err_title = 'Not found'
+        err_msg = 'No movie matching the query "%s" was found.' % query
         return error_page(request, err_title, err_msg)
 
     else:
@@ -172,6 +175,23 @@ def comparison(request, movie_1_id=None, movie_2_id=None):
             # if no id given, pick a random one                                                                                                                                      
             movie2 = Movie.randoms.random()
     except Movie.DoesNotExist:
+
+        err_title = 'No movies to fight'
+        err_msg = 'You did not rate any movies, so there are ' + \
+                  'no movies to fight against each other.\n\n' + \
+                  'A fight is only meaningful between movies ' + \
+                  'you have seen. Without rated movies, it is ' + \
+                  'impossible to know which ones you did see. ' + \
+                  'Also, the first step for finding how a movie ' + \
+                  'ranks for you among others is to give it a ' + \
+                  'star rating.\n\n' + \
+                  'You can rate a movie by ' + \
+                  'using the search bar to find it\'s detail page ' + \
+                  'and clicking on the relevant amount ' +\
+                  'of stars in the rating field.'
+        return error_page(request, err_title, err_msg)
+
+
         # No movies at all in the database                                                                                                                                           
         # ---Temporarily using an empty movie_list view as---                                                                                                                        
         # ---placeholder for a specific page informing this---                                                                                                                       
