@@ -78,18 +78,18 @@ class Movie(models.Model):
 
     def won_against(self):
         """
-        The opponents this guy has won a VersusMatch against
+        The opponents this guy has won a Fight against
         """
-        matches = self.versusmatch_set.all()
+        matches = self.fight_set.all()
         did_I_win = lambda match: match.winner() == self
         matches_won = filter(did_I_win, matches)
         return [match.loser() for match in matches_won]
 
     def drawn_with(self):
         """
-        The opponents this guy has drawn in a VersusMatch with
+        The opponents this guy has drawn in a Fight with
         """
-        matches = self.versusmatch_set.all()
+        matches = self.fight_set.all()
         did_I_draw = lambda match: match.isDraw()
         matches_drawn = filter(did_I_draw, matches)
         drawn_opponents = []
@@ -100,21 +100,18 @@ class Movie(models.Model):
 
     def lost_to(self):
         """
-        The opponents this guy has lost a VersusMatch to
+        The opponents this guy has lost a Fight to
         """
-        matches = self.versusmatch_set.all()
+        matches = self.fight_set.all()
         did_I_lose = lambda match: match.loser() == self
         matches_lost = filter(did_I_lose, matches)
         return [match.winner() for match in matches_lost]
-
-        
-
 
     def __unicode__(self):
         return self.readable_name()
 
 
-class VersusMatch(models.Model):
+class Fight(models.Model):
     """ The Result of a Movie vs Movie Comparison
         Result legend:
         0    it's a draw
@@ -159,7 +156,7 @@ class VersusMatch(models.Model):
     def save(self, *args, **kwargs):
         # When you save, make sure contestants is
         # the two compared movies
-        super(VersusMatch, self).save(*args, **kwargs)
+        super(Fight, self).save(*args, **kwargs)
         self.contestants = [self.movie1, self.movie2]
 
     def report(self):

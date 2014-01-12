@@ -10,7 +10,7 @@ from django.conf import settings
 
 from django.views.generic import ListView, DetailView
 
-from base.models import Movie, VersusMatch
+from base.models import Movie, Fight
 
 from datetime import datetime
 from django.utils.timezone import utc
@@ -264,13 +264,13 @@ def versusResult(request, movie_1_id, movie_2_id):
         # Temporarily, TrueSkill will be changed by a single update (as if                                                                                                               
         # there have been multiple matches), but this will be corrected when                                                                                                             
         # The main way of calculating TrueSkill is going over the entire chain                                                                                                           
-        # of VersusMatches from scratch.                                                                                                                                                 
+        # of Fights from scratch.                                                                                                                                                 
         # ~~~~~~~~~~~~~~~~                                                                                                                                                               
         #                                                                                                                                                                                
         # find the match if these two movies were compared before                                                                                                                        
         # or create a new match                                                                                                                                                          
         try:
-            match = VersusMatch.objects.filter(
+            match = Fight.objects.filter(
                                        contestants=movie1
                                        ).filter(
                                        contestants=movie2
@@ -280,8 +280,8 @@ def versusResult(request, movie_1_id, movie_2_id):
             match.movie1, match.movie2 = movie1, movie2
         except IndexError:
             # match not in database, create a new match                                                                                                                                  
-            match = VersusMatch(movie1=movie1,
-                                movie2=movie2)
+            match = Fight(movie1=movie1,
+                          movie2=movie2)
         # record the result                                                                                                                                                              
         match.result = result
         # record the date and time (this is not necessary if a new match                                                                                                                 
