@@ -42,9 +42,9 @@
     <!-- Press the correct button according to the current  -->
     <!-- lock at initial loading -->
     {% if lock == '1' %}
-      $('#lock-left-button').click();
+      $('#sidebar-lock-left').click();
     {% elif lock == '2' %}
-      $('#lock-right-button').click();
+      $('#sidebar-lock-right').click();
     {% endif %}
 
     {% endblock %}
@@ -54,8 +54,8 @@
 
     <!-- moresidebarlinks -->
     {% block moresidebarlinks %}
-    <li><a href="#"><span class="glyphicon"></span>Lock left</a></li>
-    <li><a href="#"><span class="glyphicon"></span>Lock right</a></li>
+    <li><a id="sidebar-lock-left" href="javascript:;"><span class="glyphicon"></span>Lock left</a></li>
+    <li><a id="sidebar-lock-right" href="javascript:;"><span class="glyphicon"></span>Lock right</a></li>
     {% endblock %}
     <!-- end of moresidebarlinks -->
 
