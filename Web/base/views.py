@@ -143,9 +143,7 @@ def search(request):
             # B) not in the db, parse the imdb page
             soup = movie_search.connect(url)
             name, year, director = movie_search.parse_name_year_director(soup)
-            description = movie_search.parse_description(soup)
-            # content = content[:-11] + '...'
-            # description = content.replace('\n', ' ')
+            description = movie_search.parse_description(soup).replace('\n', ' ')
 
             #    download the poster temporarily (if there is a poster)
             try:
