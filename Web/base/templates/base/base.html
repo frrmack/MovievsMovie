@@ -79,7 +79,11 @@
 
 	<!-- SIDEBAR -->
 	<div id="sidebar-wrapper">
-	  {% include "base/sidebar.html" %}
+	  <ul class="sidebar-nav">
+	    {% include "base/sidebar.html" %}
+	    {% block moresidebarlinks %}
+	    {% endblock moresidebarlinks %}
+	  </ul>
 	  <div class="sidebar-extra">
 	    {% block extrasidebar %}
 	    {% endblock extrasidebar %}
