@@ -22,32 +22,33 @@
     <!-- end of css -->
 
     <!-- extrahead -->
+    {% block extrahead %}
+    <!-- Custom JS for this view-->
+    <script src="{{STATIC_URL}}js/fight.js"></script>
+    {% endblock %}
     <!-- end of extrahead -->
 
     <!-- jquery -->
     {% block jquery %}
 
-    <!-- nav button-->
+    <!-- nav button -->
     $('#nav-fight').addClass('active');
 
-    <!-- Key Presses for Choosing Match Outcome -->
-    <!-- 1: Left wins  2: Right wins  0: Draw  -->
-    <!-- Space: Skip   Backspace: Revote the last one-->
-    $(document).keydown(function(event) {
-      if ( event.which == 219 ) {            // [
-        $("#left_wins_button").click();
-      } else if ( event.which == 221) {      // ]
-        $("#right_wins_button").click();
-      } else if ( event.which == 220) {      // \
-        $("#draw_button").click();
-      } else if ( event.which == 27) {      // esc
-        $("#skip_button").click();      
-      } else if ( event.which == 8) {       // backspace
-        history.go(-1);
-      }
-    });
+    <!-- Fight result url variables for the lock buttons -->
+    window.result_url_lock_left  = "{% url 'fight_result' movie1.imdb_id  movie2.imdb_id 1 %}";
+    window.result_url_lock_right = "{% url 'fight_result' movie1.imdb_id  movie2.imdb_id 2 %}";
+    window.result_url_no_lock    = "{% url 'fight_result' movie1.imdb_id  movie2.imdb_id 0 %}";
+
+    <!-- Press the correct button according to the current  -->
+    <!-- lock at initial loading -->
+    {% if lock == '1' %}
+      $('#lock-left-button').click();
+    {% elif lock == '2' %}
+      $('#lock-right-button').click();
+    {% endif %}
 
     {% endblock %}
+
     <!-- end of jquery -->
 
 
@@ -84,7 +85,8 @@
     {% block content %}
     <div class="container main-bar-container inset-lg">
 
-      <form action="{% url 'fight_result' movie1.imdb_id  movie2.imdb_id lock %}"
+      <form id="fight-result-form"
+	    action="{% url 'fight_result' movie1.imdb_id  movie2.imdb_id lock %}"
 	    method="post">
 	{% csrf_token %}
 
@@ -110,6 +112,14 @@
 		{{ movie1.readable_name }}
 	      </button>
 	    </div>
+	    <!-- lock button row -->
+	    <div class="row lock-button">
+	      <button id="lock-left-button"
+		      type="button"
+		      class="btn btn-default btn-sm btn-block">
+		Lock
+	      </button>
+	    </div>
 	  </div>
 
 	  <div id="vs" class="col-md-4">
@@ -125,7 +135,7 @@
 		      name="result" 
 		      value="0" 
 		      class="btn btn-default center-block"> 
-		<img src="{{ STATIC_URL }}img/net_draw_logo_2.jpg" 
+		<img src="{{ STATIC_URL }}img/net_draw_logo_2_alpha.png" 
 		     height="34" width="78"
 		     class="center-block"> 
 	      </button> 
@@ -157,6 +167,14 @@
 		      value="2"
 		      class="btn btn-primary btn-lg btn-block">
 		{{ movie2.readable_name }}
+	      </button>
+	    </div>
+	    <!-- lock button row -->
+	    <div class="row lock-button">
+	      <button id="lock-right-button"
+		      type="button"
+		      class="btn btn-default btn-sm btn-block">
+		Lock
 	      </button>
 	    </div>
 	  </div>

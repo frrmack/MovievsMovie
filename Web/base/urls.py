@@ -29,10 +29,10 @@ urlpatterns = patterns('base.views',
                        url(r'^fight/b=(?P<movie_2_id>tt\d+)$', 'fight', name='fight_b'),
                        # /fight/                                                                                                                                            
                        url(r'^fight/$', 'fight', name='fight'),
-                       # /fight/a=tt23&b=tt18/result/lock=a           
-                       # /fight/a=tt23&b=tt18/result/lock=b         
-                       # /fight/a=tt23&b=tt18/result/lock=no
-                       url(r'^fight/a=(?P<movie_1_id>tt\d+)\&b=(?P<movie_2_id>tt\d+)/result/lock=(?P<lock>(a|b|no))$',
+                       # /fight/a=tt23&b=tt18/result/lock=1           
+                       # /fight/a=tt23&b=tt18/result/lock=2         
+                       # /fight/a=tt23&b=tt18/result/lock=0
+                       url(r'^fight/a=(?P<movie_1_id>tt\d+)\&b=(?P<movie_2_id>tt\d+)/result/lock=(?P<lock>(1|2|0))$',
                            'fight_result',
                            name='fight_result'),
                        # /chart/random/200                                                                                                                                      

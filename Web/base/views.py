@@ -235,11 +235,11 @@ def fight(request, movie_1_id=None, movie_2_id=None):
     # Decide on lock based on the arguments:
     # default is no lock
     if movie_1_id != None and movie_2_id == None:
-        lock = 'a'
+        lock = '1'
     elif movie_1_id == None and movie_2_id != None:
-        lock = 'b'
+        lock = '2'
     else:
-        lock = 'no'
+        lock = '0'
 
     # Choose movie 2 randomly if the same id is given
     # manually for both fighters. Can't fight yourself!
@@ -368,12 +368,12 @@ def fight_result(request, movie_1_id, movie_2_id, lock):
 
     # pick new movies to fight and redirect to the fight                                                                                                                                                         
     new_fighters = {}
-    if lock == 'a':
+    if lock == '1':
         new_fighters['movie_1_id'] = movie_1_id
         name = 'fight_a'
-    elif lock == 'b':
+    elif lock == '2':
         new_fighters['movie_2_id'] = movie_2_id
-        name = 'fight_a'
+        name = 'fight_b'
     else:
         name = 'fight'
     return HttpResponseRedirect(reverse(name, kwargs=new_fighters))
