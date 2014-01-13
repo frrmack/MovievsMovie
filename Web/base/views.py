@@ -143,16 +143,21 @@ def search(request):
             # B) not in the db, parse the imdb page
             soup = movie_search.connect(url)
             name, year, director = movie_search.parse_name_year_director(soup)
-            content = content[:-11] + '...'
-            description = content.replace('\n', ' ')
+            description = movie_search.parse_description(soup)
+            # content = content[:-11] + '...'
+            # description = content.replace('\n', ' ')
 
             #    download the poster temporarily (if there is a poster)
             try:
                 imdb_poster_url = movie_search.parse_poster_url(soup)
+
             except movie_search.NotFoundError:
+
                 poster_name_in_db = '_empty_poster.jpg'
                 poster_to_show = '_empty_poster.jpg'
+
             else:
+
                 tmp_poster_file = os.path.join(settings.PROJECT_ROOT, 'base/static/posters/tmp.jpg')
                 poster_name_in_db = '%s.jpg' % imdb_id
                 movie_search.download(imdb_poster_url, tmp_poster_file)
@@ -166,10 +171,10 @@ def search(request):
                           description=description,
                           poster_name=poster_name_in_db)
 
-        finally:
-            # put together the url for the poster
-            poster_url = '%sposters/%s' % (settings.STATIC_URL,
-                                           poster_to_show)
+        # from our db or imdb, we have a poster
+        # put together the url for it
+        poster_url = '%sposters/%s' % (settings.STATIC_URL,
+                                       poster_to_show)
 
 
         # now we have a movie (and a poster), either retrieved from our db
