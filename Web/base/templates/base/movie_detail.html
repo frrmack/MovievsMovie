@@ -103,7 +103,17 @@
 	  <dt>TrueSkill</dt>
 	  <dd>{{ movie.seeded_true_skill}}</dd>
 	  
+	  <dt></dt>
+	  <dd class="top-indent-sm">
+	    <a class="btn btn-default"
+	       href="{% url 'fight_a' movie.imdb_id %}">
+	      <span class="glyphicon glyphicon-fire"></span> Fight!
+	    </a>
+	  </dd>
+
 	</dl>
+
+
       </div>
       <div class="col-md-5 inset-md">
 	<img id="poster" src="{{ poster_url }}"

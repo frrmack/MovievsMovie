@@ -229,10 +229,19 @@ def save_movie_rating(request, movie_id):
 
 def fight(request, movie_1_id=None, movie_2_id=None):
 
-    # Choose movie 2 randomly if both movies for the
-    # fight have the same actual id. Can't fight yourself!
-    if movie_1_id == movie_2_id != None:
-        movie_2_id = None
+    # Decide on lock based on the arguments:
+    # default is no lock
+    if movie_1_id != None and movie_2_id == None:
+        lock = 'a'
+    elif movie_1_id == None and movie_2_id != None:
+        lock = 'b'
+    else:
+        lock = 'no'
+
+    # Choose movie 2 randomly if the same id is given
+    # manually for both fighters. Can't fight yourself!
+    if movie_1_id == movie_2_id and movie_2_id != None:
+        movie_2_id = None        
 
     try:
         # get the first movie                                                                                                                                                        
@@ -298,14 +307,14 @@ def fight(request, movie_1_id=None, movie_2_id=None):
     else:
         # render                                                                                                                                                                         
         context = {'movie1' : movie1,
-                   'movie2' : movie2
+                   'movie2' : movie2,
+                   'lock'   : lock
                }
         return render(request, 'base/fight.html', context)
 
 
+def fight_result(request, movie_1_id, movie_2_id, lock):
 
-
-def fight_result(request, movie_1_id, movie_2_id):
     # get the movies                                                                                                                                                                 
     movie1 = get_object_or_404(Movie, pk=movie_1_id)
     movie2 = get_object_or_404(Movie, pk=movie_2_id)
@@ -354,13 +363,16 @@ def fight_result(request, movie_1_id, movie_2_id):
         match.save()
         # --end of recording (end of if)
 
-    # # pick new random movies                                                                                                                                                         
-    # randID1 = Movie.randoms.random().imdb_id
-    # randID2 = Movie.randoms.random().imdb_id
-    # # give a new fight view with random movies                                                                                                                                  
-    # return HttpResponseRedirect(reverse('fight',
-    #                                     args=(randID1, randID2)))
-    # THIS ABOVE HELPS US SHOW THE IDS IN THE URL
-    return HttpResponseRedirect(reverse('fight'))
+    # pick new movies to fight and redirect to the fight                                                                                                                                                         
+    new_fighters = {}
+    if lock == 'a':
+        new_fighters['movie_1_id'] = movie_1_id
+        name = 'fight_a'
+    elif lock == 'b':
+        new_fighters['movie_2_id'] = movie_2_id
+        name = 'fight_a'
+    else:
+        name = 'fight'
+    return HttpResponseRedirect(reverse(name, kwargs=new_fighters))
 
 
