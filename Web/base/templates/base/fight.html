@@ -34,15 +34,15 @@
     <!-- 1: Left wins  2: Right wins  0: Draw  -->
     <!-- Space: Skip   Backspace: Revote the last one-->
     $(document).keydown(function(event) {
-      if ( event.which == 49 ) {            //1
+      if ( event.which == 219 ) {            // [
         $("#left_wins_button").click();
-      } else if ( event.which == 50) {      //2
+      } else if ( event.which == 221) {      // ]
         $("#right_wins_button").click();
-      } else if ( event.which == 48) {      //0
+      } else if ( event.which == 220) {      // \
         $("#draw_button").click();
-      } else if ( event.which == 32) {      //space
+      } else if ( event.which == 27) {      // esc
         $("#skip_button").click();      
-      } else if ( event.which == 8) {       //backspace
+      } else if ( event.which == 8) {       // backspace
         history.go(-1);
       }
     });
@@ -54,11 +54,11 @@
     <!-- extrasidebar -->
     {% block extrasidebar %}
     Hint: Use shortcuts<br>
-    <span class="key">[1]</span>:      Left wins<br>
-    <span class="key">[2]</span>:      Right wins<br>
-    <span class="key">[0]</span>:      Draw<br>
-    <span class="key">[Space]</span>:  Skip<br>
-    <span class="key">[Backsp]</span>: Revote<br>
+    &nbsp;<span class="key">[</span>:      Left wins<br>
+    &nbsp;<span class="key">]</span>:      Right wins<br>
+    &nbsp;<span class="key">/</span>:      Draw<br>
+    &nbsp;<span class="key">Esc</span>:    Skip<br>
+    &nbsp;<span class="key">Backsp</span>: Revote<br>
     {% endblock %}
     <!-- end of extrasidebar -->
 
