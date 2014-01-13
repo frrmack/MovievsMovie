@@ -77,4 +77,7 @@ email.out
 sandbox/
 
 # The dir that is filled by collectstatic
-static/
+Web/static/
+
+# The movie posters
+posters/
