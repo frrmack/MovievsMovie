@@ -48,20 +48,25 @@ $(function(){
     });
 
     // Sidebar lock links
+    var lock_left   = "<span class=\"glyphicon\"></span>Lock Left";
+    var lock_right   = "<span class=\"glyphicon\"></span>Lock Right";
+    var unlock_left = "<span class=\"glyphicon\"></span>Unlock Left<span class=\"glyphicon glyphicon-lock\"></span>";
+    var unlock_right = "<span class=\"glyphicon\"></span>Unlock Right<span class=\"glyphicon glyphicon-lock\"></span>";
+
     $('#sidebar-lock-left').click( function(){
 	$('#lock-left-button').click();
         $(this).toggleClass('active');
         if ($(this).hasClass('active')) {
             if  ($('#sidebar-lock-right').hasClass('active')){
-		$('#sidebar-lock-right').html("<span class=\"glyphicon\"></span>Lock Right</a></li>");
+		$('#sidebar-lock-right').html(lock_right);
 		$('#sidebar-lock-right').removeClass('active');
             }
             $('#fight-result-form').attr('action', window.result_url_lock_left);
-	    $(this).html("<span class=\"glyphicon\"></span>Unlock Left<span class=\"glyphicon glyphicon-lock\"></span></a></li>")
+	    $(this).html(unlock_left)
         }
         else {
             $('#fight-result-form').attr('action', window.result_url_no_lock);
-	    $(this).html("<span class=\"glyphicon\"></span>Lock Left</a></li>")
+	    $(this).html(lock_left)
         }
     });
 
@@ -70,15 +75,15 @@ $(function(){
         $(this).toggleClass('active');
         if ($(this).hasClass('active')) {
             if  ($('#sidebar-lock-left').hasClass('active')){
-		$('#sidebar-lock-left').html("<span class=\"glyphicon\"></span>Lock Left</a></li>");
+		$('#sidebar-lock-left').html(lock_left);
 		$('#sidebar-lock-left').removeClass('active');
             }
             $('#fight-result-form').attr('action', window.result_url_lock_right);
-	    $(this).html("<span class=\"glyphicon\"></span>Unlock Right<span class=\"glyphicon glyphicon-lock\"></span></a></li>")
+	    $(this).html(unlock_right)
         }
         else {
             $('#fight-result-form').attr('action', window.result_url_no_lock);
-	    $(this).html("<span class=\"glyphicon\"></span>Lock Right</a></li>")
+	    $(this).html(lock_right)
         }
     });
     
