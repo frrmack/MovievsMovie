@@ -24,29 +24,6 @@ $(function(){
         }
     });
     
-    // Lock buttons
-    $('#lock-left-button').click( function(){
-        $(this).toggleClass('active');
-        if ($(this).hasClass('active')) {
-            $('#lock-right-button').removeClass('active');
-            $('#fight-result-form').attr('action', window.result_url_lock_left);
-        }
-        else {
-            $('#fight-result-form').attr('action', window.result_url_no_lock);
-        }
-    });
-    
-    $('#lock-right-button').click( function(){
-        $(this).toggleClass('active');
-        if ($(this).hasClass('active')) {
-            $('#lock-left-button').removeClass('active');
-            $('#fight-result-form').attr('action', window.result_url_lock_right);
-        }
-        else {
-            $('#fight-result-form').attr('action', window.result_url_no_lock);
-        }
-    });
-
     // Sidebar lock links
     var lock_left   = "<span class=\"glyphicon\"></span>Lock Left";
     var lock_right   = "<span class=\"glyphicon\"></span>Lock Right";
@@ -54,7 +31,6 @@ $(function(){
     var unlock_right = "<span class=\"glyphicon\"></span>Unlock Right<span class=\"glyphicon glyphicon-lock\"></span>";
 
     $('#sidebar-lock-left').click( function(){
-	$('#lock-left-button').click();
         $(this).toggleClass('active');
         if ($(this).hasClass('active')) {
             if  ($('#sidebar-lock-right').hasClass('active')){
@@ -71,7 +47,6 @@ $(function(){
     });
 
     $('#sidebar-lock-right').click( function(){
-	$('#lock-right-button').click();
         $(this).toggleClass('active');
         if ($(this).hasClass('active')) {
             if  ($('#sidebar-lock-left').hasClass('active')){
