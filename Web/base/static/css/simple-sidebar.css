@@ -1,12 +1,12 @@
 #wrapper {
-  padding-left: 150px;
+  padding-left: 155px;
   transition: all 0.4s ease 0s;
 }
 
 #sidebar-wrapper {
-  margin-left: -150px;
-  left: 150px;
-  width: 150px;
+  margin-left: -155px;
+  left: 155px;
+  width: 155px;
   background: #000;
   position: fixed;
   height: 100%;
@@ -22,7 +22,7 @@
 .sidebar-nav {
   position: absolute;
   top: 0;
-  width: 150px;
+  width: 155px;
   list-style: none;
   margin: 0;
   padding: 0;
@@ -68,7 +68,7 @@
 .sidebar-extra {
   position: absolute;
   top: 400px;
-  width: 150px;
+  width: 155px;
   list-style: none;
   margin: 5px;
   padding: 5px;
@@ -106,12 +106,12 @@
 
 #wrapper.active {
   position: relative;
-  left: 150px;
+  left: 155px;
 }
 
 #wrapper.active #sidebar-wrapper {
-  left: 150px;
-  width: 150px;
+  left: 155px;
+  width: 155px;
   transition: all 0.4s ease 0s;
 }
 
