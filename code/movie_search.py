@@ -90,9 +90,6 @@ def get_imdb_type(url):
 def parse_description(imdb_soup):
     p = imdb_soup.find('td', {'id':'overview-top'}).find('p',{'itemprop':'description'})
     removed_links = [a.extract() for a in p('a')]
-    print 'aaa'
-    print removed_links
-    print 'bbb'
     desc = p.get_text()
     # if there was a summary link, remove excess
     if removed_links:
@@ -107,11 +104,11 @@ def parse_name_year_director(imdb_soup):
     #~~ the h1 tag with class "header" and itemprop "name"                                                                                                                           
     name_header = soup.findAll('h1', {'class':'header'})[0]
 
-    name = name_header.span.string
+    name = name_header.span.get_text()
     year = name_header.find('span', {'class':'nobr'}).get_text().strip('()')
 
     #~~ first 'div' tag with the class 'txt-block'--> first 'a' tag within it                                                                                                        
-    director = soup.findAll('div', {'class': "txt-block"})[0].a.string
+    director = soup.findAll('div', {'class': "txt-block"})[0].a.get_text()
 
     # done                                                                                                                                                                       
     return name, year, director
