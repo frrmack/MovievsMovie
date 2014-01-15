@@ -31,8 +31,14 @@
       <!-- at first show the stars in the db -->
       <!-- save the new rating if user changes it -->
       $('#star').raty({
+	size      : 24,
+        cancel: true,
+        cancelPlace: 'right',
         score: {{ movie.starRating }},
-        click: function(score, evt) {
+        click: function(score, evt) {      
+          if (score == null) {
+            var score = 0;
+          }
           $.ajax({
             type: "POST",
             url: "{% url 'save_rating' movie.imdb_id %}",
