@@ -35,7 +35,7 @@ def home(request):
 class MovieListView(ListView):
 
     context_object_name = "movie_list"
-    queryset = Movie.objects.order_by('-starSeededTrueSkillMu')
+    queryset = Movie.objects.exclude(starRating=0).order_by('-starSeededTrueSkillMu')
     template_name = "base/movie_list.html"
 
     def dispatch(self, request, *args, **kwargs):
