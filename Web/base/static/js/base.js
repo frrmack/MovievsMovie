@@ -34,4 +34,13 @@ $.ajaxSetup({
 
 ////////////////////////////////////////////////
 
+$(function(){
+
+    // Search notice modal when searching
+    $('#search-bar').submit( function( event ) {
+	console.log('submit event');
+	$('#search-notice').modal('show');
+    });
+
+});
 

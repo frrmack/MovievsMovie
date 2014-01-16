@@ -11,12 +11,19 @@ footer {
     color: #ccc;
 }
 
+.modal-dialog-error-notice {
+    margin-top: 37%;
+    width: 20%;
+}
+
 .modal-dialog-notice {
     margin-top: 37%;
+    width: 10%;
 }
 
 .modal-dialog-center {
     margin-top: 25%;
+    width: 15%;
 }
 
 .top-indent {
