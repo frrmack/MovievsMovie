@@ -91,12 +91,8 @@ class Movie(models.Model):
         Returns true if this movie had a previous
         fight with this opponent
         """
-        matches = self.fight_set.all()
-        for match in matches:
-            if opponent in (match.movie1, match.movie2):
-                return True
-        return False
-        
+        prev_matches = Fight.objects.filter(contestants=self).filter(contestants=opponent)
+        return bool(prev_matches)
 
     def won_against(self):
         """
@@ -184,9 +180,9 @@ class Fight(models.Model):
     def report(self):
         name1 = self.movie1.readable_name()
         name2 = self.movie2.readable_name()
-        announcement = {1: "%s beats %s" % (name1, name2),
-                        2: "%s loses to %s" % (name1, name2),
-                        0: "%s and %s draw" % (name1, name2)
+        announcement = {1: "[%s] beats [%s]" % (name1, name2),
+                        2: "[%s] loses to [%s]" % (name1, name2),
+                        0: "[%s] and [%s] draw" % (name1, name2)
                         }
         return announcement[self.result]
 

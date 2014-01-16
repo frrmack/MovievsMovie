@@ -308,10 +308,35 @@ def fight(request, movie_1_id=None, movie_2_id=None):
         return error_page(request, err_title, err_msg)
 
     else:
+
+        # retrieve the previous score of this match-up if there was one
+        movie1.note = '&nbsp;'
+        movie2.note = '&nbsp;'
+        draw_note = '&nbsp;'
+        try:
+            previous_fights = Fight.objects.filter(contestants=movie1).filter(contestants=movie2)
+
+            # by design we allow a single fight between two anyway, last fight
+            # overrides the previous one, so this set should only have a single
+            # fight if it's not empty
+            last_round = previous_fights[0]
+
+            if last_round.isDraw():
+                draw_note = 'Previously drawn'
+            else:
+                for movie in movie1, movie2:
+                    if movie == last_round.winner():
+                        movie.note = 'Previous winner'
+                
+        except IndexError:
+            # They did not match up before
+            pass
+        
         # render                                                                                                                                                                         
         context = {'movie1' : movie1,
                    'movie2' : movie2,
-                   'lock'   : lock
+                   'lock'   : lock,
+                   'draw_note': draw_note,
                }
         return render(request, 'base/fight.html', context)
 
