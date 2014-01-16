@@ -13,18 +13,23 @@ import HTMLParser
 
 
 class RandomManager(models.Manager):
-    def random(self, exclude=None):
-        # exclude: You can give a model instance, and random
+    def random(self, skip_obj=None, exclude=None):
+        # skip_obj: You can give a model instance, and random
         # will return a random one, anything BUT this guy
         # (useful when you need a random guy outside myself, etc.)
-        count = self.aggregate(count=models.Count('imdb_id'))['count']
-        if count == 0 or (count == 1 and exclude is not None):
-            raise self.model.DoesNotExist("There is not a single %s to pick randomly." % self.model.__name__)
+        # exclude: a dict of exclude kwargs following Django DRM
+        if exclude is None:
+            objects = self
+        else:
+            objects = self.exclude( **exclude )
+        count = objects.aggregate(count=models.Count('imdb_id'))['count']
+        if count == 0 or (count == 1 and skip_obj is not None):
+            raise objects.model.DoesNotExist("There is not a single %s to pick randomly." % objects.model.__name__)
         random_index = randint(0, count-1)
-        lucky_guy = self.all()[random_index]
-        while lucky_guy == exclude:
+        lucky_guy = objects.all()[random_index]
+        while lucky_guy == skip_obj:
             random_index = randint(0, count-1)
-            lucky_guy = self.all()[random_index]
+            lucky_guy = objects.all()[random_index]
         return lucky_guy
 
 

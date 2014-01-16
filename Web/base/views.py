@@ -252,7 +252,7 @@ def fight(request, movie_1_id=None, movie_2_id=None):
             movie1 = get_object_or_404(Movie, pk=movie_1_id)
         else:
             # if no id given, pick a random one                                                                                                                                      
-            movie1 = Movie.randoms.random()
+            movie1 = Movie.randoms.random(exclude={'starRating':0})
         # get the second movie                                                                                                                                                       
         if movie_2_id is not None:
             movie2 = get_object_or_404(Movie, pk=movie_2_id)
@@ -260,11 +260,11 @@ def fight(request, movie_1_id=None, movie_2_id=None):
             # if no id given, pick a random one                                                                                                                                      
             # that movie1 did not fight before
             # also make sure you don't get movie1
-            movie2 = Movie.randoms.random(exclude=movie1)
+            movie2 = Movie.randoms.random(skip_obj=movie1, exclude={'starRating':0})
             max_tries = Movie.objects.count()
             counter = 0
             while movie1.did_already_fight(movie2):
-                movie2 = Movie.randoms.random(exclude=movie1)
+                movie2 = Movie.randoms.random(skip_obj=movie1, exclude={'starRating':0})
                 # don't search for too long
                 counter += 1
                 if counter == max_tries:
