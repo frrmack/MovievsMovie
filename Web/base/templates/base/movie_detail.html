@@ -52,9 +52,17 @@
                   },
             dataType: "json",
             success: function(data){
+              $('#save-notice').modal('show')
+              window.setTimeout(function(){
+                                    $('#save-notice').modal('hide');
+                                }, 800);
               console.log( "Succesfully saved rating as " + data.rating );
             },
             error: function(msg){
+              $('#save-notice').modal('show')
+              window.setTimeout(function(){
+                                    $('#error-notice').modal('hide');
+                                }, 800);
               console.log( "Error from server during AJAX POST." );
               console.log( msg.responseText );
             }              
@@ -126,6 +134,36 @@
 	     class="center-block img-rounded">
       </div>
     </div>
+
+
+    
+<!-- Modal: Save notice -->
+<div class="modal fade" id="save-notice" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-notice">
+    <div class="modal-content">
+      <div class="modal-body text-center">
+        Saved...
+      </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<!-- Modal: Error notice -->
+<div class="modal fade" id="save-notice" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog--notice">
+    <div class="modal-content">
+      <div class="modal-body text-center text-danger">
+        Error: Could not save rating
+      </div>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+
     {% endblock %}
     <!-- end of content -->
 

@@ -11,6 +11,14 @@ footer {
     color: #ccc;
 }
 
+.modal-dialog-notice {
+    margin-top: 37%;
+}
+
+.modal-dialog-center {
+    margin-top: 25%;
+}
+
 .top-indent {
     margin-top: 10px;
 }
