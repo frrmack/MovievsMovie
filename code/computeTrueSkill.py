@@ -35,6 +35,8 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Web.settings")
 
 
 from base.models import Movie, Fight
+from django.db import transaction
+
 import trueskill as ts
 
 
@@ -80,20 +82,35 @@ def compute_true_skills():
 
     # record new ratings in the database
     count = 0
-    for movie in Movie.objects.all():
+    for id_dict in Movie.objects.values('imdb_id'):
         count += 1
+        imdb_id = id_dict['imdb_id']
         rawRating = rawTS[movie.imdb_id]
         seededRating = seededTS[movie.imdb_id]
-        movie.rawTrueSkillMu = rawRating.mu
-        movie.rawTrueSkillSigma = rawRating.sigma
-        movie.starSeededTrueSkillMu = seededRating.mu
-        movie.starSeededTrueSkillSigma = seededRating.sigma
-        movie.save()
+        update_movie(imdb_id, rawRating, seededRating)
         if count % 100 == 0: print >> sys.stderr, '%i ratings recorded.' % count
+
+
+@transaction.atomic
+def update_movie(imdb_id, rawRating, seededRating):
+    movie = Movie.objects.get(imdb_id = imdb_id)
+    movie.rawTrueSkillMu = rawRating.mu
+    movie.rawTrueSkillSigma = rawRating.sigma
+    movie.starSeededTrueSkillMu = seededRating.mu
+    movie.starSeededTrueSkillSigma = seededRating.sigma
+    movie.save()
+
 
 
 if __name__ == '__main__':
     
-    compute_true_skills()
+    if len(sys.argv) > 1 and sys.argv[1] == '-c':
+        # infinite loop
+        while True:
+            compute_true_skills()
+            time.sleep(0.5)
+    else:
+            compute_true_skills()
+        
 
 

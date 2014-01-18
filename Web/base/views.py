@@ -10,6 +10,8 @@ from django.conf import settings
 
 from django.views.generic import ListView, DetailView
 
+from django.db import transaction
+
 from base.models import Movie, Fight
 
 from datetime import datetime
@@ -189,7 +191,7 @@ def search(request):
         return render(request, 'base/movie_detail.html', context)
 
 
-
+@transaction.atomic
 def save_movie_rating(request, movie_id):
 
     rating = request.POST['rating']
@@ -340,7 +342,7 @@ def fight(request, movie_1_id=None, movie_2_id=None):
                }
         return render(request, 'base/fight.html', context)
 
-
+@transaction.atomic
 def fight_result(request, movie_1_id, movie_2_id, lock):
 
     # get the movies                                                                                                                                                                 
