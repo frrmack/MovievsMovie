@@ -97,7 +97,6 @@ def compute_true_skills():
             # next round.
             continue
         update_movie(imdb_id, rawRating, seededRating)
-        if count % 100 == 0: print >> sys.stderr, '%i ratings recorded.' % count
     print >> sys.stderr, '--- a total of %i ratings recorded. ---' % count
 
 
