@@ -37,8 +37,9 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Web.settings")
 from base.models import Movie, Fight
 from django.db import transaction
 
-import trueskill as ts
+import time
 
+import trueskill as ts
 
 
 def update_true_skill(match, true_skill_dict):
