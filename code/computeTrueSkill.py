@@ -118,7 +118,7 @@ if __name__ == '__main__':
         # infinite loop
         while True:
             compute_true_skills()
-            time.sleep(0.5)
+            time.sleep(0.1)
     else:
             compute_true_skills()
         
