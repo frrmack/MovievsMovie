@@ -35,7 +35,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Web.settings")
 
 
 from base.models import Movie, Fight
-from django.db import transaction
+from django.db import transaction, reset_queries
 
 import time
 
@@ -110,16 +110,21 @@ def update_movie(imdb_id, rawRating, seededRating):
     movie.save()
 
 
+def main():
+    # If this is run in an infinite loop, you need reset_queries
+    # to avoid a memory leak. Read more here:
+    # http://stackoverflow.com/questions/2338041/python-django-polling-of-database-has-memory-leak
+    reset_queries()
+    compute_true_skills()
+
 
 if __name__ == '__main__':
     
     if len(sys.argv) > 1 and sys.argv[1] == '-c':
         # infinite loop
         while True:
-            compute_true_skills()
-            time.sleep(0.1)
+            main()
     else:
-            compute_true_skills()
-        
+        main()
 
 
