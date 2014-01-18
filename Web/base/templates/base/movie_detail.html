@@ -28,6 +28,8 @@
     <!-- jquery -->
     {% block jquery %}
  
+      var notice_duration_ms = 300;
+
       <!-- at first show the stars in the db -->
       <!-- save the new rating if user changes it -->
       $('#star').raty({
@@ -52,17 +54,17 @@
                   },
             dataType: "json",
             success: function(data){
-              $('#save-notice').modal('show')
+              $('#save-notice').modal({backdrop: false});
               window.setTimeout(function(){
                                     $('#save-notice').modal('hide');
-                                }, 800);
+                                }, notice_duration_ms);
               console.log( "Succesfully saved rating as " + data.rating );
             },
             error: function(msg){
-              $('#save-notice').modal('show')
+              $('#save-notice').modal({backdrop: false});
               window.setTimeout(function(){
                                     $('#error-notice').modal('hide');
-                                }, 800);
+                                }, notice_duration_ms);
               console.log( "Error from server during AJAX POST." );
               console.log( msg.responseText );
             }              
