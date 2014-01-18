@@ -2,9 +2,16 @@
       role="navigation">
         <div class="container">
 	  <div class="navbar-header">
+            <button type="button" class="navbar-toggle"
+		    data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
 	    <a class="navbar-brand" href="#">Movie vs Movie</a>
 	  </div>
-	  <div class="collapse navbar-collapse">
+	  <div class="navbar-collapse collapse">
 	      <ul class="nav navbar-nav">
 		<!-- Make the right <li> active by making it
 		     class="active" -->
@@ -18,13 +25,15 @@
 										glyphicon-th-list"></span>
 		    Rankings</a></li>
 		<li id="nav-rate"><a href="#"><span class="glyphicon
-									  glyphicon-star"></span>
+							   glyphicon-star"></span>
 		    Rate Movies</a></li>
 		<li id="nav-analyze"><a href="{% url 'bubble_chart' %}"><span class="glyphicon
 										     glyphicon-signal"></span>
 		    Analysis</a></li>
 	      </ul>
-	      <form id="search-bar" name="searchbar" class="navbar-form navbar-right" role="search"
+	      <div class="nav navbar-nav navbar-right">
+	      <form id="search-bar" name="searchbar"
+		    class="navbar-form" role="search"
 		    action="{% url 'search' %}" method="get">
 		{% csrf_token %}
 		<div class="form-group">
@@ -38,6 +47,7 @@
 		  </span>
 		</button>
 	      </form>
+	      </ul>
 	  </div>
 	</div>
       </div>

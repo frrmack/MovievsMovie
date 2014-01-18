@@ -3,6 +3,23 @@ body {
     padding-bottom: 40px;
 }
 
+
+@media (min-width: @screen-sm-min) and 
+       (max-width: @screen-sm-max) { 
+    
+    body {
+	padding-top: 100px;
+	padding-bottom: 40px;
+    }
+}
+
+body {
+    padding-top: 100px;
+    padding-bottom: 40px;
+}
+
+}
+
 footer {
     margin-top: 60px;
 }
