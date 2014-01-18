@@ -67,9 +67,11 @@ def compute_true_skills():
     rawTS, seededTS = {}, {}
 
     # initialize TrueSkill for each movie
-    for movie in Movie.objects.all():
-        rawTS[movie.imdb_id] = ts.Rating(mu=3.0, sigma=1.0)
-        seededTS[movie.imdb_id] = ts.Rating(mu=1.*movie.starRating, sigma=0.5)
+    for value_dict in Movie.objects.values('imdb_id', 'starRating'):
+        imdb_id = value_dict['imdb_id']
+        starRating = value_dict['starRating']
+        rawTS[imdb_id] = ts.Rating(mu=3.0, sigma=1.0)
+        seededTS[imdb_id] = ts.Rating(mu=1.*starRating, sigma=0.5)
 
     # iterate over matches (over time) and incrementally update
     # TrueSkill dictionaries    
@@ -86,10 +88,17 @@ def compute_true_skills():
     for id_dict in Movie.objects.values('imdb_id'):
         count += 1
         imdb_id = id_dict['imdb_id']
-        rawRating = rawTS[movie.imdb_id]
-        seededRating = seededTS[movie.imdb_id]
+        try:
+            rawRating = rawTS[imdb_id]
+            seededRating = seededTS[imdb_id]
+        except KeyError:
+            # this movie was just saved in between starting the TrueSkill
+            # calculations and recording the results. we'll get it in the
+            # next round.
+            continue
         update_movie(imdb_id, rawRating, seededRating)
         if count % 100 == 0: print >> sys.stderr, '%i ratings recorded.' % count
+    print >> sys.stderr, '--- a total of %i ratings recorded. ---' % count
 
 
 @transaction.atomic
