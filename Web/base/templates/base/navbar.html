@@ -16,10 +16,13 @@
 		    Fight!</a></li>
 		<li id="nav-list"><a href="{% url 'movie_list' %}"><span class="glyphicon
 										glyphicon-th-list"></span>
-		    Rated Movies</a></li>
-		<li id="nav-bubble"><a href="{% url 'bubble_chart' %}"><span class="glyphicon
-										    glyphicon-certificate"></span>
-		    Bubble Chart</a></li>
+		    Rankings</a></li>
+		<li id="nav-rate"><a href="#"><span class="glyphicon
+									  glyphicon-star"></span>
+		    Rate Movies</a></li>
+		<li id="nav-analyze"><a href="{% url 'bubble_chart' %}"><span class="glyphicon
+										     glyphicon-signal"></span>
+		    Analysis</a></li>
 	      </ul>
 	      <form id="search-bar" name="searchbar" class="navbar-form navbar-right" role="search"
 		    action="{% url 'search' %}" method="get">
