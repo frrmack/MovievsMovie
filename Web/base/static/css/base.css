@@ -1,11 +1,10 @@
 body {
-    padding-top: 50px;
-    padding-bottom: 40px;
+	padding-top: 50px;
+	padding-bottom: 40px;
 }
 
-
-@media (min-width: @screen-sm-min) and 
-       (max-width: @screen-sm-max) { 
+@media (min-width: 768px) and 
+       (max-width: 992px) { 
     
     body {
 	padding-top: 100px;
@@ -13,12 +12,6 @@ body {
     }
 }
 
-body {
-    padding-top: 100px;
-    padding-bottom: 40px;
-}
-
-}
 
 footer {
     margin-top: 60px;
