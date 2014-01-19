@@ -95,12 +95,15 @@ def get_imdb_type(url):
         
 def parse_description(imdb_soup):
     p = imdb_soup.find('td', {'id':'overview-top'}).find('p',{'itemprop':'description'})
-    removed_links = [a.extract() for a in p('a')]
-    desc = p.get_text()
-    # if there was a summary link, remove excess
-    if removed_links:
-        desc = desc.rsplit('...', 1)[0] + '...'
-    return desc
+    if p is None:
+        return 'N/A'
+    else:
+        removed_links = [a.extract() for a in p('a')]
+        desc = p.get_text()
+        # if there was a summary link, remove excess
+        if removed_links:
+            desc = desc.rsplit('...', 1)[0] + '...'
+        return desc
 
 def parse_name_year_director(imdb_soup):
     
