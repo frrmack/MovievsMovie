@@ -23,7 +23,10 @@ import os, sys, shutil
 # absolute path to this script
 SCRIPTPOS = os.path.abspath(__file__).rsplit('/',1)[0] + '/'
 sys.path.append(SCRIPTPOS+"../../code/")
+
 import movie_search
+from retrieve_movie_from_the_web import retrieve_movie_from_the_web
+
 
 def now():
     return datetime.utcnow().replace(tzinfo=utc)
@@ -143,44 +146,6 @@ def bubbleChart(request, order_rule='random', num_nodes=None):
                'max_num_nodes': max_num_nodes
                }
     return render(request, 'base/rating_bubble_chart.html', context)
-
-
-
-def retrieve_movie_from_the_web(imdb_id):
-
-    # connect and parse the imdb page
-    url = movie_search.get_imdb_url(imdb_id)
-    soup = movie_search.connect(url)
-    name, year, director = movie_search.parse_name_year_director(soup)
-    description = movie_search.parse_description(soup).replace('\n', ' ')
-
-    # download the poster temporarily (if there is a poster)
-    try:
-        imdb_poster_url = movie_search.parse_poster_url(soup)
-        
-    except movie_search.NotFoundError:
-
-        poster_name = '_empty_poster.jpg'
-        
-    else:
-
-        poster_name = '%s.jpg' % imdb_id
-        poster_location = os.path.join(settings.PROJECT_ROOT,
-                                       'base/static/posters/%s' % poster_name)
-        if not os.path.isfile(poster_location):
-            # download poster if you haven't already
-            movie_search.download(imdb_poster_url, poster_location)
-
-    # create and return model instance
-    movie = Movie(imdb_id = imdb_id,
-                  name=name,
-                  year=year,
-                  director=director,
-                  description=description,
-                  poster_name=poster_name)
-
-    return movie
-
 
 
 def search(request):
