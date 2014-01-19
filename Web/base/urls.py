@@ -7,18 +7,26 @@ from base.views import MovieListView, MovieDetailView
 urlpatterns = patterns('base.views',
                        # /
                        url(r'^$', 'home', name='home'),
+
+
                        # /list                                                                                                                                                  
                        url(r'^list$',
                            MovieListView.as_view(),
                            name = 'movie_list'),
+
+
                        # /tt51                                                                                                                                                      
                        url(r'^(?P<pk>tt\d+)$',
                            MovieDetailView.as_view(),
                            name = 'movie_detail'),
                        # /tt51/saverating                                                                                                                                            
                        url(r'^(?P<movie_id>tt\d+)/save_rating$', 'save_movie_rating', name='save_rating'),
+
+
                        # /search                                                                                                                                                      
                        url(r'^search$', 'search', name='search'),
+
+
                        # /fight/a=tt23&b=tt18                                                                                                                                   
                        url(r'^fight/a=(?P<movie_1_id>tt\d+)\&b=(?P<movie_2_id>tt\d+)$',
                            'fight',
@@ -35,6 +43,8 @@ urlpatterns = patterns('base.views',
                        url(r'^fight/a=(?P<movie_1_id>tt\d+)\&b=(?P<movie_2_id>tt\d+)/result/lock=(?P<lock>(1|2|0))$',
                            'fight_result',
                            name='fight_result'),
+
+
                        # /chart/random/200                                                                                                                                      
                        # /chart/ordered_by_name/                                                                                                                                
                        # /chart/ordered_by_rating/1400                                                                                                                          
