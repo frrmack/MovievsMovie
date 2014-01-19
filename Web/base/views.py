@@ -167,7 +167,9 @@ def retrieve_movie_from_the_web(imdb_id):
         poster_name = '%s.jpg' % imdb_id
         poster_location = os.path.join(settings.PROJECT_ROOT,
                                        'base/static/posters/%s' % poster_name)
-        movie_search.download(imdb_poster_url, poster_location)
+        if not os.path.isfile(poster_location):
+            # download poster if you haven't already
+            movie_search.download(imdb_poster_url, poster_location)
 
     # create and return model instance
     movie = Movie(imdb_id = imdb_id,
@@ -252,12 +254,13 @@ def save_movie_rating(request, movie_id):
                       director= request.POST['director'],
                       description= request.POST['description'],
                       poster_name = request.POST['poster_name'])
-        tmp_poster = os.path.join(settings.PROJECT_ROOT,
-                                  'base/static/posters/tmp.jpg')
-        permanent_poster = os.path.join(settings.PROJECT_ROOT,
-                                        'base/static/posters/%s' \
-                                        % request.POST['poster_name'])
-        shutil.copy(tmp_poster, permanent_poster)
+        # no need for this anymore, I stopped doing a tmp download
+        # tmp_poster = os.path.join(settings.PROJECT_ROOT,
+        #                           'base/static/posters/tmp.jpg')
+        # permanent_poster = os.path.join(settings.PROJECT_ROOT,
+        #                                 'base/static/posters/%s' \
+        #                                 % request.POST['poster_name'])
+        # shutil.copy(tmp_poster, permanent_poster)
         print 'initialized new model for %s' % name
 
 
