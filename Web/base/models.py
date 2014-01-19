@@ -94,6 +94,10 @@ class Movie(models.Model):
         prev_matches = Fight.objects.filter(contestants=self).filter(contestants=opponent)
         return bool(prev_matches)
 
+    def not_fought_opponents(self):
+        return Fight.objects.exclude(contestants=self)
+
+
     def won_against(self):
         """
         The opponents this guy has won a Fight against
