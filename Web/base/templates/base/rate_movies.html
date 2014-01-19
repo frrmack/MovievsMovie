@@ -14,12 +14,53 @@
     <!-- end of css -->
 
     <!-- extrahead -->
+    {% block extrahead %}
+    <script src="{{STATIC_URL}}js/spinner.js"></script>
+    <!-- set the active nav button here -->
+    <script type="text/javascript">
+      $("#nav-rate").ready(function(){$("#nav-rate").addClass('active');});
+    </script>
+    {% endblock %}
     <!-- end of extrahead -->
 
     <!-- jquery -->
     {% block jquery %}
-    <!-- set the active nav button here -->
-    $('#nav-rate').addClass('active');
+
+    {% for movie in movies_to_rate %}
+    $('#rate-{{movie.imdb_id}}').raty({
+	size      : 24,
+        cancel: true,
+        cancelPlace: 'right',
+        score: {{ movie.starRating }},
+        click: function(score, evt) {      
+          if (score == null) {
+            var score = 0;
+          }
+          $.ajax({
+            type: "POST",
+            url: "{% url 'save_rating' movie.imdb_id %}",
+            data: {"rating": score,
+                   "imdb_id": "{{movie.imdb_id}}",
+                   "name": "{{movie.name | safe }}",
+                   "year": "{{movie.year | safe}}",
+                   "director":"{{movie.director | safe}}",
+                   "description":"{{movie.description}}",
+                   "poster_name" : "{{movie.poster_name | safe}}"
+                  },
+            dataType: "json",
+            success: function(data){
+              console.log( "Rated {{movie.name|safe}} as " + data.rating );
+            },
+            error: function(msg){
+              console.log( "Error from server during AJAX POST." );
+              console.log( msg.responseText );
+            }              
+          });
+        }
+      });
+    {% endfor %}
+
+
     {% endblock %}
     <!-- end of jquery -->
 
@@ -33,27 +74,32 @@
     <!-- use class="main-bar-container"
 	 for your containers -->
     {% block content %}
+
     <div class="container main-bar-container">
 
+      <div id="spinner"> </div>
+
       {% for movie in movies_to_rate %}
-
-      {% cycle '<div class="row inset">' '' '' '' '' ''%}
-
-	
-	<div class="col-md-2">
-
+      {% cycle '<div class="row inset-sm">' '' '' '' '' ''%}
+	<div class="clearfix col-md-2 col-sm-4">
+	  <!-- poster -->
 	  <a href="{% url 'movie_detail' movie.imdb_id %}">
-	    <!-- original: height="317" width="214" -->
-	    <img id="poster_1" src="{{STATIC_URL}}posters/{{movie.poster_name}}"
-		 height="243" width="164"
-		 class="center-block img-rounded">
+	    <!-- generically ideal: height="317" width="214" -->
+	    <!-- a good size here:  height="243" width="164" -->
+	    <img src="{{STATIC_URL}}posters/{{movie.poster_name}}"
+		 alt="{{movie.name}}"
+		 class="center-block img-rounded img-responsive">
 	  </a>
-
-
+	  <!-- rating  -->
+	  <div class="row">
+	    <div class="col-md-2 col-sm-3 col-xs-4"> </div>
+	    <div class="rating-pane col-md-8 col-sm-6 col-xs-4 center-block">
+	      <div id="rate-{{movie.imdb_id}}"></div>
+	    </div>	    
+	    <div class="col-md-2 col-sm-3 col-xs-4"> </div>
+	  </div>
 	</div>
-
       {% cycle '' '' '' '' '' '</div>' %}
-
       {% endfor %}
 
     </div>

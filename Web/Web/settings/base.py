@@ -105,6 +105,7 @@ STATICFILES_DIRS = (
     os.path.join(PROJECT_ROOT, 'bootstrap'),
     os.path.join(PROJECT_ROOT, 'jquery'),
     os.path.join(PROJECT_ROOT, 'raty'),
+    os.path.join(PROJECT_ROOT, 'spin'),
 )
 
 # If you set this to False, Django will make some optimizations so as not

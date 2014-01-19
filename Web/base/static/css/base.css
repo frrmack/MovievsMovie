@@ -21,6 +21,14 @@ footer {
     color: #ccc;
 }
 
+#spinner {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+
 .modal-dialog-error-notice {
     margin-top: 37%;
     width: 20%;
@@ -64,11 +72,25 @@ footer {
     
 }
 
+.rating-pane {
+  min-height: 7px;
+  width: 32px;
+  padding: 6px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 7px;
+
+}
+
 .inset-flush-top-bottom {
     padding-top: 0px;
     padding-bottom: 0px;
     padding-left: 20px;
     padding-right: 20px;
+}
+
+.inset-tn {
+    padding: 7px;
 }
 
 .inset-sm {

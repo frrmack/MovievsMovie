@@ -46,10 +46,10 @@
             url: "{% url 'save_rating' movie.imdb_id %}",
             data: {"rating": score,
                    "imdb_id": "{{movie.imdb_id}}",
-                   "name": "{{movie.name | safe }}",
+                   "name": "{{movie.name | safe}}",
                    "year": "{{movie.year | safe}}",
                    "director":"{{movie.director | safe}}",
-                   "description":"{{movie.description | safe}}",
+                   "description":"{{movie.description}}",
                    "poster_name" : "{{movie.poster_name | safe}}"
                   },
             dataType: "json",

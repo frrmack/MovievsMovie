@@ -30,6 +30,9 @@
     <!-- Custom base JS -->
     <script src="{{STATIC_URL}}js/base.js"></script>
 
+    <!-- Spin (loading spinner) -->
+    <script src="{{ STATIC_URL }}js/spin.min.js"></script>
+
     <!-- Raty (star ratings) -->
     <script src="{{ STATIC_URL }}js/jquery.raty.min.js"></script>
     <script type="text/javascript">
@@ -46,8 +49,11 @@
       {% endblock %}
     </style>
 
-    <!-- extra javascript (jquery) -->
+    <!-- extra javascript (initjs & jquery) -->
     <script type="text/javascript">
+    {% block initjs %}
+    {% endblock %}
+
     $(function(){
       {% block jquery %}
       {% endblock %}
