@@ -62,6 +62,39 @@ class MovieDetailView(DetailView):
     model = Movie
     template_name = "base/movie_detail.html"
 
+    def get_object(self, *args, **kwargs):
+
+        try:
+            return super(MovieDetailView, self).get_object(*args, **kwargs)
+
+        except Http404:
+            imdb_id = self.kwargs['pk']
+
+            try:
+                movie = retrieve_movie_from_the_web( imdb_id )
+            except movie_search.NotFoundError:
+                raise Http404( imdb_id )
+            else:
+                return movie
+                
+
+    def dispatch(self, request, *args, **kwargs):
+
+        try:
+            return super(MovieDetailView, self).dispatch(request, *args, **kwargs)
+
+        except Http404 as e:
+            imdb_id =  e.message
+            err_title = 'Movie not found'
+            err_msg = 'There is no movie with the id ' +\
+                      '<strong>%s</strong>.\n\n' % (imdb_id) +\
+                      'You can try searching a movie by name, ' +\
+                      '(or even id) through the search bar. ' +\
+                      'This can help you find what you are looking ' +\
+                      'for, even if you don\'t know the name/id exactly.'
+            return error_page(request, err_title, err_msg)
+        
+
     def get_context_data(self, **kwargs):
         movie = kwargs['object']
         # Call the base implementation first to get a context
@@ -70,6 +103,7 @@ class MovieDetailView(DetailView):
         context['poster_url'] = "%sposters/%s" % (settings.STATIC_URL,
                                                   movie.poster_name) 
         return context
+
 
 
 def error_page(request, title, message):
@@ -112,6 +146,40 @@ def bubbleChart(request, order_rule='random', num_nodes=None):
 
 
 
+def retrieve_movie_from_the_web(imdb_id):
+
+    # connect and parse the imdb page
+    url = movie_search.get_imdb_url(imdb_id)
+    soup = movie_search.connect(url)
+    name, year, director = movie_search.parse_name_year_director(soup)
+    description = movie_search.parse_description(soup).replace('\n', ' ')
+
+    # download the poster temporarily (if there is a poster)
+    try:
+        imdb_poster_url = movie_search.parse_poster_url(soup)
+        
+    except movie_search.NotFoundError:
+
+        poster_name = '_empty_poster.jpg'
+        
+    else:
+
+        poster_name = '%s.jpg' % imdb_id
+        poster_location = os.path.join(settings.PROJECT_ROOT,
+                                       'base/static/posters/%s' % poster_name)
+        movie_search.download(imdb_poster_url, poster_location)
+
+    # create and return model instance
+    movie = Movie(imdb_id = imdb_id,
+                  name=name,
+                  year=year,
+                  director=director,
+                  description=description,
+                  poster_name=poster_name)
+
+    return movie
+
+
 
 def search(request):
 
@@ -138,43 +206,16 @@ def search(request):
         try:
             # A) already in the db, show it
             movie = Movie.objects.get(pk=imdb_id)
-            poster_to_show = movie.poster_name
 
         except Movie.DoesNotExist:
 
             # B) not in the db, parse the imdb page
-            soup = movie_search.connect(url)
-            name, year, director = movie_search.parse_name_year_director(soup)
-            description = movie_search.parse_description(soup).replace('\n', ' ')
-
-            #    download the poster temporarily (if there is a poster)
-            try:
-                imdb_poster_url = movie_search.parse_poster_url(soup)
-
-            except movie_search.NotFoundError:
-
-                poster_name_in_db = '_empty_poster.jpg'
-                poster_to_show = '_empty_poster.jpg'
-
-            else:
-
-                tmp_poster_file = os.path.join(settings.PROJECT_ROOT, 'base/static/posters/tmp.jpg')
-                poster_name_in_db = '%s.jpg' % imdb_id
-                movie_search.download(imdb_poster_url, tmp_poster_file)
-                poster_to_show = "tmp.jpg"
-
-            #    create model instance
-            movie = Movie(imdb_id = imdb_id,
-                          name=name,
-                          year=year,
-                          director=director,
-                          description=description,
-                          poster_name=poster_name_in_db)
+            movie = retrieve_movie_from_the_web(imdb_id)
 
         # from our db or imdb, we have a poster
         # put together the url for it
         poster_url = '%sposters/%s' % (settings.STATIC_URL,
-                                       poster_to_show)
+                                       movie.poster_name)
 
 
         # now we have a movie (and a poster), either retrieved from our db

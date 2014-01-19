@@ -11,6 +11,8 @@ log = get_log('movie_search', level="debug")
 class NotFoundError(Exception):
     pass
 
+
+
 def get_name_content_url(search_result):
     return (search_result['titleNoFormatting'],
             search_result['content'],
@@ -40,8 +42,9 @@ def connect(url):
         soup = BeautifulSoup(page)
         log.debug('connected to %s' % url)
     except Exception:
-        log.error("\n\n Failed to connect or parse %s\n" % url)
-        raise Exception
+        err_msg = "\n\n Failed to connect or parse %s\n" % url
+        log.error( err_msg )
+        raise NotFoundError( err_msg )
         
     return soup
 
@@ -79,6 +82,9 @@ def get_poster(movie_url, target_filename=None):
     
     download(url, target_filename)
 
+def get_imdb_url(imdb_id):
+    base = "http://www.imdb.com/title/"
+    return urlparse.urljoin(base, imdb_id)
 
 def get_imdb_id(url):
     return urlparse.urlparse(url).path.strip('/').split('/',2)[1]
