@@ -60,6 +60,26 @@ class MovieListView(ListView):
 
 
 
+class RateMoviesView(ListView):
+
+    context_object_name = "movies_to_rate"
+    queryset = Movie.objects.filter(starRating=0).order_by('?')
+    template_name = "base/rate_movies.html"
+
+    def dispatch(self, request, *args, **kwargs):
+        # check if there are any not-rated movies in the db
+        if not self.get_queryset():
+            
+            err_title = 'No movies to rate'
+            err_msg = 'You already rated all movies currently in the database, ' + \
+                      'but you can find and rate more using the search bar.'
+            return error_page(request, err_title, err_msg)
+
+        else:
+            return super(RateMoviesView, self).dispatch(request, *args, **kwargs)
+
+
+
 class MovieDetailView(DetailView):
 
     model = Movie

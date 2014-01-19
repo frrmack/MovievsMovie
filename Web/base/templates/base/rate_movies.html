@@ -1,20 +1,16 @@
 {% extends "base/base.html" %}
 
+    <!-- turn off sidebar -->
+    {% block sidebar %}
+    {% endblock %}
+
     <!-- title -->
     {% block title %}
-    Rankings
+    Rate Movies
     {% endblock %}
     <!-- end of title -->
 
     <!-- css -->
-    {% block css %}
-    th.title {
-      color: olive;
-    }
-    th.rating {
-      color: olive;
-    }
-    {% endblock %}
     <!-- end of css -->
 
     <!-- extrahead -->
@@ -23,7 +19,7 @@
     <!-- jquery -->
     {% block jquery %}
     <!-- set the active nav button here -->
-    $('#nav-list').addClass('active');
+    $('#nav-rate').addClass('active');
     {% endblock %}
     <!-- end of jquery -->
 
@@ -39,28 +35,29 @@
     {% block content %}
     <div class="container main-bar-container">
 
-      <div id="movie_list"> 
-	<table class="table table-striped">
-	  <th class="title">Title</th>
-	  <th class="rating">Rating</th>
-	  <th class="rating">TrueSkill</th>
-	  {% for movie in movie_list %}
-	  <tr>
-	    <td>
-	      <a href="{% url 'movie_detail' movie.imdb_id  %}">{{ movie.name }}</a>
-	    </td>
-	    <td class="stars">
-		<b>{{ movie.unicode_star_rating }}</b>
-	    </td>
-	    <td>
-	      {{ movie.seeded_true_skill }}
-	    </td>
-	  </tr>
-	  {% endfor %}
-	</table>
-      </div>
+      {% for movie in movies_to_rate %}
+
+      {% cycle '<div class="row inset">' '' '' '' '' ''%}
+
+	
+	<div class="col-md-2">
+
+	  <a href="{% url 'movie_detail' movie.imdb_id %}">
+	    <!-- original: height="317" width="214" -->
+	    <img id="poster_1" src="{{STATIC_URL}}posters/{{movie.poster_name}}"
+		 height="243" width="164"
+		 class="center-block img-rounded">
+	  </a>
+
+
+	</div>
+
+      {% cycle '' '' '' '' '' '</div>' %}
+
+      {% endfor %}
 
     </div>
+
     {% endblock %}
     <!-- end of content -->
 
