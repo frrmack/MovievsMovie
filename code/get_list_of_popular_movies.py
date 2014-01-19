@@ -34,30 +34,35 @@ def parse_single_page(soup):
 
 
 def click_next(soup):
-    link = soup.find('span', {'class':'pagination'}).find('a')
+    try:
+        link = soup.find('span', {'class':'pagination'}).find_all('a')[-1]
+    except IndexError:
+        raise KeyError("No Next button to click")
     target = urlparse.urljoin(IMDB_BASE_URL, link['href'])
-    print target
+    log.debug('clicking %s' % link.get_text())
     soup = connect( target )
     return soup
 
 
 def parse_all(start_url, total=300):
-    films = []
     soup = connect(start_url)
-    count = 0
-    while len(films) < total:
-        films.extend( parse_single_page(soup) )
+    film_count = 0
+    page_count = 0
+    while film_count < total:
+        for film in parse_single_page(soup):
+            film_count += 1
+            yield film
         soup = click_next(soup)
-        count += 1
-        print >> sys.stderr, '%i pages scraped.' % count
+        page_count += 1
+        print >> sys.stderr, '%i pages scraped.' % page_count
 
-    return films
 
 
 if __name__ == '__main__':
 
-    films = parse_all( POPULAR_URL, total=300)
-    
+     
+    for imdb_id, name in parse_all( POPULAR_URL, total=1000):
+        print imdb_id
 
 
 
