@@ -72,14 +72,13 @@ footer {
     
 }
 
-.rating-pane {
-  min-height: 7px;
-  width: 32px;
-  padding: 6px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 7px;
+.rating-wrapper {
+    margin-top: 5px;
+    text-align: center;
+}
 
+.rating-pane {
+    display: inline-block;
 }
 
 .inset-flush-top-bottom {

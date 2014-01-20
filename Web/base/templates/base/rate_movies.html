@@ -28,7 +28,7 @@
 
     {% for movie in movies_to_rate %}
     $('#rate-{{movie.imdb_id}}').raty({
-	size      : 24,
+	size      : 18,
         cancel: true,
         cancelPlace: 'right',
         score: {{ movie.starRating }},
@@ -81,7 +81,7 @@
 
       {% for movie in movies_to_rate %}
       {% cycle '<div class="row inset-sm">' '' '' '' '' ''%}
-	<div class="clearfix col-md-2 col-sm-4">
+	<div class="col-md-2 col-sm-2">
 	  <!-- poster -->
 	  <a href="{% url 'movie_detail' movie.imdb_id %}">
 	    <!-- generically ideal: height="317" width="214" -->
@@ -91,12 +91,8 @@
 		 class="center-block img-rounded img-responsive">
 	  </a>
 	  <!-- rating  -->
-	  <div class="row">
-	    <div class="col-md-2 col-sm-3 col-xs-4"> </div>
-	    <div class="rating-pane col-md-8 col-sm-6 col-xs-4 center-block">
-	      <div id="rate-{{movie.imdb_id}}"></div>
-	    </div>	    
-	    <div class="col-md-2 col-sm-3 col-xs-4"> </div>
+	  <div class="rating-wrapper">
+	    <div id="rate-{{movie.imdb_id}}" class="rating-pane"></div>
 	  </div>
 	</div>
       {% cycle '' '' '' '' '' '</div>' %}
