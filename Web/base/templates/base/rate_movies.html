@@ -13,18 +13,18 @@
     <!-- css -->
     <!-- end of css -->
 
+    <!-- set the active nav button -->
+    {% block navid %}nav-rate{% endblock %}
+    <!-- end of navid -->
+
     <!-- extrahead -->
     {% block extrahead %}
     <script src="{{STATIC_URL}}js/spinner.js"></script>
-    <!-- set the active nav button here -->
-    <script type="text/javascript">
-      $("#nav-rate").ready(function(){$("#nav-rate").addClass('active');});
-    </script>
     {% endblock %}
     <!-- end of extrahead -->
 
-    <!-- jquery -->
-    {% block jquery %}
+    <!-- javascript: put this after the DOM for quicker loading -->
+    {% block footjs %}
 
     {% for movie in movies_to_rate %}
     $('#rate-{{movie.imdb_id}}').raty({

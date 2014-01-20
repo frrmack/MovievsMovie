@@ -49,11 +49,8 @@
       {% endblock %}
     </style>
 
-    <!-- extra javascript (initjs & jquery) -->
+    <!-- extra head javascript -->
     <script type="text/javascript">
-    {% block initjs %}
-    {% endblock %}
-
     $(function(){
       {% block jquery %}
       {% endblock %}
@@ -69,6 +66,11 @@
       {% block navbar %}
       {% include "base/navbar.html" %}
       {% endblock %}
+      <!-- immediately light up the relevant nav link -->
+      <script type="text/javascript">
+	$("#{% block navid %}{% endblock %}").addClass('active');
+      </script>
+
       <!-- END OF NAVBAR -->
 
       <!-- SIDEBAR TEMPLATE: -->
@@ -126,6 +128,16 @@
 
 
   </body>
+
+
+  <!-- extra foot javascript -->
+  <script type="text/javascript">
+    $(function(){
+    {% block footjs %}
+    {% endblock %}
+    });
+  </script>
+
 
   <!-- END OF PAGE -->
 </html>

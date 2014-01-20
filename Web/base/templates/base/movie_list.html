@@ -17,13 +17,11 @@
     {% endblock %}
     <!-- end of css -->
 
+    <!-- set the active nav button -->
+    {% block navid %}nav-list{% endblock %}
+    <!-- end of navid -->
+
     <!-- extrahead -->
-    {% block extrahead %}
-    <!-- set the active nav button here -->
-    <script type="text/javascript">
-      $("#nav-list").ready(function(){$("#nav-list").addClass('active');});
-    </script>
-    {% endblock %}
     <!-- end of extrahead -->
 
     <!-- jquery -->

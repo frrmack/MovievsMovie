@@ -21,12 +21,12 @@
     {% endblock %}
     <!-- end of css -->
 
+    <!-- set the active nav button -->
+    {% block navid %}nav-fight{% endblock %}
+    <!-- end of navid -->
+
     <!-- extrahead -->
     {% block extrahead %}
-    <!-- set the active nav button here -->
-    <script type="text/javascript">
-      $("#nav-fight").ready(function(){$("#nav-fight").addClass('active');});
-    </script>
     <!-- Custom JS for this view-->
     <script src="{{STATIC_URL}}js/fight.js"></script>
     {% endblock %}
