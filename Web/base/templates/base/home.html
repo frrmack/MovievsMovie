@@ -36,10 +36,9 @@
     <div class="container-fluid">
       <div class="jumbotron">
 	<h1>Movie vs Movie</h1>
-	<p class="white">This is a website for comparing movies against each
-	  other. Choose which movie you like better, one pair at a time,
-	  to find out your own taste profile: A complete and continuous
-	  ranking of all movies you've seen.</p>
+	<p class="white">A website for rating and comparing
+	  movies.<br>  Let head to head fights define your taste: An
+	  accurate ranking of all movies you've seen.</p>
 	<a class="btn btn-primary btn-lg" href="{% url 'rate_movies' %}">Start Now!</a>
       </div>
     </div>
@@ -55,25 +54,27 @@
               <a href="#"><img class="img-responsive img-circle"
 			       src="{{STATIC_URL}}img/feat1.jpg"></a>
 	      -->
-          <h3 class="text-center">Rating movies is hard</h3>
-          <p>Research has shown that when we rate movies, the rating
-            depends a lot on what you've seen (or rated) lately, what
-            your mood is, which other film experiences come to mind when
-            you try to translate your enjoyment to a grade (out of 4, 5,
-            10, 100 or any scale). Our memories cannot evalute the
-            entirety of all movies we have seen, so every time we rate a
-            movie, even though it feels like an ultimate rating, we are
-            really comparing it to a limited set. As an example, if we
-            are rating a whole bunch of movies in succession, if they
-            are all movies we are fond of, our grading becomes a lot
-            more strict, without us noticing it. This is because the
-            human brain is great at adaptation, pattern recognition, and
-            setting a baseline. This is generally very useful, but in
-            this case it becomes harder to find out which movies you
-            truly like best, or to have a complete, continuous ranking
-            that doesn't depend on different conditions of each rating
+          <h3 class="text-center">What's your top ten?</h3>
+          <p>This is a very hard question to answer. Research has
+            shown that when we rate movies, the rating depends a lot
+            on what you've seen (or rated) lately, what your mood is,
+            which other film experiences come to mind at that point,
+            and many other environmental factors. Our memories cannot
+            evalute the entirety of all movies we have seen, so every
+            time we rate a movie, even though it feels like an
+            ultimate rating, we are really comparing it to a limited
+            set. As an example, if we rate a lot of movies in
+            succession and they are all movies we are fond of, our
+            grading becomes a lot more strict, without us noticing
+            it. This is because the human brain is great at
+            adaptation, pattern recognition, and setting a
+            baseline. This is generally very useful, but in this case
+            it becomes harder to find out which movies you truly like
+            best, or to have a complete, continuous ranking that
+            doesn't depend on different conditions of each rating
             session. </p>
-          <a href="#" class="btn btn-success">Start the Fights</a>
+            <a href="{% url 'movie_list' %}" 
+	       class="btn btn-success">See your rankings</a>
 	</div>
 	
 	<div class="col-md-4">
@@ -81,24 +82,26 @@
               <a href="#"><img class="img-responsive img-circle"
 			       src="{{STATIC_URL}}img/feat2.jpg"></a>
 	      -->
-          <h3 class="text-center">Star rating as a start</h3>
+          <h3 class="text-center">Star ratings</h3>
           <p>A star rating (1-5 stars out of 5) is a good starting
             point to get a general idea of where the movie is: towards
             the top, the middle, or the bottom of your
-            rankings. However, it does not have enough resolution for a
-            continuous ranking, and it is also sensitive to factors
-            like our limited memory, which can only compare it to a few
-            other movies we focus on, instead of the entire
-            rankings. Trying to use a high resolution grading system (like out
-            of a hundred or out of ten with a decimal place) makes these
-            ratings very sensitive. If you rate two movies on two
-            separate days, you may give a 7.8 to film A and 7.5 to film
-            B even if you would have said that you like B better than A
-            on either day. For a movie, we start by asking you to give a
-            star rating out of five. Then, we get a better idea of how
-            much you like it by letting you tell us how it does in one
-            to one matches against other movies. </p>
-          <a href="#" class="btn btn-danger">Enter the Thunderdome</a>
+            rankings. However, it does not have enough resolution for
+            a continuous ranking, and it is sensitive to factors
+            like our limited memory. In a moment of rating, we
+            cannot analyze a movie in the context of our entire
+            library of movies. Instead we think of a much
+            smaller subset. Trying to use a high resolution grading
+            system (like out of 1-100 or 1-10 with a decimal place)
+            makes ratings even more sensitive to such problems. Let's
+            say you rate two movies. You may give a 7.8 to film A
+            today, and 7.6 to film B a few weeks later, even if you would
+            have said that you like B better than A on either day. For
+            a movie, we start by asking you to give a star rating out
+            of five. Then, we get a better idea of how much you really
+            like it from one on one fights against other movies. </p>
+          <a href="{% url 'rate_movies' %}" 
+	     class="btn btn-danger">Rate some movies</a>
 	</div>
 	
 	<div class="col-md-4">
@@ -107,32 +110,25 @@
 			       src="{{STATIC_URL}}img/feat3.jpg"></a>
 	      -->
           <h3 class="text-center">Head to head fights</h3>
-          <p> We need to have high resolution, continuous scores for
-            all movies to be able ro rank them. Directly rating on a
-            high resolution scale is unreliable. Instead, we get to
-            higher resolutions through head to head comparisons. When
-            you determine the winner (or a draw) of a head to head
-            match, the current score of each movie changes according to
-            the result. These scores start with the initial star rating
-            for each movie. Then, how each score changes depends on the
-            previous scores of the competitors. If Casablanca had a
-            score of 5.4, and The Matrix had 4, when you say that The
-            Matrix beats Casablanca, its score goes up quite a bit,
-            whereas Casablanca's score goes down a bit. However, if The
-            Godfather has a score of 4.7, and Troll 2 has a score of
-            1.4, and The Godfather beats it, the scores don't really
-            change much, because that was already an expected
-            result. Also, the algorithm learns a lot more from the first
-            matches than the hundredth match for a movie, since it
-            already has a lot of information about its true score from
-            the previous matches. Technically, we use the TrueSkill
-            algorithm that we seed by the star ratings as priors. We try
-            to bring you matches that will inform the scores and
-            converge to the true score as fast as possible. On average,
-            the score of a movie converges close to its stable final
-            score in about 10 comparisons. </p>
-          <a href="#" class="btn btn-info">Let the Movies Free</a>
-	</div>
+          <p> We need high resolution, continuous scores for all
+            movies to rank them. Directly rating on such a scale is
+            unreliable. Instead, we get to higher resolutions through
+            head to head comparisons. When you determine the winner
+            (or draw) of a fight, scores change according to the
+            result. The score for each movie starts as your star
+            rating.  Changes after a fight depend on the previous
+            scores. Let's say Casablanca had a score of 5.4, and The
+            Matrix had 4. If The Matrix beats Casablanca, its score
+            goes up quite a bit and Casablanca's score drops
+            significantly. However, if The Godfather has a score of
+            4.7, and Troll 2 has a score of 1.4, and The Godfather
+            wins, the scores don't really change much, because that
+            was already an expected result. Also, Movie vs Movie
+            learns a lot more from the first fights of a movie than
+            its hundredth, since it already has a lot of information
+            about its true score from the previous fights. </p>
+          <a href="{% url 'fight' %}" 
+	     class="btn btn-info">Enter the Thunderdome</a>
       </div>
 
       <div class="row inset-lg">
