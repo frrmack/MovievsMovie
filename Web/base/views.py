@@ -277,6 +277,9 @@ def fight(request, movie_1_id=None, movie_2_id=None):
     if movie_1_id == movie_2_id and movie_2_id != None:
         movie_2_id = None        
 
+
+    # BELOW: OLD< STUPID WAY OF GETTING A VIRGIN FIGHT
+    # ABOUT TO BE CHANGED VERY SOON
     try:
         # get the first movie                                                                                                                                                        
         if movie_1_id is not None:
@@ -434,4 +437,15 @@ def fight_result(request, movie_1_id, movie_2_id, lock):
         name = 'fight'
     return HttpResponseRedirect(reverse(name, kwargs=new_fighters))
 
+
+
+def taste_profile(request):
+    err_title = 'Coming soon'
+    err_msg = 'Taste Profile is under construction, ' +\
+              'it will be opened soon.\n\n' +\
+              'Here you will be able to see how much you like ' +\
+              'each genre, your favorite directors, cyclic wins ' +\
+              'in your fights (a>b>c>a) and other fun analyses ' +\
+              'of your taste.'
+    return error_page(request, err_title, err_msg)
 

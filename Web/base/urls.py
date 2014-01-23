@@ -50,7 +50,12 @@ urlpatterns = patterns('base.views',
                            'fight_result',
                            name='fight_result'),
 
+                       # /taste
+                       url(r'^taste$',
+                           'taste_profile',
+                           name = 'taste_profile'),
 
+                       
                        # /chart/random/200                                                                                                                                      
                        # /chart/ordered_by_name/                                                                                                                                
                        # /chart/ordered_by_rating/1400                                                                                                                          
