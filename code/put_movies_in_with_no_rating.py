@@ -7,7 +7,7 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Web.settings")
 
 
 from base.models import Movie
-from base.views import retrieve_movie_from_the_web
+from retrieve_movie_from_the_web import retrieve_movie_from_the_web
 
 from django.db import transaction
 
@@ -25,8 +25,13 @@ def put_in_with_no_rating(imdb_id):
 
 if __name__ == '__main__':
 
-    movielistfile = '../data/popular_movies_300.txt'
+    num_pop_movies = 300
 
+
+    movielistfile = SCRIPTPOS+'../data/popular_movies_%i.txt' % num_pop_movies
+    stampfile = SCRIPTPOS+'../data/.popular_movie_download_complete'
+    
+    print >> sys.stderr, "Retrieving %i popular movies..." % num_pop_movies
     with open(movielistfile, 'r') as movielist:
     
         for line in movielist:
@@ -44,6 +49,11 @@ if __name__ == '__main__':
                 # it's already in, don't worry about it
                 pass
 
+    # touch a stamp file to know download is already complete
+    open(stampfile, 'a').close()
+
+
+    
         
 
 

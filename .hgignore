@@ -81,3 +81,6 @@ Web/static/
 
 # The movie posters
 posters/
+
+# stampfile to know movie download is complete
+.popular_movie_download_complete
