@@ -1,0 +1,88 @@
+{% extends "base/base.html" %}
+
+    <!-- title -->
+    {% block title %}
+    Taste Profile
+    {% endblock %}
+    <!-- end of title -->
+
+    <!-- css -->
+    {% block css %}
+    .key {
+       color: #731;
+    }
+    .label {
+      font: 10 sans-serif;
+    }
+    {% endblock %}
+    <!-- end of css -->
+
+    <!-- set the active nav button -->
+    {% block navid %}nav-taste{% endblock %}
+    <!-- end of navid -->
+
+    <!-- extrahead -->
+    {% block extrahead %}
+    <script type="text/javascript">
+      var movieList;
+      var movieData;
+      window.movieList = [
+        {% for movie in movie_list %}
+          {"name":  "{{ movie.name }}",
+           "value": {{ movie.starRating }},
+           "score": {{ movie.starSeededTrueSkillMu }},
+           "url":   "{% url 'movie_detail' movie.imdb_id %}",
+           "unicode_stars": "{{ movie.seeded_true_skill }}"
+          },
+        {% endfor %}
+      ];
+      window.movieData = {"children": movieList};
+      console.log('HEYYY');
+      console.log( window.movieData )
+    </script>
+    {% endblock %}
+    <!-- end of extrahead -->
+
+    <!-- extrafoot -->
+    {% block extrafoot %}
+    <!-- Custom JS for this view-->
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="{{STATIC_URL}}js/taste_profile.js"></script>
+    {% endblock %}
+    <!-- end of jquery -->
+
+    <!-- jquery -->
+    <!-- end of jquery -->
+
+    <!-- extrasidebar -->
+    {% block extrasidebar %}
+    <span class="key">
+    Bubble Chart<br>
+    of Movie Ratings<br>
+    </span>
+    [ Placeholder until better 
+    analysis shows up shortly ]<br>
+    <br>
+    {% endblock %}
+    <!-- end of extrasidebar -->
+
+    <!-- content -->
+    <!-- use class="page-content inset"
+	 if you have a header above -->
+    <!-- use class="main-bar-container"
+	 for your containers -->
+    {% block content %}
+    <div class="container main-bar-container">
+      <div class="row">
+	<div class="col-md-12">
+	  <div id="chart_area">
+	    <!-- Chart (to be filled by the d3 script) -->
+	    <div id="chart"></div>
+	  </div>
+	</div>
+      </div>
+    </div>
+
+    {% endblock %}
+    <!-- end of content -->
+

@@ -199,8 +199,9 @@ var movieList = [
         {% for movie in movie_list %}
             {"name":  "{{ movie.name }}",
              "value": {{ movie.starRating }},
+             "score": {{ movie.starSeededTrueSkillMu }},
              "url":   "{% url 'movie_detail' movie.imdb_id %}",
-             "unicode_stars": "{{ movie.unicode_star_rating }}"
+             "unicode_stars": "{{ movie.seeded_true_skill }}"
              },
         {% endfor %}
 ];
@@ -213,12 +214,12 @@ var movieData = {"children": movieList};
 ///////////-- Chart Setup --////////////
 
 //-- Initialize geometry, format and colors
-var diameter = 635,           // 856 | 960 ?
+var diameter = 600,           // 856 | 960 ?
     format = d3.format(",d"),
 //  color = d3.scale.category20c();
     color = d3.scale.linear()
-      .domain([0.2,1.2,2.3,3.5,4.4,5.26])
-      .range(["pink", "red", "orange", "yellow", "green", "#E898FF"]);
+      .domain([0.0,1.2,2.3,3.5,4.4,5.60,6.0])
+      .range(["#993333", "red", "orange", "yellow", "green", "#44AAFF","#E898FF"]);
 
 //-- The pack layout of d3 for packing hierarchies of
 //-- circular nodes. [It will be used with flat data
@@ -274,7 +275,7 @@ node.append("title")
 //-- fluctuation in shades of each discerete color)
 node.append("circle")
     .attr("r", function(d) { return d.r; })
-    .style("fill", function(d) { return color(d.value+Math.random()/4); });
+    .style("fill", function(d) { return color(d.score); });
 
 //-- The text that permaently appears on the circle. Cut to fit.
 node.append("text")

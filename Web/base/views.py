@@ -137,35 +137,6 @@ def error_page(request, title, message):
     return render(request, 'base/error_message.html', context)
 
 
-def bubbleChart(request, order_rule='random', num_nodes=None):
-    # translate order_rule into django model api                                                                                                                                     
-    order_query = {'random': '?',
-                  'ordered_by_name': 'name',
-                  'ordered_by_rating': '-starRating'
-                  }[order_rule]
-
-    # get all the movie objects                                                                                                                                                      
-    movie_list = Movie.objects.order_by(order_query)
-
-    # convert num_nodes into a sane integer                                                                                                                                          
-    max_num_nodes = len(movie_list)
-    try:
-        num_nodes = int(num_nodes)
-        if num_nodes <= 0: num_nodes = max_num_nodes
-    except TypeError:
-        num_nodes = max_num_nodes
-
-    # slice the first num_nodes movies                                                                                                                                               
-    if 0 < num_nodes < len(movie_list):
-        movie_list = movie_list[:num_nodes]
-
-    # render                                                                                                                                                                         
-    context = {'movie_list' : movie_list,
-               'order_rule' : order_rule,
-               'num_nodes': num_nodes,
-               'max_num_nodes': max_num_nodes
-               }
-    return render(request, 'base/rating_bubble_chart.html', context)
 
 
 def search(request):
@@ -440,12 +411,46 @@ def fight_result(request, movie_1_id, movie_2_id, lock):
 
 
 def taste_profile(request):
-    err_title = 'Coming soon'
-    err_msg = 'Taste Profile is under construction, ' +\
-              'it will be opened soon.\n\n' +\
-              'Here you will be able to see how much you like ' +\
-              'each genre, your favorite directors, cyclic wins ' +\
-              'in your fights (a>b>c>a) and other fun analyses ' +\
-              'of your taste.'
-    return error_page(request, err_title, err_msg)
+    return bubbleChart(request, 
+                       order_rule='ordered_by_rating')
+    # err_title = 'Coming soon'
+    # err_msg = 'Taste Profile is under construction, ' +\
+    #           'it will be opened soon.\n\n' +\
+    #           'Here you will be able to see how much you like ' +\
+    #           'each genre, your favorite directors, cyclic wins ' +\
+    #           'in your fights (a>b>c>a) and other fun analyses ' +\
+    #           'of your taste.'
+    # return error_page(request, err_title, err_msg)
 
+
+
+def bubbleChart(request, order_rule='random', num_nodes=None):
+    # translate order_rule into django model api                                                                                                                                     
+    order_query = {'random': '?',
+                  'ordered_by_name': 'name',
+                  'ordered_by_rating': '-starSeededTrueSkillMu'
+                  }[order_rule]
+
+    # get all the movie objects                                                                                                                                                      
+    movie_list = Movie.objects.exclude(starRating=0).order_by(order_query)
+
+    # convert num_nodes into a sane integer                                                                                                                                          
+    max_num_nodes = len(movie_list)
+    try:
+        num_nodes = int(num_nodes)
+        if num_nodes <= 0: num_nodes = max_num_nodes
+    except TypeError:
+        num_nodes = max_num_nodes
+
+    # slice the first num_nodes movies                                                                                                                                               
+    if 0 < num_nodes < len(movie_list):
+        movie_list = movie_list[:num_nodes]
+
+    # render                                                                                                                                                                         
+    context = {'movie_list' : movie_list,
+               'order_rule' : order_rule,
+               'num_nodes': num_nodes,
+               'max_num_nodes': max_num_nodes
+               }
+    #return render(request, 'base/rating_bubble_chart.html', context)
+    return render(request, 'base/taste_profile.html', context)
