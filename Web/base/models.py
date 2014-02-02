@@ -33,6 +33,15 @@ class RandomManager(models.Manager):
         return lucky_guy
 
 
+
+class User(models.Model):
+
+    username = models.CharField(max_length=255, primary_key=True)
+    email = models.CharField(max_length=255)
+
+
+
+
 class Movie(models.Model):
 
     imdb_id = models.CharField(max_length=255, primary_key=True)

@@ -55,6 +55,9 @@ INSTALLED_APPS = (
     # Application base, containing global templates.
     'base',
 
+    # oauth app: python-social-auth
+    'social.apps.django_app.default',
+
     # Local apps, referenced via appname
 )
 
@@ -203,6 +206,22 @@ DEBUG_TOOLBAR_PANELS = (
     #'debug_toolbar.panels.logger.LoggingPanel',
     'debug_toolbar.panels.logging.LoggingPanel',
 )
+
+# OAUTH
+AUTHENTICATION_BACKENDS = (
+    'social.backends.google.GoogleOAuth2',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '145047141688.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'bXcrZ1oVncAo6xNlDKnx19I4'
+
+SOCIAL_AUTH_USER_MODEL = 'base.User'
+
+SOCIAL_AUTH_UID_LENGTH = 223
+
+SOCIAL_AUTH_DEFAULT_USERNAME = 'anon'
+SOCIAL_AUTH_UUID_LENGTH = 16
+
 
 # Specify a custom user model to use
 #AUTH_USER_MODEL = 'accounts.MyUser'
