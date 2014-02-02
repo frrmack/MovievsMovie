@@ -5,6 +5,9 @@ from random import randint
 from datetime import datetime
 from django.utils.timezone import utc
 
+from social.models import UserSocialAuth
+
+
 def now():
     return datetime.utcnow().replace(tzinfo=utc)
 
@@ -34,12 +37,9 @@ class RandomManager(models.Manager):
 
 
 
-class User(models.Model):
-
-    username = models.CharField(max_length=255, primary_key=True)
-    email = models.CharField(max_length=255)
-
-
+class User(UserSocialAuth):
+    pass
+    
 
 
 class Movie(models.Model):

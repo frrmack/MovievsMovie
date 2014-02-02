@@ -8,10 +8,15 @@ urlpatterns = patterns('base.views',
                        # /
                        url(r'^$', 'home', name='home'),
 
-                       # /login
+                       # oauth urls
                        url(r'', 
                            include('social.apps.django_app.urls',
                            namespace='social')),
+
+                       # /logged-in
+                       url(r'^logged-in$',
+                           'home'),
+
 
                        # /list                                                                                                                                                  
                        url(r'^list$',

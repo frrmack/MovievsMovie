@@ -146,6 +146,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'base.middleware.SocialAuthExceptionMiddleware',
 ]
 
 TEMPLATE_CONTEXT_PROCESSORS = [
@@ -213,8 +214,12 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '145047141688.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'bXcrZ1oVncAo6xNlDKnx19I4'
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '145047141688-5qfjh6lbdnrr6dte59uk03c20jrtt16k.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '_DrNNNXSAMebNMvYn1vEUKJL'
+
+#SOCIAL_AUTH_RAISE_EXCEPTIONS = False
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/logged-in'
+
 
 SOCIAL_AUTH_USER_MODEL = 'base.User'
 
@@ -274,7 +279,7 @@ DEV = False
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*',]
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # Hardcoded values can leak through source control.
