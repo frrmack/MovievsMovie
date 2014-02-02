@@ -1,6 +1,6 @@
 """urlconf for the base application"""
 
-from django.conf.urls import url, patterns
+from django.conf.urls import url, patterns, include
 from base.views import MovieListView, RateMoviesView, MovieDetailView
 
 
@@ -8,6 +8,10 @@ urlpatterns = patterns('base.views',
                        # /
                        url(r'^$', 'home', name='home'),
 
+                       # /login
+                       url(r'', 
+                           include('social.apps.django_app.urls',
+                           namespace='social')),
 
                        # /list                                                                                                                                                  
                        url(r'^list$',

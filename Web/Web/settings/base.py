@@ -210,6 +210,7 @@ DEBUG_TOOLBAR_PANELS = (
 # OAUTH
 AUTHENTICATION_BACKENDS = (
     'social.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 )
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '145047141688.apps.googleusercontent.com'
