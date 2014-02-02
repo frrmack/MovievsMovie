@@ -17,6 +17,9 @@ from base.models import Movie, Fight
 from datetime import datetime
 from django.utils.timezone import utc
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout as auth_logout
+
 import json
 
 import os, sys, shutil
@@ -34,6 +37,10 @@ def now():
 
 def home(request):
     """ Default view for the root """
+    return render(request, 'base/home.html')
+
+def logout(request):
+    auth_logout(request)
     return render(request, 'base/home.html')
 
 

@@ -17,6 +17,11 @@ urlpatterns = patterns('base.views',
                        url(r'^logged-in$',
                            'home'),
 
+                       # /logged-in
+                       url(r'^logged-out$',
+                           'home',
+                           name='logout'),
+
 
                        # /list                                                                                                                                                  
                        url(r'^list$',

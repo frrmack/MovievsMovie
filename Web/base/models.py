@@ -5,7 +5,7 @@ from random import randint
 from datetime import datetime
 from django.utils.timezone import utc
 
-from social.models import UserSocialAuth
+#from social.apps.django_app.models import UserSocialAuth
 
 
 def now():
@@ -37,9 +37,6 @@ class RandomManager(models.Manager):
 
 
 
-class User(UserSocialAuth):
-    pass
-    
 
 
 class Movie(models.Model):
