@@ -48,3 +48,6 @@ http://github.com/sublee/trueskill/zipball/master#egg=trueskill-dev
 
 # django filtering
 django-generic-filters
+
+# oauth
+python-social-auth
