@@ -53,10 +53,8 @@ class Movie(models.Model):
     # Aggregate Scores
     starRating = models.IntegerField(default=0)
 
-    rawTrueSkillMu = models.FloatField(default=3.0)
-    rawTrueSkillSigma = models.FloatField(default=1.0)
-    starSeededTrueSkillMu = models.FloatField(default=3.0)
-    starSeededTrueSkillSigma = models.FloatField(default=1.0)
+    scoreMu = models.FloatField(default=3.0)
+    scoreSigma = models.FloatField(default=1.0)
 
     poster_name = models.CharField(max_length=255, default="_empty_poster.jpg")
 
@@ -140,6 +138,8 @@ class Movie(models.Model):
 
     def __unicode__(self):
         return self.readable_name()
+
+
 
 
 class Fight(models.Model):
