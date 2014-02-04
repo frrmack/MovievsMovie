@@ -48,6 +48,9 @@ class Movie(models.Model):
     director = models.CharField(max_length=500, default="N/A")
     description = models.TextField(default="N/A")
 
+    # User Scores
+
+    # Aggregate Scores
     starRating = models.IntegerField(default=0)
 
     rawTrueSkillMu = models.FloatField(default=3.0)
@@ -147,6 +150,7 @@ class Fight(models.Model):
         2    movie2 wins
     """
 
+    user = models.ForeignKey(User, related_name='user', default='NULL')
     movie1 = models.ForeignKey(Movie, related_name='movie_1')
     movie2 = models.ForeignKey(Movie, related_name='movie_2')
     timestamp  = models.DateTimeField(default=now)
