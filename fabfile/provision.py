@@ -81,6 +81,9 @@ def setup_django(do_rsync=True):
         
     with vagrant_settings(env.host_string):
 
+        # open up and listen to port 8000
+        sudo("iptables -A INPUT -p tcp --dport 8000 -j ACCEPT")
+
         # extract necessary configuration variables from INI file
         parser = utils.get_config_parser()
         mysql_root_password = parser.get('mysql', 'root_password')
@@ -99,7 +102,7 @@ def setup_django(do_rsync=True):
         #
         # TODO: Use a soft link to the figures/templates directory to
         # avoid unnecessary rsyncing of data from analysis?
-        site_name = "movie.vs.movie.datasco.pe"
+        site_name = "movievsmovie.datasco.pe"
         web_dir = "Web"
         site_root = os.path.join("/srv", "www", site_name, web_dir)
         fabtools.require.directory(site_root, owner="www-data", use_sudo=True)

@@ -37,6 +37,27 @@ Vagrant.configure("2") do |config|
     override_config.vm.box_url = "https://github.com/mitchellh/vagrant-rackspace/raw/master/dummy.box"
   end
 
+  ##################################################### DIGITAL OCEAN PROVIDER SETUP
+  # global digital provider configuration for the vagrant-digitalocean plugin
+  digo_server_name = ini['servers']['digital_ocean']
+  config.vm.provider :digital_ocean do |digo, override|
+
+    digo.server_name = digo_server_name
+
+    digo.client_id        = ini['digital_ocean']['client_id']
+    digo.api_key         = ini['digital_ocean']['api_key']
+
+    # setup passwordless ssh access for irmak
+    digo.public_key_path = "~/.ssh/id_rsa.pub"
+    override.ssh.private_key_path = "~/.ssh/id_rsa"
+    
+    # set the vm box name for the digo box
+    override.vm.box = 'digital_ocean'
+    override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+
+  end
+
+
   #################################################### VIRTUALBOX PROVIDER SETUP
   # global configuration on the virtualbox provider. for all available
   # options, see http://www.virtualbox.org/manual/ch08.html
@@ -61,6 +82,11 @@ Vagrant.configure("2") do |config|
   ############################################################# RACKSPACE SERVER
   config.vm.define rackspace_server_name do |server_config|
     server_config.vm.hostname = rackspace_server_name
+  end
+
+  ############################################################# RACKSPACE SERVER
+  config.vm.define digo_server_name do |server_config|
+    server_config.vm.hostname = digo_server_name
   end
 
 end
