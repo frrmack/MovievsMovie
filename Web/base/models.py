@@ -5,7 +5,7 @@ from random import randint
 from datetime import datetime
 from django.utils.timezone import utc
 
-#from social.apps.django_app.models import UserSocialAuth
+from django.contrib.auth.models import User
 
 
 def now():

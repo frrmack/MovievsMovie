@@ -39,9 +39,16 @@ def home(request):
     """ Default view for the root """
     return render(request, 'base/home.html')
 
+
+
+from django.contrib.auth.models import User
+
 def logout(request):
+    user = request.user
     auth_logout(request)
-    return render(request, 'base/home.html')
+    err_title = 'Logged out'
+    err_msg = 'User %s is logged out now.' % user
+    return error_page(request, err_title, err_msg)
 
 
 class MovieListView(ListView):
