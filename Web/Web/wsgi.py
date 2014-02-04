@@ -14,12 +14,13 @@ framework.
 
 """
 import os
-#import sys
+import sys
 #import site
 #import subprocess
 
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__) + "../../")
+
 
 # Add the virtualenv packages to the site directory. This uses the technique
 # described at http://code.google.com/p/modwsgi/wiki/VirtualEnvironments
@@ -47,10 +48,11 @@ PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__) + "../../")
 #sys.path[:0] = new_sys_path
 
 # Add the app code to the path
-#sys.path.append(PROJECT_ROOT)
+sys.path.append(PROJECT_ROOT)
 
 os.environ['CELERY_LOADER'] = 'django'
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Web.settings")
+
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

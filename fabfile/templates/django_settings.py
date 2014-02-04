@@ -60,6 +60,11 @@ CACHES = {
 DEBUG = TEMPLATE_DEBUG = True
 TEMPLATE_STRING_IF_INVALID = "TEMPLATE_ERROR"
 
+# Without this debug toolbar setting, the site works in
+# development server, but doesn't with wsgi (like apache)
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
+
+
 # Is this a development instance? Set this to True on development/master
 # instances and False on stage/prod.
 DEV = True

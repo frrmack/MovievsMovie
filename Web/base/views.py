@@ -25,7 +25,7 @@ import json
 import os, sys, shutil
 # absolute path to this script
 SCRIPTPOS = os.path.abspath(__file__).rsplit('/',1)[0] + '/'
-sys.path.append(SCRIPTPOS+"../../code/")
+sys.path.append(SCRIPTPOS+"/../code/")
 
 import movie_search
 from retrieve_movie_from_the_web import retrieve_movie_from_the_web
