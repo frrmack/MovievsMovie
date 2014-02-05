@@ -47,7 +47,7 @@ class Movie(models.Model):
 
     # Aggregate score
     scoreMu = models.FloatField(default=3.0)
-    scoreSigma = models.FloatField(default=1.5)
+    scoreSigma = models.FloatField(default=1.0)
 
     poster_name = models.CharField(max_length=255, default="_empty_poster.jpg")
 
@@ -87,8 +87,6 @@ class Movie(models.Model):
 
     def fought_opponents(self, user):
         return Fight.objects.filter(user=user).filter(contestants=self).order_by('?')
-
-
 
     def won_against(self, user):
         """
@@ -135,13 +133,17 @@ class Score(models.Model):
     mu = models.FloatField(default=3.0)
     sigma = models.FloatField(default=1.0)
 
+    objects = models.Manager()
     randoms = RandomManager()
 
     def unicode_star_rating(self):
         return u'\u2605' * self.starRating
 
+    def unicode_score(self):
+        return u'%.2f  \u00B1 %.1f' % (self.mu, 2*self.sigma)
+
     def __unicode__(self):
-        return u'%.2f  \u00B1 %.1f' % (self.scoreMu, 2*self.scoreSigma)
+        return self.unicode_score()
 
     def conservative(self):
         return self.mu - 2.* self.sigma

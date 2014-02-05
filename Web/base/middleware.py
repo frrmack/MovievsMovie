@@ -2,6 +2,9 @@ from social.apps.django_app.middleware import SocialAuthExceptionMiddleware
 from social import exceptions as social_exceptions
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from base.views import error_page
+import traceback
+
+DEBUG = True
 
 
 class SocialAuthExceptionMiddleware(SocialAuthExceptionMiddleware):
@@ -13,5 +16,15 @@ class SocialAuthExceptionMiddleware(SocialAuthExceptionMiddleware):
             return error_page(request, err_title, err_msg)
 
         else:
-            raise exception
+
+            if DEBUG == True:
+                err_title = exception.__class__.__name__
+                err_msg =  'An error occured while rendering this page.'
+                err_msg += '\n\n%s' % exception
+                err_msg += '\n\n %s \n' % traceback.format_exc()
+                return error_page(request, err_title, err_msg)
+
+            else:
+                traceback.print_exc()
+                raise exception
 

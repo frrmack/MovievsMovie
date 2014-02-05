@@ -36,7 +36,7 @@
 	size      : 24,
         cancel: true,
         cancelPlace: 'right',
-        score: {{ movie.starRating }},
+        score: {{ score.starRating }},
         click: function(score, evt) {      
           if (score == null) {
             var score = 0;
@@ -116,8 +116,8 @@
 	    <div id="star"></div>
 	  </dd>
 	
-	  <dt>TrueSkill</dt>
-	  <dd>{{ movie.seeded_true_skill}}</dd>
+	  <dt>Score</dt>
+	  <dd>{{ score.unicode_score }}</dd>
 	  
 	  <dt></dt>
 	  <dd class="top-indent-sm">

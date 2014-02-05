@@ -57,7 +57,7 @@ class RankingsView(ListView):
     template_name = "base/movie_list.html"
 
     def get_queryset(self):
-        return Scores.filter(user=self.request.user).exclude(starRating=0).order_by('?')
+        return Score.objects.filter(user=self.request.user).exclude(starRating=0).order_by('?')
 
     def dispatch(self, request, *args, **kwargs):
         # check if there is some video onsite
@@ -82,7 +82,7 @@ class RateMoviesView(ListView):
     template_name = "base/rate_movies.html"
 
     def get_queryset(self):
-        return Scores.filter(user=self.request.user).filter(starRating=0).order_by('?')
+        return Score.objects.filter(user=self.request.user.id).filter(starRating=0).order_by('?')
 
     def dispatch(self, request, *args, **kwargs):
         # check if there are any not-rated movies in the db
@@ -100,23 +100,41 @@ class RateMoviesView(ListView):
 
 class MovieDetailView(DetailView):
 
-    model = Movie
+    model = Score
     template_name = "base/movie_detail.html"
 
     def get_object(self, *args, **kwargs):
 
+        print 'hey, ho'
+        print 'args', args
+        print 'kwargs', kwargs
+
+        # GET MOVIE
         try:
-            return super(MovieDetailView, self).get_object(*args, **kwargs)
+            # get it from the db
+            movie = get_object_or_404(Movie, pk=kwargs['pk'])
 
         except Http404:
-            imdb_id = self.kwargs['pk']
-
+            # not in the db, scrape it
+            imdb_id = kwargs['pk']
             try:
                 movie = retrieve_movie_from_the_web( imdb_id )
             except movie_search.NotFoundError:
                 raise Http404( imdb_id )
-            else:
-                return movie
+
+        # GET SCORE
+        try:
+            # A) Already in the db, retrieve it
+            score = Score.objects.filter(user=request.user, movie=movie)
+            print 'found old score in the database'
+            
+        except Score.DoesNotExist:
+            # B) Not in the db, saving it for the first time
+            score = Score(user=request.user,
+                          movie=movie)
+            print 'created new score'
+
+        return score
                 
 
     def dispatch(self, request, *args, **kwargs):
@@ -137,10 +155,12 @@ class MovieDetailView(DetailView):
         
 
     def get_context_data(self, **kwargs):
-        movie = kwargs['object']
+        score = kwargs['object']
+        movie = score.movie
         # Call the base implementation first to get a context
         context = super(MovieDetailView, self).get_context_data(**kwargs)
         # Add in a poster url
+        context['movie'] = movie
         context['poster_url'] = "%sposters/%s" % (settings.STATIC_URL,
                                                   movie.poster_name) 
         return context
@@ -198,11 +218,26 @@ def search(request):
         # or parsed from imdb. Show its details. Render, baby, render.
         #
         # [If the rating is changed in this view, the movie will be saved.
-        #  If it was already in our db, only the rating will change. If it
+        #  If it was already in our db, only the score will change. If it
         #  wasn't in there, it will get in at this point. This is handled by
         #  the save_movie_rating view.]
+
+        # GET SCORE
+        try:
+            # A) Already in the db, retrieve it
+            score = Score.objects.get(user=request.user.id, movie=movie)
+            print 'found old score in the database'
+            print score.unicode_score()
             
-        context = {'movie' : movie,
+        except Score.DoesNotExist:
+            # B) Not in the db, saving it for the first time
+            score = Score(user=request.user,
+                          movie=movie)
+            print 'created new score', score.unicode_score()
+        
+            
+        context = {'score' : score,
+                   'movie' : movie,
                    'poster_url': poster_url}
 
         return render(request, 'base/movie_detail.html', context)
@@ -213,7 +248,6 @@ def save_movie_rating(request, movie_id):
 
     rating = request.POST['rating']
     name = request.POST['name']
-    user = request.user
 
     # Check if the movie is already in the db
     try:
@@ -244,7 +278,7 @@ def save_movie_rating(request, movie_id):
     # Check if the score is already in the db
     try:
         # A) Already in the db, retrieve it
-        score = Score.objects.filter(user=request.user, movie=movie)
+        score = Score.objects.get(user=request.user.id, movie=movie)
         print 'found old score in the database'
 
     except Score.DoesNotExist:
