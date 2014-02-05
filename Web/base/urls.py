@@ -1,7 +1,7 @@
 """urlconf for the base application"""
 
 from django.conf.urls import url, patterns, include
-from base.views import MovieListView, RateMoviesView, MovieDetailView
+from base.views import RankingsView, RateMoviesView, MovieDetailView
 
 
 urlpatterns = patterns('base.views',
@@ -25,7 +25,7 @@ urlpatterns = patterns('base.views',
 
                        # /list                                                                                                                                                  
                        url(r'^list$',
-                           MovieListView.as_view(),
+                           RankingsView.as_view(),
                            name = 'movie_list'),
 
 

@@ -12,7 +12,7 @@ from django.views.generic import ListView, DetailView
 
 from django.db import transaction
 
-from base.models import Movie, Fight
+from base.models import Movie, Fight, Score
 
 from datetime import datetime
 from django.utils.timezone import utc
@@ -51,11 +51,13 @@ def logout(request):
     return error_page(request, err_title, err_msg)
 
 
-class MovieListView(ListView):
+class RankingsView(ListView):
 
     context_object_name = "movie_list"
-    queryset = Movie.objects.exclude(starRating=0).order_by('-starSeededTrueSkillMu')
     template_name = "base/movie_list.html"
+
+    def get_queryset(self):
+        return Scores.filter(user=self.request.user).exclude(starRating=0).order_by('?')
 
     def dispatch(self, request, *args, **kwargs):
         # check if there is some video onsite
@@ -70,22 +72,24 @@ class MovieListView(ListView):
             return error_page(request, err_title, err_msg)
 
         else:
-            return super(MovieListView, self).dispatch(request, *args, **kwargs)
+            return super(RankingsView, self).dispatch(request, *args, **kwargs)
 
 
 
 class RateMoviesView(ListView):
 
     context_object_name = "movies_to_rate"
-    queryset = Movie.objects.filter(starRating=0).order_by('?')
     template_name = "base/rate_movies.html"
+
+    def get_queryset(self):
+        return Scores.filter(user=self.request.user).filter(starRating=0).order_by('?')
 
     def dispatch(self, request, *args, **kwargs):
         # check if there are any not-rated movies in the db
         if not self.get_queryset():
             
             err_title = 'No movies to rate'
-            err_msg = 'You already rated all movies currently in the database, ' + \
+            err_msg = 'You already rated all of the most popular movies, ' + \
                       'but you can find and rate more using the search bar.'
             return error_page(request, err_title, err_msg)
 
@@ -209,10 +213,11 @@ def save_movie_rating(request, movie_id):
 
     rating = request.POST['rating']
     name = request.POST['name']
+    user = request.user
 
     # Check if the movie is already in the db
     try:
-        # A) Already in the db, just change the rating
+        # A) Already in the db, retrieve it
         movie = Movie.objects.get(pk=movie_id)
         print 'retrieved %s from database' % name
 
@@ -224,7 +229,8 @@ def save_movie_rating(request, movie_id):
                       director= request.POST['director'],
                       description= request.POST['description'],
                       poster_name = request.POST['poster_name'])
-        # no need for this anymore, I stopped doing a tmp download
+        # no need for this (below) anymore, I stopped doing a tmp download
+        # --------------------------------------------------------
         # tmp_poster = os.path.join(settings.PROJECT_ROOT,
         #                           'base/static/posters/tmp.jpg')
         # permanent_poster = os.path.join(settings.PROJECT_ROOT,
@@ -232,12 +238,24 @@ def save_movie_rating(request, movie_id):
         #                                 % request.POST['poster_name'])
         # shutil.copy(tmp_poster, permanent_poster)
         print 'initialized new model for %s' % name
+        # save it!
+        movie.save()
 
+    # Check if the score is already in the db
+    try:
+        # A) Already in the db, retrieve it
+        score = Score.objects.filter(user=request.user, movie=movie)
+        print 'found old score in the database'
+
+    except Score.DoesNotExist:
+        # B) Not in the db, saving it for the first time
+        score = Score(user=request.user,
+                      movie=movie)
 
     # set the rating and save
-    movie.starRating = int(rating)
-    movie.save()
-    print 'saved %s in the db with the new rating %s' % (name, rating)
+    score.starRating = int(rating)
+    score.save()
+    print 'saved new rating %s for %s' % (rating, name)
 
     # done
     return HttpResponse(json.dumps({'rating': rating}),
@@ -248,49 +266,62 @@ def save_movie_rating(request, movie_id):
 
 def fight(request, movie_1_id=None, movie_2_id=None):
 
-    # Decide on lock based on the arguments:
-    # default is no lock
-    if movie_1_id != None and movie_2_id == None:
-        lock = '1'
-    elif movie_1_id == None and movie_2_id != None:
-        lock = '2'
-    else:
-        lock = '0'
+
+    if request.user.score_set().count() < 2:
+
+        err_title = 'No movies to fight'
+        err_msg = 'You did not rate any movies, so there are ' + \
+                  'no movies to fight against each other.\n\n' + \
+                  'A fight is only meaningful between movies ' + \
+                  'you have seen. Without rated movies, it is ' + \
+                  'impossible to know which ones you did see. ' + \
+                  'Also, the first step for finding how a movie ' + \
+                  'ranks for you among others is to give it a ' + \
+                  'star rating.\n\n' + \
+                  'You can rate a movie by ' + \
+                  'using the search bar to find it\'s detail page ' + \
+                  'and clicking on the relevant amount ' +\
+                  'of stars in the rating field.'
+        return error_page(request, err_title, err_msg)
 
     # Choose movie 2 randomly if the same id is given
     # manually for both fighters. Can't fight yourself!
     if movie_1_id == movie_2_id and movie_2_id != None:
         movie_2_id = None        
 
+    # Decide on lock based on the arguments:
+    # default is no lock
+    if movie_1_id != None and movie_2_id == None:
+        lock = '1'
+        lock_id = movie_1_id
+    elif movie_1_id == None and movie_2_id != None:
+        lock = '2'
+        lock_id = movie_2_id
+    else:
+        lock = '0'
+        lock_id = None
 
-    # BELOW: OLD< STUPID WAY OF GETTING A VIRGIN FIGHT
-    # ABOUT TO BE CHANGED VERY SOON
+
+    
+    # For now, choose random fights
     try:
-        # get the first movie                                                                                                                                                        
-        if movie_1_id is not None:
-            movie1 = get_object_or_404(Movie, pk=movie_1_id)
+        if lock in ('1', '2'):
+            locked_movie = get_object_or_404(Movie, pk=lock_id)
         else:
-            # if no id given, pick a random one                                                                                                                                      
-            movie1 = Movie.randoms.random(exclude={'starRating':0})
-        # get the second movie                                                                                                                                                       
-        if movie_2_id is not None:
-            movie2 = get_object_or_404(Movie, pk=movie_2_id)
-        else:
-            # if no id given, pick a random one                                                                                                                                      
-            # that movie1 did not fight before
-            # also make sure you don't get movie1
-            movie2 = Movie.randoms.random(skip_obj=movie1, exclude={'starRating':0})
-            max_tries = Movie.objects.count()
-            counter = 0
-            while movie1.did_already_fight(movie2):
-                movie2 = Movie.randoms.random(skip_obj=movie1, exclude={'starRating':0})
-                # don't search for too long
-                counter += 1
-                if counter == max_tries:
-                    print 'GAVE UP'
-                    break
-            print 'After %i tries: %s VS %s' % (counter, movie1.name, movie2.name)
+            locked_movie = Score.randoms.filter(user=request.user).random(exclude={'starRating':0})
 
+        try:
+            rival_movie = locked_movie.not_fought_opponents(request.user)[0]
+        except IndexError:
+            print 'No movie found that %s did not fight before' % locked_movie.name
+            rival_movie = locked_movie.fought_opponents(request.user)[0]
+
+        if lock in ('1', '0'):
+            movie1 = locked_movie
+            movie2 = rival_movie
+        else:
+            movie1 = rival_movie
+            movie2 = locked_movie
             
     except Http404:
 
@@ -308,24 +339,6 @@ def fight(request, movie_1_id=None, movie_2_id=None):
                   'and rate it.'
         return error_page(request, err_title, err_msg)
 
-    except Movie.DoesNotExist:
-
-        # could not find any movie (Movie.randoms.random() failed)
-        err_title = 'No movies to fight'
-        err_msg = 'You did not rate any movies, so there are ' + \
-                  'no movies to fight against each other.\n\n' + \
-                  'A fight is only meaningful between movies ' + \
-                  'you have seen. Without rated movies, it is ' + \
-                  'impossible to know which ones you did see. ' + \
-                  'Also, the first step for finding how a movie ' + \
-                  'ranks for you among others is to give it a ' + \
-                  'star rating.\n\n' + \
-                  'You can rate a movie by ' + \
-                  'using the search bar to find it\'s detail page ' + \
-                  'and clicking on the relevant amount ' +\
-                  'of stars in the rating field.'
-        return error_page(request, err_title, err_msg)
-
     else:
 
         # retrieve the previous score of this match-up if there was one
@@ -333,7 +346,7 @@ def fight(request, movie_1_id=None, movie_2_id=None):
         movie2.note = '&nbsp;'
         draw_note = '&nbsp;'
         try:
-            previous_fights = Fight.objects.filter(contestants=movie1).filter(contestants=movie2)
+            previous_fights = Fight.objects.filter(user=request.user).filter(contestants=movie1).filter(contestants=movie2)
 
             # by design we allow a single fight between two anyway, last fight
             # overrides the previous one, so this set should only have a single
@@ -441,8 +454,8 @@ def taste_profile(request):
 def bubbleChart(request, order_rule='random', num_nodes=None):
     # translate order_rule into django model api                                                                                                                                     
     order_query = {'random': '?',
-                  'ordered_by_name': 'name',
-                  'ordered_by_rating': '-starSeededTrueSkillMu'
+                  'ordered_by_name': 'movie',
+                  'ordered_by_rating': '-mu'
                   }[order_rule]
 
     # get all the movie objects                                                                                                                                                      

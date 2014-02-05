@@ -36,9 +36,6 @@ class RandomManager(models.Manager):
         return lucky_guy
 
 
-
-
-
 class Movie(models.Model):
 
     imdb_id = models.CharField(max_length=255, primary_key=True)
@@ -48,13 +45,9 @@ class Movie(models.Model):
     director = models.CharField(max_length=500, default="N/A")
     description = models.TextField(default="N/A")
 
-    # User Scores
-
-    # Aggregate Scores
-    starRating = models.IntegerField(default=0)
-
+    # Aggregate score
     scoreMu = models.FloatField(default=3.0)
-    scoreSigma = models.FloatField(default=1.0)
+    scoreSigma = models.FloatField(default=1.5)
 
     poster_name = models.CharField(max_length=255, default="_empty_poster.jpg")
 
@@ -62,25 +55,13 @@ class Movie(models.Model):
     randoms = RandomManager()
 
     class Meta:
-        ordering = ["name", "-starRating"]
+        ordering = ["name", "-scoreMu"]
 
-    def unicode_star_rating(self):
-        return u'\u2605' * self.starRating
+    def conservative_score(self):
+        return self.scoreMu - 2.* self.scoreSigma
 
-    unicode_star_rating.admin_order_field = 'starRating'
-    unicode_star_rating.short_description = 'Star Rating'
-
-
-    def raw_true_skill(self):
-        return u'%.2f  \u00B1 %.1f' % (self.rawTrueSkillMu, 2*self.rawTrueSkillSigma)
-
-    raw_true_skill.admin_order_field = 'rawTrueSkillMu'
-    
-    def seeded_true_skill(self):
-        return u'%.2f  \u00B1 %.1f' % (self.starSeededTrueSkillMu, 2*self.starSeededTrueSkillSigma)
-
-    seeded_true_skill.admin_order_field = 'starSeededTrueSkillMu'
-
+    def unicode_score(self):
+        return u'%.2f  \u00B1 %.1f' % (self.scoreMu, 2*self.scoreSigma)
 
     def readable_name(self):
         """
@@ -98,27 +79,31 @@ class Movie(models.Model):
         Returns true if this movie had a previous
         fight with this opponent
         """
-        prev_matches = Fight.objects.filter(contestants=self).filter(contestants=opponent)
+        prev_matches = Fight.objects.filter(user=user).filter(contestants=self).filter(contestants=opponent)
         return bool(prev_matches)
 
-    def not_fought_opponents(self):
-        return Fight.objects.exclude(contestants=self)
+    def not_fought_opponents(self, user):
+        return Fight.objects.filter(user=user).exclude(contestants=self).order_by('?')
+
+    def fought_opponents(self, user):
+        return Fight.objects.filter(user=user).filter(contestants=self).order_by('?')
 
 
-    def won_against(self):
+
+    def won_against(self, user):
         """
         The opponents this guy has won a Fight against
         """
-        matches = self.fight_set.all()
+        matches = self.fight_set.filter(user=user)
         did_I_win = lambda match: match.winner() == self
         matches_won = filter(did_I_win, matches)
         return [match.loser() for match in matches_won]
 
-    def drawn_with(self):
+    def drawn_with(self, user):
         """
         The opponents this guy has drawn in a Fight with
         """
-        matches = self.fight_set.all()
+        matches = self.fight_set.filter(user=user)
         did_I_draw = lambda match: match.isDraw()
         matches_drawn = filter(did_I_draw, matches)
         drawn_opponents = []
@@ -127,7 +112,7 @@ class Movie(models.Model):
             drawn_opponents.append(opponent)
         return drawn_opponents
 
-    def lost_to(self):
+    def lost_to(self, user):
         """
         The opponents this guy has lost a Fight to
         """
@@ -141,6 +126,27 @@ class Movie(models.Model):
 
 
 
+class Score(models.Model):
+    """ A user's underlying score (bayesian model) for a movie
+    """
+    user = models.ForeignKey(User)
+    movie = models.ForeignKey(Movie)
+    starRating = models.IntegerField(default=0)
+    mu = models.FloatField(default=3.0)
+    sigma = models.FloatField(default=1.0)
+
+    randoms = RandomManager()
+
+    def unicode_star_rating(self):
+        return u'\u2605' * self.starRating
+
+    def __unicode__(self):
+        return u'%.2f  \u00B1 %.1f' % (self.scoreMu, 2*self.scoreSigma)
+
+    def conservative(self):
+        return self.mu - 2.* self.sigma
+
+
 
 class Fight(models.Model):
     """ The Result of a Movie vs Movie Comparison
@@ -150,7 +156,7 @@ class Fight(models.Model):
         2    movie2 wins
     """
 
-    user = models.ForeignKey(User, related_name='user', default='NULL')
+    user = models.ForeignKey(User)
     movie1 = models.ForeignKey(Movie, related_name='movie_1')
     movie2 = models.ForeignKey(Movie, related_name='movie_2')
     timestamp  = models.DateTimeField(default=now)
@@ -201,6 +207,6 @@ class Fight(models.Model):
         return announcement[self.result]
 
     def __unicode__(self):
-        return self.report()
+        return u'<User %s: %s>' % (self.user, self.report())
 
 
