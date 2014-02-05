@@ -6,8 +6,8 @@ from base.views import error_page
 class SocialAuthExceptionMiddleware(SocialAuthExceptionMiddleware):
     def process_exception(self, request, exception):
         if hasattr(social_exceptions, 'AuthCanceled'):
-            err_title = 'Authentication Cancelled'
-            err_msg = 'You are not logged in.'
+            err_title = 'Authentication Error'
+            err_msg = 'There was an error during authentication process.\n\n%s' % exception
             return error_page(request, err_title, err_msg)
         else:
             raise exception

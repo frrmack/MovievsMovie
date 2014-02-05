@@ -8,52 +8,55 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'Movie'
-        db.create_table(u'base_movie', (
-            ('imdb_id', self.gf('django.db.models.fields.CharField')(max_length=255, primary_key=True)),
-            ('name', self.gf('django.db.models.fields.CharField')(max_length=500)),
-            ('year', self.gf('django.db.models.fields.CharField')(default='N/A', max_length=100)),
-            ('director', self.gf('django.db.models.fields.CharField')(default='N/A', max_length=500)),
-            ('description', self.gf('django.db.models.fields.TextField')(default='N/A')),
-            ('starRating', self.gf('django.db.models.fields.IntegerField')(default=0)),
-            ('rawTrueSkillMu', self.gf('django.db.models.fields.FloatField')(default=3.0)),
-            ('rawTrueSkillSigma', self.gf('django.db.models.fields.FloatField')(default=1.0)),
-            ('starSeededTrueSkillMu', self.gf('django.db.models.fields.FloatField')(default=3.0)),
-            ('starSeededTrueSkillSigma', self.gf('django.db.models.fields.FloatField')(default=1.0)),
-            ('poster_name', self.gf('django.db.models.fields.CharField')(default='_empty_poster.jpg', max_length=255)),
-        ))
-        db.send_create_signal(u'base', ['Movie'])
+        # Deleting field 'Movie.starSeededTrueSkillSigma'
+        db.delete_column(u'base_movie', 'starSeededTrueSkillSigma')
 
-        # Adding model 'Fight'
-        db.create_table(u'base_fight', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('user', self.gf('django.db.models.fields.related.ForeignKey')(default='NULL', related_name='user', to=orm['auth.User'])),
-            ('movie1', self.gf('django.db.models.fields.related.ForeignKey')(related_name='movie_1', to=orm['base.Movie'])),
-            ('movie2', self.gf('django.db.models.fields.related.ForeignKey')(related_name='movie_2', to=orm['base.Movie'])),
-            ('timestamp', self.gf('django.db.models.fields.DateTimeField')(default=datetime.datetime(2014, 2, 4, 0, 0))),
-            ('result', self.gf('django.db.models.fields.IntegerField')(default=-1)),
-        ))
-        db.send_create_signal(u'base', ['Fight'])
+        # Deleting field 'Movie.rawTrueSkillSigma'
+        db.delete_column(u'base_movie', 'rawTrueSkillSigma')
 
-        # Adding M2M table for field contestants on 'Fight'
-        m2m_table_name = db.shorten_name(u'base_fight_contestants')
-        db.create_table(m2m_table_name, (
-            ('id', models.AutoField(verbose_name='ID', primary_key=True, auto_created=True)),
-            ('fight', models.ForeignKey(orm[u'base.fight'], null=False)),
-            ('movie', models.ForeignKey(orm[u'base.movie'], null=False))
-        ))
-        db.create_unique(m2m_table_name, ['fight_id', 'movie_id'])
+        # Deleting field 'Movie.rawTrueSkillMu'
+        db.delete_column(u'base_movie', 'rawTrueSkillMu')
+
+        # Deleting field 'Movie.starSeededTrueSkillMu'
+        db.delete_column(u'base_movie', 'starSeededTrueSkillMu')
+
+        # Adding field 'Movie.scoreMu'
+        db.add_column(u'base_movie', 'scoreMu',
+                      self.gf('django.db.models.fields.FloatField')(default=3.0),
+                      keep_default=False)
+
+        # Adding field 'Movie.scoreSigma'
+        db.add_column(u'base_movie', 'scoreSigma',
+                      self.gf('django.db.models.fields.FloatField')(default=1.0),
+                      keep_default=False)
 
 
     def backwards(self, orm):
-        # Deleting model 'Movie'
-        db.delete_table(u'base_movie')
+        # Adding field 'Movie.starSeededTrueSkillSigma'
+        db.add_column(u'base_movie', 'starSeededTrueSkillSigma',
+                      self.gf('django.db.models.fields.FloatField')(default=1.0),
+                      keep_default=False)
 
-        # Deleting model 'Fight'
-        db.delete_table(u'base_fight')
+        # Adding field 'Movie.rawTrueSkillSigma'
+        db.add_column(u'base_movie', 'rawTrueSkillSigma',
+                      self.gf('django.db.models.fields.FloatField')(default=1.0),
+                      keep_default=False)
 
-        # Removing M2M table for field contestants on 'Fight'
-        db.delete_table(db.shorten_name(u'base_fight_contestants'))
+        # Adding field 'Movie.rawTrueSkillMu'
+        db.add_column(u'base_movie', 'rawTrueSkillMu',
+                      self.gf('django.db.models.fields.FloatField')(default=3.0),
+                      keep_default=False)
+
+        # Adding field 'Movie.starSeededTrueSkillMu'
+        db.add_column(u'base_movie', 'starSeededTrueSkillMu',
+                      self.gf('django.db.models.fields.FloatField')(default=3.0),
+                      keep_default=False)
+
+        # Deleting field 'Movie.scoreMu'
+        db.delete_column(u'base_movie', 'scoreMu')
+
+        # Deleting field 'Movie.scoreSigma'
+        db.delete_column(u'base_movie', 'scoreSigma')
 
 
     models = {
@@ -103,11 +106,9 @@ class Migration(SchemaMigration):
             'imdb_id': ('django.db.models.fields.CharField', [], {'max_length': '255', 'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '500'}),
             'poster_name': ('django.db.models.fields.CharField', [], {'default': "'_empty_poster.jpg'", 'max_length': '255'}),
-            'rawTrueSkillMu': ('django.db.models.fields.FloatField', [], {'default': '3.0'}),
-            'rawTrueSkillSigma': ('django.db.models.fields.FloatField', [], {'default': '1.0'}),
+            'scoreMu': ('django.db.models.fields.FloatField', [], {'default': '3.0'}),
+            'scoreSigma': ('django.db.models.fields.FloatField', [], {'default': '1.0'}),
             'starRating': ('django.db.models.fields.IntegerField', [], {'default': '0'}),
-            'starSeededTrueSkillMu': ('django.db.models.fields.FloatField', [], {'default': '3.0'}),
-            'starSeededTrueSkillSigma': ('django.db.models.fields.FloatField', [], {'default': '1.0'}),
             'year': ('django.db.models.fields.CharField', [], {'default': "'N/A'", 'max_length': '100'})
         },
         u'contenttypes.contenttype': {

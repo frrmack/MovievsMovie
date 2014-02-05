@@ -30,7 +30,7 @@
 	<li id="nav-taste"><a href="{% url 'taste_profile' %}"><span class="glyphicon
 									    glyphicon-signal"></span>
 	    Taste Profile</a></li>
-	{% if user.is_authenticated %}
+	{% if user.is_authenticated and user.is_active %}
 	<li id="nav-login"><a href="{% url 'logout' %}"><span class="glyphicon
 								  glyphicon-user"></span>
 	   Logout {{ user.username}}</a></li>

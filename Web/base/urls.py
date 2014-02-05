@@ -19,7 +19,7 @@ urlpatterns = patterns('base.views',
 
                        # /logged-in
                        url(r'^logged-out$',
-                           'home',
+                           'logout',
                            name='logout'),
 
 
