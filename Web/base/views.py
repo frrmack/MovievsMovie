@@ -54,7 +54,7 @@ class RankingsView(ListView):
     template_name = "base/movie_list.html"
 
     def get_queryset(self):
-        return Score.objects.filter(user=self.request.user).exclude(starRating=0).order_by('?')
+        return Score.objects.filter(user=self.request.user).exclude(starRating=0).order_by('-mu')
 
     def dispatch(self, request, *args, **kwargs):
         if not self.get_queryset():
@@ -299,6 +299,8 @@ def save_movie_rating(request, movie_id):
 
     # set the rating and save
     score.starRating = int(rating)
+    score.mu = float(rating)
+    score.sigma = score.star_seeded_sigma
     score.save()
     print 'saved new rating %s for %s' % (rating, name)
 

@@ -139,6 +139,9 @@ class Movie(models.Model):
 class Score(models.Model):
     """ A user's underlying score (bayesian model) for a movie
     """
+    star_seeded_sigma = 0.5
+    raw_sigma = 1.0
+
     user = models.ForeignKey(User)
     movie = models.ForeignKey(Movie)
     starRating = models.IntegerField(default=0)
