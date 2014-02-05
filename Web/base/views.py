@@ -12,7 +12,7 @@ from django.views.generic import ListView, DetailView
 
 from django.db import transaction
 
-from base.models import Movie, Fight, Score
+from base.models import Movie, Fight, Score, User
 
 from datetime import datetime
 from django.utils.timezone import utc
@@ -39,9 +39,6 @@ def home(request):
     """ Default view for the root """
     return render(request, 'base/home.html')
 
-
-
-from django.contrib.auth.models import User
 
 def logout(request):
     user = request.user
@@ -301,7 +298,7 @@ def save_movie_rating(request, movie_id):
 def fight(request, movie_1_id=None, movie_2_id=None):
 
 
-    if request.user.score_set().count() < 2:
+    if request.user.score_set.count() < 2:
 
         err_title = 'No movies to fight'
         err_msg = 'You did not rate any movies, so there are ' + \
@@ -342,10 +339,11 @@ def fight(request, movie_1_id=None, movie_2_id=None):
         if lock in ('1', '2'):
             locked_movie = get_object_or_404(Movie, pk=lock_id)
         else:
-            locked_movie = Score.randoms.filter(user=request.user).random(exclude={'starRating':0})
+            locked_movie = Score.randoms.random(filter={'user':request.user.id}, exclude={'starRating':0}).movie
 
         try:
             rival_movie = locked_movie.not_fought_opponents(request.user)[0]
+            
         except IndexError:
             print 'No movie found that %s did not fight before' % locked_movie.name
             rival_movie = locked_movie.fought_opponents(request.user)[0]

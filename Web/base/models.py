@@ -16,16 +16,21 @@ import HTMLParser
 
 
 class RandomManager(models.Manager):
-    def random(self, skip_obj=None, exclude=None):
+    def random(self, skip_obj=None, filter=None, exclude=None):
         # skip_obj: You can give a model instance, and random
         # will return a random one, anything BUT this guy
         # (useful when you need a random guy outside myself, etc.)
         # exclude: a dict of exclude kwargs following Django DRM
+        # filter: a dict of filter kwargs following Django DRM
         if exclude is None:
             objects = self
         else:
             objects = self.exclude( **exclude )
-        count = objects.aggregate(count=models.Count('imdb_id'))['count']
+        if filter is not None:
+            objects = objects.filter( **filter )
+
+        #count = objects.aggregate(count=models.Count('imdb_id'))['count']
+        count = objects.count()
         if count == 0 or (count == 1 and skip_obj is not None):
             raise objects.model.DoesNotExist("There is not a single %s to pick randomly." % objects.model.__name__)
         random_index = randint(0, count-1)
@@ -82,11 +87,18 @@ class Movie(models.Model):
         prev_matches = Fight.objects.filter(user=user).filter(contestants=self).filter(contestants=opponent)
         return bool(prev_matches)
 
-    def not_fought_opponents(self, user):
-        return Fight.objects.filter(user=user).exclude(contestants=self).order_by('?')
-
     def fought_opponents(self, user):
         return Fight.objects.filter(user=user).filter(contestants=self).order_by('?')
+
+    def not_fought_opponents(self, user):
+        potentials = Score.objects.filter(user=user).exclude(movie=self).order_by('?')
+        fought = self.fought_opponents(user)
+        not_fought = []
+        for score in potentials:
+            if score not in fought:
+                not_fought.append(score.movie)
+        return not_fought
+
 
     def won_against(self, user):
         """
