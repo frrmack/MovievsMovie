@@ -44,16 +44,16 @@
 	  <th class="title">Title</th>
 	  <th class="rating">Rating</th>
 	  <th class="rating">TrueSkill</th>
-	  {% for movie in movie_list %}
+	  {% for score in score_list %}
 	  <tr>
 	    <td>
-	      <a href="{% url 'movie_detail' movie.imdb_id  %}">{{ movie.name }}</a>
+	      <a href="{% url 'movie_detail' score.movie_imdb_id  %}">{{ score.movie_name }}</a>
 	    </td>
 	    <td class="stars">
-		<b>{{ movie.unicode_star_rating }}</b>
+		<b>{{ score.unicode_star_rating }}</b>
 	    </td>
 	    <td>
-	      {{ movie.seeded_true_skill }}
+	      {{ score.unicode_score }}
 	    </td>
 	  </tr>
 	  {% endfor %}

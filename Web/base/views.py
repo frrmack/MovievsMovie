@@ -50,14 +50,13 @@ def logout(request):
 
 class RankingsView(ListView):
 
-    context_object_name = "movie_list"
+    context_object_name = "score_list"
     template_name = "base/movie_list.html"
 
     def get_queryset(self):
         return Score.objects.filter(user=self.request.user).exclude(starRating=0).order_by('?')
 
     def dispatch(self, request, *args, **kwargs):
-        # check if there is some video onsite
         if not self.get_queryset():
             
             err_title = 'No movies rated'
@@ -71,6 +70,18 @@ class RankingsView(ListView):
         else:
             return super(RankingsView, self).dispatch(request, *args, **kwargs)
 
+
+    # def get_context_data(self, **kwargs):
+    #     # Call the base implementation first to get a context
+    #     context = super(RankingsView, self).get_context_data(**kwargs)
+    #     print context
+    #     # get the movie's name from the db
+    #     def get_movie_name(score):
+    #         score.movie_name = score.movie.name
+    #         score.movie_imdb_id = score.movie.imdb_id
+    #         return score
+    #     context['score_list'] = map(get_movie_name, context['score_list'])
+    #     return context
 
 
 class RateMoviesView(ListView):

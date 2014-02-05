@@ -148,6 +148,12 @@ class Score(models.Model):
     objects = models.Manager()
     randoms = RandomManager()
 
+    def movie_imdb_id(self):
+        return self.movie.imdb_id
+
+    def movie_name(self):
+        return self.movie.name
+
     def unicode_star_rating(self):
         return u'\u2605' * self.starRating
 
