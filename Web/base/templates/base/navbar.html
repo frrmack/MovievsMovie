@@ -9,15 +9,12 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Movie vs Movie</a>
+      <a class="navbar-brand" href="{% url 'home' %}">Movie vs Movie</a>
     </div>
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 	<!-- Make the right <li> active by making it
 	     class="active" -->
-	<li id="nav-home"><a href="{% url 'home' %}"><span class="glyphicon
-								  glyphicon-home"></span>
-	    Home</a></li>
 	<li id="nav-fight"><a href="{% url 'fight' %}"><span class="glyphicon
 								    glyphicon-fire"></span>
 	    Fight!</a></li>

@@ -112,13 +112,13 @@ footer {
     width: 100%;
 }
 
-.navbar-inverse .navbar-brand {
-    color: #999;
-}
+/* .navbar-inverse .navbar-brand { */
+/*     color: #999; */
+/* } */
 
-.navbar-inverse .navbar-brand:hover {
-    color: #999;
-}
+/* .navbar-inverse .navbar-brand:hover { */
+/*     color: #999; */
+/* } */
 
 .stars {
     color: #FFAA00;
