@@ -97,6 +97,11 @@ def setup_django(do_rsync=True):
             fabtools.require.mysql.user(django_username, django_password)
             fabtools.require.mysql.database(django_db,owner=django_username)
 
+
+        # collect the static files
+        with cd("/vagrant/Web"):
+            run("./manage.py collectstatic --noinput")
+
         # rsync directory to get all models, views, etc into the
         # /srv/www directory.
         #
@@ -158,6 +163,7 @@ def setup_django(do_rsync=True):
             run("./manage.py syncdb --noinput")
             run("./manage.py migrate")
 
+
         # setup apache
         # fabtools.require.apache.module_enabled("mod_wsgi") # __future__
         config_filename = os.path.join(
@@ -172,6 +178,9 @@ def setup_django(do_rsync=True):
             site_root=site_root,
         )
         fabtools.require.apache.disabled('default')
+
+
+
 
 @task
 @decorators.needs_environment
