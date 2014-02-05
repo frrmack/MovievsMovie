@@ -294,7 +294,6 @@ def save_movie_rating(request, movie_id):
 
 def fight(request, movie_1_id=None, movie_2_id=None):
 
-
     if request.user.score_set.count() < 2:
 
         err_title = 'No movies to fight'
@@ -329,8 +328,6 @@ def fight(request, movie_1_id=None, movie_2_id=None):
         lock = '0'
         lock_id = None
 
-
-    
     # For now, choose random fights
     try:
         if lock in ('1', '2'):
@@ -407,6 +404,8 @@ def fight_result(request, movie_1_id, movie_2_id, lock):
     # get the movies                                                                                                                                                                 
     movie1 = get_object_or_404(Movie, pk=movie_1_id)
     movie2 = get_object_or_404(Movie, pk=movie_2_id)
+    # get the user
+    user = request.user
     # get the posted result                                                                                                                                                          
     result = request.POST['result']
     # a result of -1 means "skip", no recording
@@ -427,29 +426,32 @@ def fight_result(request, movie_1_id, movie_2_id, lock):
         # of Fights from scratch.                                                                                                                                                 
         # ~~~~~~~~~~~~~~~~                                                                                                                                                               
         #                                                                                                                                                                                
-        # find the match if these two movies were compared before                                                                                                                        
-        # or create a new match                                                                                                                                                          
+        # find the fight if these two movies were compared before                                                                                                                        
+        # or create a new fight
         try:
-            match = Fight.objects.filter(
+            fight = Fight.objects.filter(
+                                       user=user
+                                        ).filter(
                                        contestants=movie1
                                        ).filter(
                                        contestants=movie2
-                                       )[0]
+                                       ).get()
             # make sure the movies are in the right order                                                                                                                                
             # so that the result integer is accurate                                                                                                                                     
-            match.movie1, match.movie2 = movie1, movie2
-        except IndexError:
+            fight.movie1, fight.movie2 = movie1, movie2
+        except Fight.DoesNotExist:
             # match not in database, create a new match                                                                                                                                  
-            match = Fight(movie1=movie1,
+            fight = Fight(user=user,
+                          movie1=movie1,
                           movie2=movie2)
         # record the result                                                                                                                                                              
-        match.result = result
+        fight.result = result
         # record the date and time (this is not necessary if a new match                                                                                                                 
         # is created, since this is done by default, but it is necessary                                                                                                                 
         # if an old match is retrieved.                                                                                                                                                  
-        match.timestamp = now()
+        fight.timestamp = now()
         # put the match in the database                                                                                                                                                  
-        match.save()
+        fight.save()
         # --end of recording (end of if)
 
     # pick new movies to fight and redirect to the fight                                                                                                                                                         
