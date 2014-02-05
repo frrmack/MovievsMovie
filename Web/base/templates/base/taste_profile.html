@@ -27,12 +27,12 @@
       var movieList;
       var movieData;
       window.movieList = [
-        {% for movie in movie_list %}
-          {"name":  "{{ movie.name }}",
-           "value": {{ movie.starRating }},
-           "score": {{ movie.starSeededTrueSkillMu }},
-           "url":   "{% url 'movie_detail' movie.imdb_id %}",
-           "unicode_stars": "{{ movie.seeded_true_skill }}"
+        {% for score in score_list %}
+          {"name":  "{{ score.movie_name }}",
+           "value": {{ score.starRating }},
+           "score": {{ score.mu }},
+           "url":   "{% url 'movie_detail' score.movie_imdb_id %}",
+           "unicode_stars": "{{ score.unicode_score }}"
           },
         {% endfor %}
       ];

@@ -501,18 +501,19 @@ def taste_profile(request):
 
 
 
-def bubbleChart(request, order_rule='random', num_nodes=None):
+def bubbleChart(request, order_rule='ordered_by_rating', num_nodes=None):
     # translate order_rule into django model api                                                                                                                                     
     order_query = {'random': '?',
                   'ordered_by_name': 'movie',
                   'ordered_by_rating': '-mu'
                   }[order_rule]
 
-    # get all the movie objects                                                                                                                                                      
-    movie_list = Movie.objects.exclude(starRating=0).order_by(order_query)
+    # get all the score objects                                                                                                                                                      
+    score_list = Score.objects.filter(user=request.user.id).exclude(starRating=0).order_by(order_query)
+    print 'score_list', score_list
 
     # convert num_nodes into a sane integer                                                                                                                                          
-    max_num_nodes = len(movie_list)
+    max_num_nodes = len(score_list)
     try:
         num_nodes = int(num_nodes)
         if num_nodes <= 0: num_nodes = max_num_nodes
@@ -520,11 +521,11 @@ def bubbleChart(request, order_rule='random', num_nodes=None):
         num_nodes = max_num_nodes
 
     # slice the first num_nodes movies                                                                                                                                               
-    if 0 < num_nodes < len(movie_list):
-        movie_list = movie_list[:num_nodes]
+    if 0 < num_nodes < len(score_list):
+        score_list = score_list[:num_nodes]
 
     # render                                                                                                                                                                         
-    context = {'movie_list' : movie_list,
+    context = {'score_list' : score_list,
                'order_rule' : order_rule,
                'num_nodes': num_nodes,
                'max_num_nodes': max_num_nodes
