@@ -22,18 +22,15 @@ urlpatterns = patterns('base.views',
                            'logout',
                            name='logout'),
 
-
                        # /list                                                                                                                                                  
                        url(r'^list$',
                            RankingsView.as_view(),
                            name = 'movie_list'),
 
-
                        # /rate
                        url(r'^rate$',
                            RateMoviesView.as_view(),
                            name = 'rate_movies'),
-
 
                        # /tt51                                                                                                                                                      
                        url(r'^(?P<pk>tt\d+)$',
@@ -42,10 +39,8 @@ urlpatterns = patterns('base.views',
                        # /tt51/saverating                                                                                                                                            
                        url(r'^(?P<movie_id>tt\d+)/save_rating$', 'save_movie_rating', name='save_rating'),
 
-
                        # /search                                                                                                                                                      
                        url(r'^search$', 'search', name='search'),
-
 
                        # /fight/a=tt23&b=tt18                                                                                                                                   
                        url(r'^fight/a=(?P<movie_1_id>tt\d+)\&b=(?P<movie_2_id>tt\d+)$',

@@ -155,7 +155,7 @@ class Score(models.Model):
         return u'%.2f  \u00B1 %.1f' % (self.mu, 2*self.sigma)
 
     def __unicode__(self):
-        return self.unicode_score()
+        return '%s -> %s: %s' % (self.user, self.movie.name, self.unicode_score())
 
     def conservative(self):
         return self.mu - 2.* self.sigma

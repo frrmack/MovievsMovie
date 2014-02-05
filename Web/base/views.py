@@ -97,23 +97,19 @@ class RateMoviesView(ListView):
 
 class MovieDetailView(DetailView):
 
-    model = Score
+    model = Movie
     template_name = "base/movie_detail.html"
 
     def get_object(self, *args, **kwargs):
 
-        print 'hey, ho'
-        print 'args', args
-        print 'kwargs', kwargs
-
         # GET MOVIE
         try:
             # get it from the db
-            movie = get_object_or_404(Movie, pk=kwargs['pk'])
+            movie = super(MovieDetailView, self).get_object()
 
         except Http404:
-            # not in the db, scrape it
-            imdb_id = kwargs['pk']
+            # not in the db
+            imdb_id = self.request.path.strip('/')
             try:
                 movie = retrieve_movie_from_the_web( imdb_id )
             except movie_search.NotFoundError:
@@ -122,12 +118,12 @@ class MovieDetailView(DetailView):
         # GET SCORE
         try:
             # A) Already in the db, retrieve it
-            score = Score.objects.filter(user=request.user, movie=movie)
+            score = Score.objects.get(user=self.request.user, movie=movie)
             print 'found old score in the database'
             
         except Score.DoesNotExist:
             # B) Not in the db, saving it for the first time
-            score = Score(user=request.user,
+            score = Score(user=self.request.user,
                           movie=movie)
             print 'created new score'
 
@@ -140,7 +136,7 @@ class MovieDetailView(DetailView):
             return super(MovieDetailView, self).dispatch(request, *args, **kwargs)
 
         except Http404 as e:
-            imdb_id =  e.message
+            imdb_id =  request.path.strip('/')
             err_title = 'Movie not found'
             err_msg = 'There is no movie with the id ' +\
                       '<strong>%s</strong>.\n\n' % (imdb_id) +\
@@ -157,6 +153,7 @@ class MovieDetailView(DetailView):
         # Call the base implementation first to get a context
         context = super(MovieDetailView, self).get_context_data(**kwargs)
         # Add in a poster url
+        context['score'] = score
         context['movie'] = movie
         context['poster_url'] = "%sposters/%s" % (settings.STATIC_URL,
                                                   movie.poster_name) 
@@ -424,7 +421,7 @@ def fight_result(request, movie_1_id, movie_2_id, lock):
         # any confusion as to preferences between any two movies, and to keep                                                                                                            
         # the database compact, simple and straightforward.                                                                                                                              
         #                                                                                                                                                                                
-        # Temporarily, TrueSkill will be changed by a single update (as if                                                                                                               
+        # Temporarily, score will be changed by a single update (as if                                                                                                               
         # there have been multiple matches), but this will be corrected when                                                                                                             
         # The main way of calculating TrueSkill is going over the entire chain                                                                                                           
         # of Fights from scratch.                                                                                                                                                 
