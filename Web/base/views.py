@@ -21,7 +21,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 
 import json
-
+from itertools import chain
 import os, sys, shutil
 # absolute path to this script
 SCRIPTPOS = os.path.abspath(__file__).rsplit('/',1)[0] + '/'
@@ -79,8 +79,14 @@ class RateMoviesView(ListView):
     template_name = "base/rate_movies.html"
 
     def get_queryset(self):
-        return Score.objects.filter(user=self.request.user.id).filter(starRating=0).order_by('?')
-
+        # movies not rated yet
+        not_rated = Movie.objects.exclude(score__user=self.request.user.id).order_by('?')
+        # movies rated 0 stars
+        rated_0 = Movie.objects.filter(score__user=self.request.user.id, score__starRating=0).order_by('?')
+        # chain these together and return them
+        # (as a list so the template can iterate over them multiple times)
+        return list(chain(not_rated, rated_0))
+            
     def dispatch(self, request, *args, **kwargs):
         # check if there are any not-rated movies in the db
         if not self.get_queryset():
