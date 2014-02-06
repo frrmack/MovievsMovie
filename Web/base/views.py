@@ -23,6 +23,9 @@ from django.contrib.auth import logout as auth_logout
 import json
 import random
 from itertools import chain
+
+import trueskill as ts
+
 import os, sys, shutil
 # absolute path to this script
 SCRIPTPOS = os.path.abspath(__file__).rsplit('/',1)[0] + '/'
@@ -508,6 +511,27 @@ def fight_result(request, movie_1_id, movie_2_id, lock):
         fight.save()
         # --end of recording (end of if)
 
+    # update scores (until periodic cleaner recalculation)
+    # set parameters
+    ts.setup(mu=3.0, sigma=1.0, beta=0.3, tau=0.005, draw_probability=0.05)
+    # retrieve scores to update
+    score1 = Score.objects.get(user=user, movie=movie1)
+    score2 = Score.objects.get(user=user, movie=movie2)
+    # create VS score objects
+    old_VS_1 = ts.Rating(mu=score1.mu, sigma=score1.sigma)
+    old_VS_2 = ts.Rating(mu=score2.mu, sigma=score2.sigma)
+    # update: get the new VS score objects
+    if int(result) == 0:
+        new_VS_1, new_VS_2 = ts.rate_1vs1(old_VS_1, old_VS_2, drawn=True)
+    elif int(result) == 1:
+        new_VS_1, new_VS_2 = ts.rate_1vs1(old_VS_1, old_VS_2, drawn=False)
+    elif int(result) == 2:
+        new_VS_2, new_VS_1 = ts.rate_1vs1(old_VS_2, old_VS_1, drawn=False)
+    # save new scores to the db
+    update_score(user, movie1, new_VS_1)
+    update_score(user, movie2, new_VS_2)
+    # scores are updated
+    
     # pick new movies to fight and redirect to the fight                                                                                                                                                         
     new_fighters = {}
     if lock == '1':
@@ -519,6 +543,15 @@ def fight_result(request, movie_1_id, movie_2_id, lock):
     else:
         name = 'fight'
     return HttpResponseRedirect(reverse(name, kwargs=new_fighters))
+
+
+
+@transaction.atomic
+def update_score(user, movie, new_VS):
+    score = Score.objects.get(user=user, movie=movie)
+    score.mu = new_VS.mu
+    score.sigma = new_VS.sigma
+    score.save()
 
 
 
