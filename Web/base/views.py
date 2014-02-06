@@ -150,13 +150,11 @@ class MovieDetailView(DetailView):
         try:
             # A) Already in the db, retrieve it
             score = Score.objects.get(user=self.request.user, movie=movie)
-            print 'found old score in the database'
             
         except Score.DoesNotExist:
             # B) Not in the db, saving it for the first time
             score = Score(user=self.request.user,
                           movie=movie)
-            print 'created new score'
 
         return score
                 
@@ -257,14 +255,11 @@ def search(request):
         try:
             # A) Already in the db, retrieve it
             score = Score.objects.get(user=request.user.id, movie=movie)
-            print 'found old score in the database'
-            print score.unicode_score()
             
         except Score.DoesNotExist:
             # B) Not in the db, saving it for the first time
             score = Score(user=request.user,
                           movie=movie)
-            print 'created new score', score.unicode_score()
         
             
         context = {'score' : score,
@@ -287,7 +282,6 @@ def save_movie_rating(request, movie_id):
     try:
         # A) Already in the db, retrieve it
         movie = Movie.objects.get(pk=movie_id)
-        print 'retrieved %s from database' % name
 
     except Movie.DoesNotExist:
         # sB) Not in the db, saving it for the first time
@@ -305,7 +299,6 @@ def save_movie_rating(request, movie_id):
         #                                 'base/static/posters/%s' \
         #                                 % request.POST['poster_name'])
         # shutil.copy(tmp_poster, permanent_poster)
-        print 'initialized new model for %s' % name
         # save it!
         movie.save()
 
@@ -313,7 +306,6 @@ def save_movie_rating(request, movie_id):
     try:
         # A) Already in the db, retrieve it
         score = Score.objects.get(user=request.user.id, movie=movie)
-        print 'found old score in the database'
 
     except Score.DoesNotExist:
         # B) Not in the db, saving it for the first time
@@ -325,7 +317,6 @@ def save_movie_rating(request, movie_id):
     score.mu = float(rating)
     score.sigma = score.star_seeded_sigma
     score.save()
-    print 'saved new rating %s for %s' % (rating, name)
 
     # done
     return HttpResponse(json.dumps({'rating': rating}),
@@ -383,16 +374,13 @@ def fight(request, movie_1_id=None, movie_2_id=None):
             locked_movie = get_object_or_404(Movie, pk=lock_id)
         else:
             locked_movie = Score.randoms.random(filter={'user':request.user.id}, exclude={'starRating':0}).movie
-        print 'locked', locked_movie.name
         try:
             rival_movie = locked_movie.not_fought_opponents(request.user)[0]
             
         except IndexError:
-            print 'No movie found that %s did not fight before' % locked_movie.name
             rival_movie = locked_movie.fought_opponents(request.user)[0]
 
 
-        print 'rival', rival_movie.name
 
 
         if lock in ('1', '0'):
@@ -592,7 +580,6 @@ def bubbleChart(request, order_rule='ordered_by_rating', num_nodes=None):
 
     # get all the score objects                                                                                                                                                      
     score_list = Score.objects.filter(user=request.user.id).exclude(starRating=0).order_by(order_query)
-    print 'score_list', score_list
 
     # convert num_nodes into a sane integer                                                                                                                                          
     max_num_nodes = len(score_list)
