@@ -61,22 +61,28 @@
 	       src="{{STATIC_URL}}img/favicon1.png"> 
             This is a very hard question to answer. Research has
             shown that when we rate movies, the rating depends a lot
-            on what you've seen (or rated) lately, what your mood is,
-            which other film experiences come to mind at that point,
-            and many other environmental factors. Our memories cannot
-            evalute the entirety of all movies we have seen, so every
-            time we rate a movie, even though it feels like an
-            ultimate rating, we are really comparing it to a limited
-            set. As an example, if we rate a lot of movies in
-            succession and they are all movies we are fond of, our
-            grading becomes a lot more strict, without us noticing
-            it. This is because the human brain is great at
+            on your mood, what you've seen/rated lately, etc.</p>
+
+          <div class="pull-right"><a id="show_more_1" 
+	     class="btn btn-link">More on ranking...</a></div>
+	  <div id="more1" hidden>
+	    <p>Rating movies is sensitive to environmental factors.
+	    Our memories cannot evalute the entirety of all
+            movies we have seen, so every time we rate a movie, even
+            though it feels like an ultimate rating, we are really
+            comparing it to a limited set. </p><p>As an example, if we rate a
+            lot of movies in succession and they are all movies we are
+            fond of, our grading becomes a lot more strict, without us
+            noticing it. This is because the human brain is great at
             adaptation, pattern recognition, and setting a
-            baseline. This is generally very useful, but in this case
+            baseline. </p><p>This is generally very useful, but in this case
             it becomes harder to find out which movies you truly like
             best, or to have a complete, continuous ranking that
             doesn't depend on different conditions of each rating
             session. </p>
+            <div class="pull-right"><a id="show_less_1" 
+		class="btn btn-link">Show less...</a></div>
+	  </div>
             <a href="{% url 'movie_list' %}" 
 	       class="btn btn-success">See your rankings</a>
 	</div>
@@ -94,20 +100,28 @@
             A star rating (1-5 stars out of 5) is a good starting
             point to get a general idea of where the movie is: towards
             the top, the middle, or the bottom of your
-            rankings. However, it does not have enough resolution for
+            rankings. </p>
+
+          <div class="pull-right"><a id="show_more_2" 
+	     class="btn btn-link">More on ratings...</a></div>
+	  <div id="more2" hidden>
+	    <p>However, it does not have enough resolution for
             a continuous ranking, and it is sensitive to factors
             like our limited memory. In a moment of rating, we
             cannot analyze a movie in the context of our entire
             library of movies. Instead we think of a much
-            smaller subset. Trying to use a high resolution grading
+            smaller subset. </p><p>Trying to use a high resolution grading
             system (like out of 1-100 or 1-10 with a decimal place)
             makes ratings even more sensitive to such problems. Let's
             say you rate two movies. You may give a 7.8 to film A
             today, and 7.6 to film B a few weeks later, even if you would
-            have said that you like B better than A on either day. For
+            have said that you like B better than A on either day. </p><p>For
             a movie, we start by asking you to give a star rating out
             of five. Then, we get a better idea of how much you really
             like it from one on one fights against other movies. </p>
+            <div class="pull-right"><a id="show_less_2" 
+		class="btn btn-link">Show less...</a></div>
+	  </div>
           <a href="{% url 'rate_movies' %}" 
 	     class="btn btn-danger">Rate some movies</a>
 	</div>
@@ -122,23 +136,31 @@
                class="inline-img"
 		   style="float: left; padding:5px;"
 	       src="{{STATIC_URL}}img/favicon3.png"> 
-	    We need high resolution, continuous scores for all
-            movies to rank them. Directly rating on such a scale is
-            unreliable. Instead, we get to higher resolutions through
-            head to head comparisons. When you determine the winner
-            (or draw) of a fight, scores change according to the
+	    To rank movies, we need high resolution scores. Directly
+            rating on such a scale is unreliable. Instead, we get there
+            through one to one
+            comparisons. </p>
+
+          <div class="pull-right"><a id="show_more_3" 
+	     class="btn btn-link">More on fights...</a></div>
+	  <div id="more3" hidden>
+	    <p>When you determine the winner (or
+            draw) of a fight, scores change according to the
             result. The score for each movie starts as your star
             rating.  Changes after a fight depend on the previous
-            scores. Let's say Casablanca had a score of 5.4, and The
-            Matrix had 4. If The Matrix beats Casablanca, its score
-            goes up quite a bit and Casablanca's score drops
+            scores. </p><p>Let's say Casablanca had a score of 5.4,
+            and The Matrix had 4. If The Matrix beats Casablanca, its
+            score goes up quite a bit and Casablanca's score drops
             significantly. However, if The Godfather has a score of
             4.7, and Troll 2 has a score of 1.4, and The Godfather
             wins, the scores don't really change much, because that
-            was already expected. Also, Movie vs Movie
-            learns much more from the first fights of a movie than
-            its hundredth, since we have not much uncertainty left at
-	    this point. </p>
+            was already expected. </p><p>Also, Movie vs Movie learns
+            much more from the first fights of a movie than its
+            hundredth, since we have not much uncertainty left at this
+            point. </p>
+            <div class="pull-right"><a id="show_less_3" 
+		class="btn btn-link">Show less...</a></div>
+	  </div>
           <a href="{% url 'fight' %}" 
 	     class="btn btn-info">Enter the Thunderdome</a>
 	</div>
@@ -151,3 +173,33 @@
     <!-- footer -->
     <!-- end of footer -->
 
+    <!-- footjs -->
+    {% block footjs %}
+
+    $("#show_more_1").click( function() {
+      $("#more1").toggle()
+      $("#show_more_1").toggle()
+    });
+    $("#show_less_1").click( function() {
+      $("#more1").toggle()
+      $("#show_more_1").toggle()
+    });
+    $("#show_more_2").click( function() {
+      $("#more2").toggle()
+      $("#show_more_2").toggle()
+    });
+    $("#show_less_2").click( function() {
+      $("#more2").toggle()
+      $("#show_more_2").toggle()
+    });
+    $("#show_more_3").click( function() {
+      $("#more3").toggle()
+      $("#show_more_3").toggle()
+    });
+    $("#show_less_3").click( function() {
+      $("#more3").toggle()
+      $("#show_more_3").toggle()
+    });
+
+    {% endblock %}
+    <!-- end of footjs -->
