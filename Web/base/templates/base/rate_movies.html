@@ -98,6 +98,15 @@
       {% cycle '' '' '' '' '' '</div>' %}
       {% endfor %}
 
+      <div class="row inset-sm">
+	<div class="col-md-4"></div>
+	<div class="col-md-4">
+	  <a href="{% url 'rate_movies' %}" 
+	     class="btn btn-default center-block">Get more movies to rate</a>
+	</div>
+	<div class="col-md-4"></div>
+      </div>
+
     </div>
 
     {% endblock %}
