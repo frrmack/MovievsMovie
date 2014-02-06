@@ -48,8 +48,13 @@ def logout(request):
     return error_page(request, err_title, err_msg)
 
 
-def redirect_to_login():
-    return HttpResponseRedirect(reverse('social:begin', args=('google-oauth2',)))
+def redirect_to_login(next_url_name=None, args=None, kwargs=None):
+    login_path = reverse('social:begin', args=('google-oauth2',))
+    if next_url_name:
+        next_path = '?next=%s' % reverse(next_url_name, args=args, kwargs=kwargs)
+    else:
+        next_path = ''
+    return HttpResponseRedirect(login_path + next_path)
 
 
 class RankingsView(ListView):
@@ -63,7 +68,7 @@ class RankingsView(ListView):
     def dispatch(self, request, *args, **kwargs):
         
         if not request.user.is_authenticated():
-            return redirect_to_login()
+            return redirect_to_login('movie_list')
 
         if not self.get_queryset():
             err_title = 'No movies rated'
@@ -95,7 +100,7 @@ class RateMoviesView(ListView):
     def dispatch(self, request, *args, **kwargs):
 
         if not request.user.is_authenticated():
-            return redirect_to_login()
+            return redirect_to_login('rate_movies')
 
         # check if there are any not-rated movies in the db
         if not self.get_queryset():
@@ -148,7 +153,7 @@ class MovieDetailView(DetailView):
     def dispatch(self, request, *args, **kwargs):
 
         if not request.user.is_authenticated():
-            return redirect_to_login()
+            return redirect_to_login('movie_detail', args=args, kwargs=kwargs)
 
         try:
             return super(MovieDetailView, self).dispatch(request, *args, **kwargs)
@@ -190,7 +195,6 @@ def error_page(request, title, message):
 
 
 def search(request):
-
 
     if not request.user.is_authenticated():
         return redirect_to_login()
@@ -263,7 +267,7 @@ def search(request):
 def save_movie_rating(request, movie_id):
 
     if not request.user.is_authenticated():
-        return redirect_to_login()
+        return redirect_to_login('save_rating', args=args, kwargs=kwargs)
 
     rating = request.POST['rating']
     name = request.POST['name']
@@ -320,8 +324,28 @@ def save_movie_rating(request, movie_id):
 
 def fight(request, movie_1_id=None, movie_2_id=None):
 
+    # Choose movie 2 randomly if the same id is given
+    # manually for both fighters. Can't fight yourself!
+    if movie_1_id == movie_2_id and movie_2_id != None:
+        movie_2_id = None        
+
+    # Decide on lock based on the arguments:
+    # default is no lock
+    if movie_1_id != None and movie_2_id == None:
+        lock = '1'
+        lock_id = movie_1_id
+        redir_kwargs = {'movie_1_id': movie_1_id}
+    elif movie_1_id == None and movie_2_id != None:
+        lock = '2'
+        lock_id = movie_2_id
+        redir_kwargs = {'movie_2_id': movie_2_id}
+    else:
+        lock = '0'
+        lock_id = None
+        redir_kwargs = {}
+
     if not request.user.is_authenticated():
-        return redirect_to_login()
+        return redirect_to_login('fight', kwargs=redir_kwargs)
 
     if request.user.score_set.count() < 2:
 
@@ -340,22 +364,7 @@ def fight(request, movie_1_id=None, movie_2_id=None):
                   'of stars in the rating field.'
         return error_page(request, err_title, err_msg)
 
-    # Choose movie 2 randomly if the same id is given
-    # manually for both fighters. Can't fight yourself!
-    if movie_1_id == movie_2_id and movie_2_id != None:
-        movie_2_id = None        
 
-    # Decide on lock based on the arguments:
-    # default is no lock
-    if movie_1_id != None and movie_2_id == None:
-        lock = '1'
-        lock_id = movie_1_id
-    elif movie_1_id == None and movie_2_id != None:
-        lock = '2'
-        lock_id = movie_2_id
-    else:
-        lock = '0'
-        lock_id = None
 
     # For now, choose random fights
     try:
@@ -431,7 +440,8 @@ def fight(request, movie_1_id=None, movie_2_id=None):
 def fight_result(request, movie_1_id, movie_2_id, lock):
 
     if not request.user.is_authenticated():
-        return redirect_to_login()
+        args = (movie_1_id, movie_2_id, lock)
+        return redirect_to_login('fight_result', args=args)
 
     # get the movies                                                                                                                                                                 
     movie1 = get_object_or_404(Movie, pk=movie_1_id)
@@ -503,7 +513,7 @@ def fight_result(request, movie_1_id, movie_2_id, lock):
 def taste_profile(request):
 
     if not request.user.is_authenticated():
-        return redirect_to_login()
+        return redirect_to_login('taste_profile')
 
     return bubbleChart(request, 
                        order_rule='ordered_by_rating')
