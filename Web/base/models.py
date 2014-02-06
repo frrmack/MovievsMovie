@@ -88,15 +88,23 @@ class Movie(models.Model):
         return bool(prev_matches)
 
     def fought_opponents(self, user):
-        return Fight.objects.filter(user=user).filter(contestants=self).order_by('?')
+        fights = Fight.objects.filter(user=user).filter(contestants=self).order_by('?')
+        fought = []
+        for fight in fights:
+            if self == fight.movie1:
+                fought.append(fight.movie2)
+            else:
+                fought.append(fight.movie1)
+        return fought
 
     def not_fought_opponents(self, user):
-        potentials = Score.objects.filter(user=user).exclude(movie=self).order_by('?')
+        potentials = Score.objects.filter(user=user).exclude(starRating=0).exclude(movie=self).order_by('?')
         fought = self.fought_opponents(user)
         not_fought = []
         for score in potentials:
-            if score not in fought:
-                not_fought.append(score.movie)
+            movie = score.movie
+            if movie not in fought:
+                not_fought.append(movie)
         return not_fought
 
 

@@ -372,13 +372,17 @@ def fight(request, movie_1_id=None, movie_2_id=None):
             locked_movie = get_object_or_404(Movie, pk=lock_id)
         else:
             locked_movie = Score.randoms.random(filter={'user':request.user.id}, exclude={'starRating':0}).movie
-
+        print 'locked', locked_movie.name
         try:
             rival_movie = locked_movie.not_fought_opponents(request.user)[0]
             
         except IndexError:
             print 'No movie found that %s did not fight before' % locked_movie.name
             rival_movie = locked_movie.fought_opponents(request.user)[0]
+
+
+        print 'rival', rival_movie.name
+
 
         if lock in ('1', '0'):
             movie1 = locked_movie
