@@ -3,11 +3,10 @@
 from django.conf.urls import url, patterns, include
 from base.views import RankingsView, RateMoviesView, MovieDetailView
 
-
 urlpatterns = patterns('base.views',
                        # /
                        url(r'^$', 'home', name='home'),
-
+                       
                        # oauth urls
                        url(r'', 
                            include('social.apps.django_app.urls',

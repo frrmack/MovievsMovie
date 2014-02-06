@@ -28,6 +28,9 @@ footer {
     overflow: hidden;
 }
 
+.inline-img {
+    vertical-align: middle;
+}
 
 .modal-dialog-error-notice {
     margin-top: 37%;
