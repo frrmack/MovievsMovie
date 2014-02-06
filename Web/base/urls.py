@@ -50,7 +50,7 @@ urlpatterns = patterns('base.views',
                        # /fight/b=tt18                                                                                                                                        
                        url(r'^fight/b=(?P<movie_2_id>tt\d+)$', 'fight', name='fight_b'),
                        # /fight/                                                                                                                                            
-                       url(r'^fight/$', 'fight', name='fight'),
+                       url(r'^fight$', 'fight', name='fight'),
                        # /fight/a=tt23&b=tt18/result/lock=1           
                        # /fight/a=tt23&b=tt18/result/lock=2         
                        # /fight/a=tt23&b=tt18/result/lock=0
