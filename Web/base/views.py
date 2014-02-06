@@ -330,7 +330,10 @@ def save_movie_rating(request, movie_id):
                         content_type="application/json")
 
 
+
+
 def fight(request, movie_1_id=None, movie_2_id=None):
+
 
     if not request.user.is_authenticated():
         return redirect_to_login()
