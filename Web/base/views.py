@@ -358,10 +358,10 @@ def fight(request, movie_1_id=None, movie_2_id=None):
                   'Also, the first step for finding how a movie ' + \
                   'ranks for you among others is to give it a ' + \
                   'star rating.\n\n' + \
-                  'You can rate a movie by ' + \
-                  'using the search bar to find it\'s detail page ' + \
-                  'and clicking on the relevant amount ' +\
-                  'of stars in the rating field.'
+                  'You can rate movies ' + \
+                  'at "<a href="/rate">Rate Movies</a>" or ' +\
+                  'by using the search bar to find a movie ' + \
+                  'and clicking on the stars in its page.'
         return error_page(request, err_title, err_msg)
 
 
@@ -514,6 +514,16 @@ def taste_profile(request):
 
     if not request.user.is_authenticated():
         return redirect_to_login('taste_profile')
+
+    if not Score.objects.filter(user=request.user.id).exclude(starRating=0):
+        err_title = 'No movies rated'
+        err_msg = 'You did not rate any movies, so there are ' + \
+                  'no movies to build a taste profile from.\n\n ' +\
+                  'You can rate some ' + \
+                  'at "<a href="/rate">Rate Movies</a>" or ' +\
+                  'by using the search bar to find a movie ' + \
+                  'and clicking on the stars in its page.'
+        return error_page(request, err_title, err_msg)
 
     return bubbleChart(request, 
                        order_rule='ordered_by_rating')
