@@ -57,7 +57,7 @@ CACHES = {
 # SECURITY WARNING: don't run with debug turned on in production!
 # Debugging displays nice error messages, but leaks memory. Set this to False
 # on all server instances and True only for development.
-DEBUG = TEMPLATE_DEBUG = True
+DEBUG = TEMPLATE_DEBUG = False
 TEMPLATE_STRING_IF_INVALID = "TEMPLATE_ERROR"
 
 # Without this debug toolbar setting, the site works in

@@ -4,7 +4,7 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from base.views import error_page
 import traceback
 
-DEBUG = True
+DEBUG = False
 
 
 class SocialAuthExceptionMiddleware(SocialAuthExceptionMiddleware):
