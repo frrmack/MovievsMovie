@@ -61,10 +61,10 @@
 	       src="{{STATIC_URL}}img/favicon1.png"> 
             This is a very hard question to answer. Research has
             shown that when we rate movies, the rating depends a lot
-            on your mood, what you've seen/rated lately, etc.</p>
+            on our mood, what we've seen/rated lately, etc.</p>
 
           <div class="pull-right"><a id="show_more_1" 
-	     class="btn btn-link">More on ranking...</a></div>
+	     class="btn btn-link"><span class="caret"></span>More on ranking...</a></div>
 	  <div id="more1" hidden>
 	    <p>Rating movies is sensitive to environmental factors.
 	    Our memories cannot evalute the entirety of all
@@ -81,7 +81,7 @@
             doesn't depend on different conditions of each rating
             session. </p>
             <div class="pull-right"><a id="show_less_1" 
-		class="btn btn-link">Show less...</a></div>
+		class="btn btn-link"><span class="caret caret-reversed"></span>Show less...</span></a></div>
 	  </div>
             <a href="{% url 'movie_list' %}" 
 	       class="btn btn-success">See your rankings</a>
@@ -103,7 +103,7 @@
             rankings. </p>
 
           <div class="pull-right"><a id="show_more_2" 
-	     class="btn btn-link">More on ratings...</a></div>
+	     class="btn btn-link"><span class="caret"></span>More on ratings...</a></div>
 	  <div id="more2" hidden>
 	    <p>However, it does not have enough resolution for
             a continuous ranking, and it is sensitive to factors
@@ -120,7 +120,7 @@
             of five. Then, we get a better idea of how much you really
             like it from one on one fights against other movies. </p>
             <div class="pull-right"><a id="show_less_2" 
-		class="btn btn-link">Show less...</a></div>
+		class="btn btn-link"><span class="caret caret-reversed"></span>Show less...</a></div>
 	  </div>
           <a href="{% url 'rate_movies' %}" 
 	     class="btn btn-danger">Rate some movies</a>
@@ -142,7 +142,7 @@
             comparisons. </p>
 
           <div class="pull-right"><a id="show_more_3" 
-	     class="btn btn-link">More on fights...</a></div>
+	     class="btn btn-link"><span class="caret"></span>More on fights...</a></div>
 	  <div id="more3" hidden>
 	    <p>When you determine the winner (or
             draw) of a fight, scores change according to the
@@ -159,7 +159,7 @@
             hundredth, since we have not much uncertainty left at this
             point. </p>
             <div class="pull-right"><a id="show_less_3" 
-		class="btn btn-link">Show less...</a></div>
+		class="btn btn-link"><span class="caret caret-reversed"></span>Show less...</a></div>
 	  </div>
           <a href="{% url 'fight' %}" 
 	     class="btn btn-info">Enter the Thunderdome</a>
