@@ -21,6 +21,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout as auth_logout
 
 import json
+import random
 from itertools import chain
 import os, sys, shutil
 # absolute path to this script
@@ -87,15 +88,22 @@ class RateMoviesView(ListView):
 
     context_object_name = "movies_to_rate"
     template_name = "base/rate_movies.html"
+    num_movies_per_page = 120
 
     def get_queryset(self):
         # movies not rated yet
-        not_rated = Movie.objects.exclude(score__user=self.request.user.id).order_by('?')
+        not_rated = Movie.objects.exclude(score__user=self.request.user.id).order_by('-popularity')
         # movies rated 0 stars
-        rated_0 = Movie.objects.filter(score__user=self.request.user.id, score__starRating=0).order_by('?')
-        # chain these together and return them
+        rated_0 = Movie.objects.filter(score__user=self.request.user.id, score__starRating=0).order_by('-popularity')
+        # chain these together
         # (as a list so the template can iterate over them multiple times)
-        return list(chain(not_rated, rated_0))
+        queryset = list(chain(not_rated, rated_0))
+        # only return 60 items
+        queryset = queryset[:self.num_movies_per_page]
+        # shuffle it so it's random everytime
+        random.shuffle(queryset)
+        # ta-daa
+        return queryset
             
     def dispatch(self, request, *args, **kwargs):
 
