@@ -514,9 +514,13 @@ def fight_result(request, movie_1_id, movie_2_id, lock):
         new_VS_1, new_VS_2 = ts.rate_1vs1(old_VS_1, old_VS_2, drawn=False)
     elif int(result) == 2:
         new_VS_2, new_VS_1 = ts.rate_1vs1(old_VS_2, old_VS_1, drawn=False)
+    else:
+        new_VS_1, new_VS_2 = None, None
     # save new scores to the db
-    update_score(user, movie1, new_VS_1)
-    update_score(user, movie2, new_VS_2)
+    if new_VS_1:
+        update_score(user, movie1, new_VS_1)
+    if new_VS_2:
+        update_score(user, movie2, new_VS_2)
     # scores are updated
     
     # pick new movies to fight and redirect to the fight                                                                                                                                                         
