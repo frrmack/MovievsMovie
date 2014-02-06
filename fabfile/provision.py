@@ -208,16 +208,16 @@ def load_popular_movies():
     """populate the database with movies to rate"""
     with vagrant_settings(env.host_string):
         
-        # scrape the top 300 popular movies from imdb
+        # scrape the top 1000 popular movies from imdb
         # this will make sure that the Rate Movies view
         # has all the stuff it needs.
         # you only need to do this once, so do it if
         # shawshank isn't in there
         stampfile = "/vagrant/data/.popular_movie_download_complete"
         if not fabtools.files.is_file( stampfile ):
-            with cd("/vagrant/code"):
-                run("python put_movies_in_with_no_rating.py")
-
+            with cd("/vagrant/Web"):
+                run("./manage.py put_movies_in_with_popularity_rank ../data/popular_movies_1000.txt")
+                run("touch %s" % stampfile)
 
 @task(default=True)
 @decorators.needs_environment

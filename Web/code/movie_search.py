@@ -5,7 +5,7 @@ import urlparse
 import sys
 
 from logtemplate import get_log
-log = get_log('movie_search', level="debug")
+log = get_log('movie_search', level="info")
 
 
 class NotFoundError(Exception):

@@ -31,6 +31,7 @@ import sys, os
 SCRIPTPOS = os.path.abspath(__file__).rsplit('/',1)[0] + '/'
 WEBSITEDIR = SCRIPTPOS + '../'
 sys.path.append(WEBSITEDIR)
+sys.path.append(SCRIPTPOS)
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "Web.settings")
 
 
@@ -38,8 +39,14 @@ from base.models import Movie, Score, Fight, User
 from django.db import transaction, reset_queries
 
 import time
+from datetime import datetime
+from django.utils.timezone import utc
 
 import trueskill as ts
+
+def log(msg):
+    timestamp = datetime.utcnow().replace(tzinfo=utc)
+    print >> sys.stderr, '%s --- %s' %(timestamp, msg)
 
 
 def update_true_skill(fight, true_skill_dict):
@@ -94,8 +101,8 @@ def compute_true_skills(user):
             continue
         update_score(user, movie_id, new_TS)
         count += 1
-    print >> sys.stderr, '--- a total of %i ratings recorded. ---' % (count)
-
+    #log('--- a total of %i ratings recorded. ---' % (count))
+    return count
 
 @transaction.atomic
 def update_score(user, movie_id, new_TS):
@@ -110,10 +117,12 @@ def main():
     # to avoid a memory leak. Read more here:
     # http://stackoverflow.com/questions/2338041/python-django-polling-of-database-has-memory-leak
     reset_queries()
+    user_count, score_count = 0, 0
     for user in User.objects.values_list('id', flat=True):
-        print 'Updating scores for user: %s' % User.objects.get(id=user).username
-        compute_true_skills(user)
-
+        #log('Updating scores for user: %s' % User.objects.get(id=user).username)
+        score_count += compute_true_skills(user)
+        user_count += 1
+    log('Updated %i scores from %i users.' % (score_count, user_count))
 
 if __name__ == '__main__':
     
