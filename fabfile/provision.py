@@ -119,23 +119,6 @@ def setup_django(do_rsync=True):
         # write the local django settings. since local.py is listed in
         # the .hgignore, the -C option to rsync must ignore it. this
         # needs to go AFTER rsyncing
-        #
-        # TODO: Figure out why this is causing ildev to fail
-        # provisioning. Mike is to blame for temporarily commenting
-        # this out. Couldn't get ildev to provision, received Fatal
-        # error: put() encountered an exception while uploading, "no
-        # such file" while trying to render the template at site_root.
-        #
-        # FIXED? 
-        #
-        #
-        # NOTE FROM IRMAK ON Dec 18, Wed: I believe I solved this issue.
-        # It should be FIXED, and provisioning without any hitches (here).
-        # if it still fails, I recommend you come see me. What's up, yo?
-        #
-        # NOTE FROM DEAN ON 12/18, LATER: Its fixed for me now. I also
-        # changed the rsync location above which I also think fixes
-        # the problem, too
         for root_dir in ["/vagrant/" + web_dir, site_root]:
             # make sure the dir exists (for the site_root one)
             target_dir = root_dir+"/Web/settings/"
@@ -155,6 +138,7 @@ def setup_django(do_rsync=True):
             )
 
         # make sure permissions are set up properly
+        #sudo("chmod -R a+w %s" % site_root)
         sudo("chmod -R g+w %s" % site_root)
         sudo("chgrp -R www-data %s" % site_root)
             

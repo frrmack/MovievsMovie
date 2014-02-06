@@ -382,7 +382,6 @@ def fight(request, movie_1_id=None, movie_2_id=None):
 
 
 
-
         if lock in ('1', '0'):
             movie1 = locked_movie
             movie2 = rival_movie
