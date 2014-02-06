@@ -7,25 +7,22 @@ from django.db import transaction
 # absolute path to this script
 import os.path, sys
 SCRIPTPOS = os.path.abspath(__file__).rsplit('/',1)[0] + '/'
-sys.path.append(SCRIPTPOS+"../../../../code/")
+sys.path.append(SCRIPTPOS+"../../../code/")
 
 from retrieve_movie_from_the_web import retrieve_movie_from_the_web
-
 
 
 @transaction.atomic
 def put_in_with_no_rating(imdb_id):
     # parse the imdb page
     movie = retrieve_movie_from_the_web(imdb_id)
-    # give it a not-rated rating
-    movie.starRating = 0
     # save it
     movie.save()
 
 
 class Command(BaseCommand):
     args = '<movielistfile> (each line is an id)'
-    help = 'save movie info and poster in the db, with no rating.'
+    help = 'save movie info and poster in the db.'
 
     def handle(self, movielistfile, **options):
 

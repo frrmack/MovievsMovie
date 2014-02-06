@@ -78,19 +78,6 @@ class RankingsView(ListView):
             return super(RankingsView, self).dispatch(request, *args, **kwargs)
 
 
-    # def get_context_data(self, **kwargs):
-    #     # Call the base implementation first to get a context
-    #     context = super(RankingsView, self).get_context_data(**kwargs)
-    #     print context
-    #     # get the movie's name from the db
-    #     def get_movie_name(score):
-    #         score.movie_name = score.movie.name
-    #         score.movie_imdb_id = score.movie.imdb_id
-    #         return score
-    #     context['score_list'] = map(get_movie_name, context['score_list'])
-    #     return context
-
-
 class RateMoviesView(ListView):
 
     context_object_name = "movies_to_rate"
@@ -114,8 +101,8 @@ class RateMoviesView(ListView):
         if not self.get_queryset():
             
             err_title = 'No movies to rate'
-            err_msg = 'You already rated all of the most popular movies, ' + \
-                      'but you can find and rate more using the search bar.'
+            err_msg = 'You already rated all of the available (most popular) ' + \
+                      'movies, but you can find and rate more using the search bar.'
             return error_page(request, err_title, err_msg)
 
         else:
@@ -288,7 +275,7 @@ def save_movie_rating(request, movie_id):
         print 'retrieved %s from database' % name
 
     except Movie.DoesNotExist:
-        # B) Not in the db, saving it for the first time
+        # sB) Not in the db, saving it for the first time
         movie = Movie(imdb_id = request.POST['imdb_id'],
                       name= request.POST['name'],
                       year= request.POST['year'],
@@ -331,9 +318,7 @@ def save_movie_rating(request, movie_id):
 
 
 
-
 def fight(request, movie_1_id=None, movie_2_id=None):
-
 
     if not request.user.is_authenticated():
         return redirect_to_login()
