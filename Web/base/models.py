@@ -14,7 +14,6 @@ def now():
 
 import HTMLParser
 
-
 class RandomManager(models.Manager):
     def random(self, skip_obj=None, filter=None, exclude=None):
         # skip_obj: You can give a model instance, and random
@@ -55,6 +54,8 @@ class Movie(models.Model):
     scoreSigma = models.FloatField(default=1.0)
 
     poster_name = models.CharField(max_length=255, default="_empty_poster.jpg")
+
+    popularity = models.IntegerField(default=0)
 
     objects = models.Manager()
     randoms = RandomManager()
@@ -106,7 +107,6 @@ class Movie(models.Model):
             if movie not in fought:
                 not_fought.append(movie)
         return not_fought
-
 
     def won_against(self, user):
         """
