@@ -99,14 +99,26 @@
       {% endfor %}
 
       <div class="row inset-sm">
-	<div class="col-md-4"></div>
 	<div class="col-md-4">
 	  <a href="{% url 'rate_movies' %}" 
 	     class="btn btn-default center-block">Get more movies to rate</a>
 	</div>
-	<div class="col-md-4"></div>
+	<div class="col-md-4">
+	  <a href="{% url 'fight' %}" 
+	     class="btn btn-primary center-block">Time to fight!</a>
+	</div>
+	<div class="col-md-4">
+	  <a href="{% url 'movie_list' %}" 
+	     class="btn btn-default center-block">See your rankings</a>
+	</div>
       </div>
-
+      <div class="row top-indent-sm">
+	<div class="col-md-3"></div>
+	<div class="col-md-6 text-center lightgray">
+	  Hint: You can also find & rate movies through the search bar.
+	</div>
+	<div class="col-md-3"></div>
+      </div>
     </div>
 
     {% endblock %}

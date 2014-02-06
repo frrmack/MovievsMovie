@@ -12,7 +12,6 @@ body {
     }
 }
 
-
 footer {
     margin-top: 60px;
 }
@@ -26,6 +25,15 @@ footer {
     height: 100%;
     width: 100%;
     overflow: hidden;
+}
+
+.lightgray {
+
+    color: #999;
+}
+
+.gray {
+    color: #444;
 }
 
 .caret.caret-reversed {
