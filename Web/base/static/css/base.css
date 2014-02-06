@@ -27,13 +27,19 @@ footer {
     overflow: hidden;
 }
 
-.lightgray {
-
-    color: #999;
+.key {
+    /* color: #731; */
+    color: #f86;
 }
 
+.verylightgray {
+    color: #bbb;
+}
+.lightgray {
+    color: #999;
+}
 .gray {
-    color: #444;
+    color: #666;
 }
 
 .caret.caret-reversed {
