@@ -56,6 +56,10 @@
   font-size: 18px;
 }
 
+.sidebar-nav > .sidebar-brand span.sidebar-label {
+  color: #999;
+}
+
 .sidebar-nav > .sidebar-brand a {
   color: #999;
 }
