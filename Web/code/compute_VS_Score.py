@@ -130,6 +130,7 @@ if __name__ == '__main__':
         # infinite loop
         while True:
             main()
+            time.sleep(5)
     else:
         main()
 

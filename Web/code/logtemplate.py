@@ -27,7 +27,6 @@ def get_log(name=None,
     else:
         log_level = logging.DEBUG
 
-    print name, level, log_level
     # set it up
     logging.basicConfig(level=log_level,
                         format=log_format,
