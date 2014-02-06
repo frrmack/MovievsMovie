@@ -54,11 +54,12 @@
               <a href="#"><img class="img-responsive img-circle"
 			       src="{{STATIC_URL}}img/feat1.jpg"></a>
 	      -->
-          <h3 class="text-center"><img height="24"
+          <h3 class="text-center">What's your top ten?</h3>
+          <p> <img height="80"
                class="inline-img"
-	       src="{{STATIC_URL}}img/favicon1.png">
-            What's your top ten?</h3>
-          <p>This is a very hard question to answer. Research has
+		   style="float: left; padding:5px;"
+	       src="{{STATIC_URL}}img/favicon1.png"> 
+            This is a very hard question to answer. Research has
             shown that when we rate movies, the rating depends a lot
             on what you've seen (or rated) lately, what your mood is,
             which other film experiences come to mind at that point,
@@ -85,11 +86,12 @@
               <a href="#"><img class="img-responsive img-circle"
 			       src="{{STATIC_URL}}img/feat2.jpg"></a>
 	      -->
-          <h3 class="text-center"><img height="24"
+          <h3 class="text-center">Star ratings</h3>
+          <p> <img height="80"
                class="inline-img"
+		   style="float: left; padding:5px;"
 	       src="{{STATIC_URL}}img/favicon2.png"> 
-            Star ratings</h3>
-          <p>A star rating (1-5 stars out of 5) is a good starting
+            A star rating (1-5 stars out of 5) is a good starting
             point to get a general idea of where the movie is: towards
             the top, the middle, or the bottom of your
             rankings. However, it does not have enough resolution for
@@ -115,11 +117,12 @@
               <a href="#"><img class="img-responsive img-circle"
 			       src="{{STATIC_URL}}img/feat3.jpg"></a>
 	      -->
-          <h3 class="text-center"><img height="24"
+          <h3 class="text-center"> Head to head fights</h3>
+          <p> <img height="80"
                class="inline-img"
+		   style="float: left; padding:5px;"
 	       src="{{STATIC_URL}}img/favicon3.png"> 
-	    Head to head fights</h3>
-          <p> We need high resolution, continuous scores for all
+	    We need high resolution, continuous scores for all
             movies to rank them. Directly rating on such a scale is
             unreliable. Instead, we get to higher resolutions through
             head to head comparisons. When you determine the winner
@@ -132,10 +135,10 @@
             significantly. However, if The Godfather has a score of
             4.7, and Troll 2 has a score of 1.4, and The Godfather
             wins, the scores don't really change much, because that
-            was already an expected result. Also, Movie vs Movie
-            learns a lot more from the first fights of a movie than
-            its hundredth, since it already has a lot of information
-            about its true score from the previous fights. </p>
+            was already expected. Also, Movie vs Movie
+            learns much more from the first fights of a movie than
+            its hundredth, since we have not much uncertainty left at
+	    this point. </p>
           <a href="{% url 'fight' %}" 
 	     class="btn btn-info">Enter the Thunderdome</a>
 	</div>
