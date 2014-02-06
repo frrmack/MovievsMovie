@@ -48,6 +48,10 @@ def logout(request):
     return error_page(request, err_title, err_msg)
 
 
+def redirect_to_login():
+    return HttpResponseRedirect(reverse('social:begin', args=('google-oauth2',)))
+
+
 class RankingsView(ListView):
 
     context_object_name = "score_list"
@@ -57,14 +61,17 @@ class RankingsView(ListView):
         return Score.objects.filter(user=self.request.user).exclude(starRating=0).order_by('-mu')
 
     def dispatch(self, request, *args, **kwargs):
+        
+        if not request.user.is_authenticated():
+            return redirect_to_login()
+
         if not self.get_queryset():
-            
             err_title = 'No movies rated'
             err_msg = 'You did not rate any movies, so there are ' + \
-                      'no movies to list.\n\n You can rate a movie by ' + \
-                      'using the search bar to find it\'s detail page ' + \
-                      'and clicking on the relevant amount ' +\
-                      'of stars in the rating field.'
+                      'no movies to list.\n\n You can rate some ' + \
+                      'at "<a href="/rate">Rate Movies</a>" or ' +\
+                      'by using the search bar to find a movie ' + \
+                      'and clicking on the stars in its page.'
             return error_page(request, err_title, err_msg)
 
         else:
@@ -99,6 +106,10 @@ class RateMoviesView(ListView):
         return list(chain(not_rated, rated_0))
             
     def dispatch(self, request, *args, **kwargs):
+
+        if not request.user.is_authenticated():
+            return redirect_to_login()
+
         # check if there are any not-rated movies in the db
         if not self.get_queryset():
             
@@ -149,6 +160,9 @@ class MovieDetailView(DetailView):
 
     def dispatch(self, request, *args, **kwargs):
 
+        if not request.user.is_authenticated():
+            return redirect_to_login()
+
         try:
             return super(MovieDetailView, self).dispatch(request, *args, **kwargs)
 
@@ -189,6 +203,10 @@ def error_page(request, title, message):
 
 
 def search(request):
+
+
+    if not request.user.is_authenticated():
+        return redirect_to_login()
 
     query = request.GET['query']
 
@@ -257,6 +275,9 @@ def search(request):
 @transaction.atomic
 def save_movie_rating(request, movie_id):
 
+    if not request.user.is_authenticated():
+        return redirect_to_login()
+
     rating = request.POST['rating']
     name = request.POST['name']
 
@@ -309,9 +330,10 @@ def save_movie_rating(request, movie_id):
                         content_type="application/json")
 
 
-
-
 def fight(request, movie_1_id=None, movie_2_id=None):
+
+    if not request.user.is_authenticated():
+        return redirect_to_login()
 
     if request.user.score_set.count() < 2:
 
@@ -420,6 +442,9 @@ def fight(request, movie_1_id=None, movie_2_id=None):
 @transaction.atomic
 def fight_result(request, movie_1_id, movie_2_id, lock):
 
+    if not request.user.is_authenticated():
+        return redirect_to_login()
+
     # get the movies                                                                                                                                                                 
     movie1 = get_object_or_404(Movie, pk=movie_1_id)
     movie2 = get_object_or_404(Movie, pk=movie_2_id)
@@ -488,6 +513,10 @@ def fight_result(request, movie_1_id, movie_2_id, lock):
 
 
 def taste_profile(request):
+
+    if not request.user.is_authenticated():
+        return redirect_to_login()
+
     return bubbleChart(request, 
                        order_rule='ordered_by_rating')
     # err_title = 'Coming soon'

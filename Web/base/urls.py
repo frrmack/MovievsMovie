@@ -15,7 +15,7 @@ urlpatterns = patterns('base.views',
 
                        # /logged-in
                        url(r'^logged-in$',
-                           'home'),
+                           RateMoviesView.as_view()),
 
                        # /logged-in
                        url(r'^logged-out$',
