@@ -122,6 +122,15 @@ def parse_name_year_director(imdb_soup):
     # done                                                                                                                                                                       
     return name, year, director
 
+def parse_genres(imdb_soup):
+
+    #~~ the h4 tag that says Genres:
+    genres = imdb_soup.findAll('h4', text="Genres:")[0]
+
+    #~~ genres are all the links in the div that has the "Genres:" h4
+    return [genre_link.string for genre_link in genres.parent.findAll('a')]
+
+
     
 
 if __name__ == "__main__":
@@ -154,4 +163,5 @@ if __name__ == "__main__":
         print
         for sentence in content.split('. '):
             print sentence.replace('\n', ' ') + '.'
+
 
