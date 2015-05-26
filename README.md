@@ -4,27 +4,7 @@ This is the source code for [movievsmovie.datasco.pe](http://movievsmovie.datasc
 
 ## Screenshots
 
-![](http://i.imgur.com/TImue2n.jpg)
-----
-![](http://i.imgur.com/uy0G8P3.jpg)
-----
-![](http://i.imgur.com/wHgnXpl.jpg)
-----
-![](http://i.imgur.com/28mY7nh.jpg)
-----
-![](http://i.imgur.com/QSFpXZo.jpg)
-----
-![](http://i.imgur.com/AeiPvev.jpg)
-----
-![](http://i.imgur.com/73yCc4t.png)
-----
-![](http://i.imgur.com/4qGsdYR.png)
-----
-![](http://i.imgur.com/HPCLFP7.png)
-----
-![](http://i.imgur.com/2lqFdCj.png)
-----
-![](http://i.imgur.com/RuAkoyQ.png)
+![](http://i.imgur.com/2HA3NK1.gif)
 ----
 ----
 
