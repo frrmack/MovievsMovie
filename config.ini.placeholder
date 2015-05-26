@@ -1,0 +1,21 @@
+[rackspace_cloud]
+username = XXXXXX
+api_key = XXXXXX
+
+[digital_ocean]
+client_id = XXXXXX
+api_key = XXXXXX
+
+# comma-separated list server names here so that vagrant and fabric
+# can access them from one place.
+[servers]
+digital_ocean = XXXXXX
+rackspace = XXXXXX
+virtualbox = XXXXXX
+
+[mysql]
+root_password = XXXXXX
+django_root_username = XXXXXX
+django_root_password = XXXXXX
+django_database = XXXXXX
+
